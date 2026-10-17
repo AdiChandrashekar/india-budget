@@ -1,0 +1,11 @@
+# Raw downloads are large, re-fetchable and recorded in data/raw/*/manifest.csv
+# with their sha256, so they are reproducible rather than committed.
+data/raw/
+
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+.DS_Store
+Thumbs.db
+*.tmp

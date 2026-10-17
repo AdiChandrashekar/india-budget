@@ -1,0 +1,578 @@
+[
+ {
+  "fiscal_year": "1970-71",
+  "interim": false,
+  "archive_scan": true,
+  "index_url": "https://www.indiabudget.gov.in/MissingDocs/CENTRAC BUDGET-1970-71/CENTRAC BUDGET-1970-71.pdf",
+  "label": "1970-71(P-1)",
+  "eb_base": "",
+  "formats": [],
+  "n_demands": 0,
+  "note": "pre-1996 scanned PDF of the whole budget; OCR needed"
+ },
+ {
+  "fiscal_year": "1985-86",
+  "interim": false,
+  "archive_scan": true,
+  "index_url": "https://www.indiabudget.gov.in/MissingDocs/CENTRAL BUDGET-1985-86/CENTRAL BUDGET-1985-86-I.pdf",
+  "label": "1985-1986",
+  "eb_base": "",
+  "formats": [],
+  "n_demands": 0,
+  "note": "pre-1996 scanned PDF of the whole budget; OCR needed"
+ },
+ {
+  "fiscal_year": "1986-87",
+  "interim": false,
+  "archive_scan": true,
+  "index_url": "https://www.indiabudget.gov.in/MissingDocs/CENTRAL BUDGET-1986-87/CENTRAL BUDGET-1986-87.pdf",
+  "label": "1986-1987",
+  "eb_base": "",
+  "formats": [],
+  "n_demands": 0,
+  "note": "pre-1996 scanned PDF of the whole budget; OCR needed"
+ },
+ {
+  "fiscal_year": "1991-92",
+  "interim": false,
+  "archive_scan": true,
+  "index_url": "https://www.indiabudget.gov.in/MissingDocs/CENTRAL BUDGET1991-92/CENTRAL BIDGET-91-92.pdf",
+  "label": "1991-1992(P-1)",
+  "eb_base": "",
+  "formats": [],
+  "n_demands": 0,
+  "note": "pre-1996 scanned PDF of the whole budget; OCR needed"
+ },
+ {
+  "fiscal_year": "1996-97",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub1996-97/welcome.html",
+  "label": "1996-1997",
+  "eb_base": "",
+  "formats": [],
+  "n_demands": 0,
+  "note": "no Expenditure Budget directory found by pattern"
+ },
+ {
+  "fiscal_year": "1997-98",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub1997-98/welcome.html",
+  "label": "1997-1998",
+  "eb_base": "",
+  "formats": [],
+  "n_demands": 0,
+  "note": "no Expenditure Budget directory found by pattern"
+ },
+ {
+  "fiscal_year": "1998-99",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/welcome.html",
+  "label": "1998-1999",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/",
+  "formats": [
+   "sbe_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "1999-00",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/welcome.html",
+  "label": "1999-2000",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/",
+  "formats": [
+   "sbe_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2000-01",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/welcome.html",
+  "label": "2000-2001",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/",
+  "formats": [
+   "sbe_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2001-02",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/welcome.html",
+  "label": "2001-2002",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/",
+  "formats": [
+   "sbe_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2002-03",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/welcome.html",
+  "label": "2002-2003",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/",
+  "formats": [
+   "sbe_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2003-04",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/ubmain.htm",
+  "label": "2003-2004",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2004-05",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/ubmain.htm",
+  "label": "2004-2005",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2004-05",
+  "interim": true,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05(I)/ubmain.htm",
+  "label": "2004-2005(I)",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2004-05(I)/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2005-06",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/ubmain.htm",
+  "label": "2005-2006",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2006-07",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/ubmain.htm",
+  "label": "2006-2007",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2007-08",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/ubmain.htm",
+  "label": "2007-2008",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2008-09",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/ubmain.htm",
+  "label": "2008-2009",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2009-10",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/ubmain.htm",
+  "label": "2009-2010",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2009-10",
+  "interim": true,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10(I)/ubmain.htm",
+  "label": "2009-2010(I)",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2009-10(I)/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2010-11",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/ubmain.htm",
+  "label": "2010-2011",
+  "eb_base": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/",
+  "formats": [
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2011-12",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2011-2012/budget.asp",
+  "label": "2011-2012",
+  "eb_base": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2012-13",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2012-2013/budget.asp",
+  "label": "2012-2013",
+  "eb_base": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2013-14",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2013-2014/budget.asp",
+  "label": "2013-2014",
+  "eb_base": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2014-15",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2014-2015/budget.asp",
+  "label": "2014-2015",
+  "eb_base": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2014-15",
+  "interim": true,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2014-2015(I)/budget.asp",
+  "label": "2014-2015(I)",
+  "eb_base": "https://www.indiabudget.gov.in/budget2014-2015(I)/ub2014-15/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2015-16",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2015-2016/budget.asp",
+  "label": "2015-2016",
+  "eb_base": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2016-17",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2016-2017/budget.asp",
+  "label": "2016-2017",
+  "eb_base": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2017-18",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2017-2018/budget.asp",
+  "label": "2017-2018",
+  "eb_base": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2018-19",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2018-2019/budget.asp",
+  "label": "2018-2019",
+  "eb_base": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2019-20",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2019-20/index.php",
+  "label": "2019-2020",
+  "eb_base": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/",
+  "formats": [
+   "alldg_excel",
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2019-20",
+  "interim": true,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2019-20(I)/budget.asp",
+  "label": "2019-2020(I)",
+  "eb_base": "https://www.indiabudget.gov.in/budget2019-20(I)/ub2019-20/eb/",
+  "formats": [
+   "alldg_excel",
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_excel",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2020-21",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2020-21/index.php",
+  "label": "2020-2021",
+  "eb_base": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2021-22",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2021-22/index.php",
+  "label": "2021-2022",
+  "eb_base": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2022-23",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2022-23/index.php",
+  "label": "2022-2023",
+  "eb_base": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2023-24",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2023-24/index.php",
+  "label": "2023-2024",
+  "eb_base": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_pdf",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2024-25",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2024-25/index.php",
+  "label": "2024-2025",
+  "eb_base": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/",
+  "formats": [
+   "alldg_excel",
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2024-25",
+  "interim": true,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2024-25(I)/index.php",
+  "label": "2024-2025(I)",
+  "eb_base": "https://www.indiabudget.gov.in/budget2024-25(I)/doc/eb/",
+  "formats": [
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2025-26",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/budget2025-26/index.php",
+  "label": "2025-2026",
+  "eb_base": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/",
+  "formats": [
+   "alldg_excel",
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ },
+ {
+  "fiscal_year": "2026-27",
+  "interim": false,
+  "archive_scan": false,
+  "index_url": "https://www.indiabudget.gov.in/",
+  "label": "2026-27 (current)",
+  "eb_base": "https://www.indiabudget.gov.in/doc/eb/",
+  "formats": [
+   "alldg_excel",
+   "alldg_pdf",
+   "dg_excel",
+   "dg_pdf",
+   "sbe_excel",
+   "sbe_pdf",
+   "dgsum_excel",
+   "dgsum_pdf"
+  ],
+  "n_demands": 0
+ }
+]

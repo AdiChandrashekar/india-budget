@@ -1,0 +1,392 @@
+{
+ "2026-27": {
+  "1": {
+   "department": "Department of Agriculture and Farmers Welfare",
+   "ministry": "Ministry of Agriculture and Farmers Welfare"
+  },
+  "2": {
+   "department": "Department of Agricultural Research and Education",
+   "ministry": "Ministry of Agriculture and Farmers Welfare"
+  },
+  "3": {
+   "department": "Atomic Energy",
+   "ministry": "Department of Atomic Energy"
+  },
+  "4": {
+   "department": "Ministry of Ayush",
+   "ministry": "Ministry of AYUSH"
+  },
+  "5": {
+   "department": "Department of Chemicals and Petrochemicals",
+   "ministry": "Ministry of Chemicals and Fertilisers"
+  },
+  "6": {
+   "department": "Department of Fertilisers",
+   "ministry": "Ministry of Chemicals and Fertilisers"
+  },
+  "7": {
+   "department": "Department of Pharmaceuticals",
+   "ministry": "Ministry of Chemicals and Fertilisers"
+  },
+  "8": {
+   "department": "Ministry of Civil Aviation",
+   "ministry": "Ministry of Civil Aviation"
+  },
+  "9": {
+   "department": "Ministry of Coal",
+   "ministry": "Ministry of Coal"
+  },
+  "10": {
+   "department": "Department of Commerce",
+   "ministry": "Ministry of Commerce and Industry"
+  },
+  "11": {
+   "department": "Department for Promotion of Industry and Internal Trade",
+   "ministry": "Ministry of Commerce and Industry"
+  },
+  "12": {
+   "department": "Department of Posts",
+   "ministry": "Ministry of Communications"
+  },
+  "13": {
+   "department": "Department of Telecommunications",
+   "ministry": "Ministry of Communications"
+  },
+  "14": {
+   "department": "Department of Consumer Affairs",
+   "ministry": "Ministry of Consumer Affairs, Food and Public Distribution"
+  },
+  "15": {
+   "department": "Department of Food and Public Distribution",
+   "ministry": "Ministry of Consumer Affairs, Food and Public Distribution"
+  },
+  "16": {
+   "department": "Ministry of Cooperation",
+   "ministry": "Ministry of Cooperation"
+  },
+  "17": {
+   "department": "Ministry of Corporate Affairs",
+   "ministry": "Ministry of Corporate Affairs"
+  },
+  "18": {
+   "department": "Ministry of Culture",
+   "ministry": "Ministry of Culture"
+  },
+  "21": {
+   "department": "Capital Outlay on Defence Services",
+   "ministry": "Ministry of Defence"
+  },
+  "22": {
+   "department": "Defence Pensions",
+   "ministry": "Ministry of Defence"
+  },
+  "23": {
+   "department": "Ministry of Development of North Eastern Region",
+   "ministry": "Ministry of Development of North Eastern Region"
+  },
+  "24": {
+   "department": "Ministry of Earth Sciences",
+   "ministry": "Ministry of Earth Sciences"
+  },
+  "25": {
+   "department": "Department of School Education and Literacy",
+   "ministry": "Ministry of Education"
+  },
+  "26": {
+   "department": "Department of Higher Education",
+   "ministry": "Ministry of Education"
+  },
+  "27": {
+   "department": "Ministry of Electronics and Information Technology",
+   "ministry": "Ministry of Electronics and Information Technology"
+  },
+  "28": {
+   "department": "Ministry of Environment, Forests and Climate Change",
+   "ministry": "Ministry of Environment, Forests and Climate Change"
+  },
+  "29": {
+   "department": "Ministry of External Affairs",
+   "ministry": "Ministry of External Affairs"
+  },
+  "30": {
+   "department": "Department of Economic Affairs",
+   "ministry": "Ministry of Finance"
+  },
+  "31": {
+   "department": "Department of Expenditure",
+   "ministry": "Ministry of Finance"
+  },
+  "32": {
+   "department": "Department of Financial Services",
+   "ministry": "Ministry of Finance"
+  },
+  "33": {
+   "department": "Department of Public Enterprises",
+   "ministry": "Ministry of Finance"
+  },
+  "35": {
+   "department": "Department of Revenue",
+   "ministry": "Ministry of Finance"
+  },
+  "36": {
+   "department": "Direct Taxes",
+   "ministry": "Ministry of Finance"
+  },
+  "37": {
+   "department": "Indirect Taxes",
+   "ministry": "Ministry of Finance"
+  },
+  "38": {
+   "department": "Indian Audit and Accounts Department",
+   "ministry": "Ministry of Finance"
+  },
+  "39": {
+   "department": "Interest Payments",
+   "ministry": "Ministry of Finance"
+  },
+  "40": {
+   "department": "Repayment of Debt",
+   "ministry": "Ministry of Finance"
+  },
+  "41": {
+   "department": "Pensions",
+   "ministry": "Ministry of Finance"
+  },
+  "42": {
+   "department": "Transfers to States",
+   "ministry": "Ministry of Finance"
+  },
+  "43": {
+   "department": "Department of Fisheries",
+   "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying"
+  },
+  "44": {
+   "department": "Department of Animal Husbandry and Dairying",
+   "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying"
+  },
+  "45": {
+   "department": "Ministry of Food Processing Industries",
+   "ministry": "Ministry of Food Processing Industries"
+  },
+  "46": {
+   "department": "Department of Health and Family Welfare",
+   "ministry": "Ministry of Health and Family Welfare"
+  },
+  "47": {
+   "department": "Department of Health Research",
+   "ministry": "Ministry of Health and Family Welfare"
+  },
+  "48": {
+   "department": "Ministry of Heavy Industries",
+   "ministry": "Ministry of Heavy Industries"
+  },
+  "49": {
+   "department": "Ministry of Home Affairs",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "50": {
+   "department": "Cabinet",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "51": {
+   "department": "Police",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "52": {
+   "department": "Andaman and Nicobar Islands",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "53": {
+   "department": "Chandigarh",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "54": {
+   "department": "Dadra and Nagar Haveli and Daman and Diu",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "55": {
+   "department": "Ladakh",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "56": {
+   "department": "Lakshadweep",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "57": {
+   "department": "Transfers to Delhi",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "59": {
+   "department": "Transfers to Puducherry",
+   "ministry": "Ministry of Home Affairs"
+  },
+  "60": {
+   "department": "Ministry of Housing and Urban Affairs",
+   "ministry": "Ministry of Housing and Urban Affairs"
+  },
+  "61": {
+   "department": "Ministry of Information and Broadcasting",
+   "ministry": "Ministry of Information and Broadcasting"
+  },
+  "62": {
+   "department": "Department of Water Resources, River Development and Ganga Rejuvenation",
+   "ministry": "Ministry of Jal Shakti"
+  },
+  "63": {
+   "department": "Department of Drinking Water and Sanitation",
+   "ministry": "Ministry of Jal Shakti"
+  },
+  "64": {
+   "department": "Ministry of Labour and Employment",
+   "ministry": "Ministry of Labour and Employment"
+  },
+  "65": {
+   "department": "Law and Justice",
+   "ministry": "Ministry of Law and Justice"
+  },
+  "66": {
+   "department": "Election Commission",
+   "ministry": "Ministry of Law and Justice"
+  },
+  "67": {
+   "department": "Supreme Court of India",
+   "ministry": "Ministry of Law and Justice"
+  },
+  "68": {
+   "department": "Ministry of Micro, Small and Medium Enterprises",
+   "ministry": "Ministry of Micro, Small and Medium Enterprises"
+  },
+  "69": {
+   "department": "Ministry of Mines",
+   "ministry": "Ministry of Mines"
+  },
+  "70": {
+   "department": "Ministry of Minority Affairs",
+   "ministry": "Ministry of Minority Affairs"
+  },
+  "71": {
+   "department": "Ministry of New and Renewable Energy",
+   "ministry": "Ministry of New and Renewable Energy"
+  },
+  "72": {
+   "department": "Ministry of Panchayati Raj",
+   "ministry": "Ministry of Panchayati Raj"
+  },
+  "73": {
+   "department": "Ministry of Parliamentary Affairs",
+   "ministry": "Ministry of Parliamentary Affairs"
+  },
+  "74": {
+   "department": "Ministry of Personnel, Public Grievances and Pensions",
+   "ministry": "Ministry of Personnel, Public Grievances and Pensions"
+  },
+  "75": {
+   "department": "Central Vigilance Commission",
+   "ministry": "Ministry of Personnel, Public Grievances and Pensions"
+  },
+  "76": {
+   "department": "Ministry of Petroleum and Natural Gas",
+   "ministry": "Ministry of Petroleum and Natural Gas"
+  },
+  "77": {
+   "department": "Ministry of Planning",
+   "ministry": "Ministry of Planning"
+  },
+  "78": {
+   "department": "Ministry of Ports, Shipping and Waterways",
+   "ministry": "Ministry of Ports, Shipping and Waterways"
+  },
+  "79": {
+   "department": "Ministry of Power",
+   "ministry": "Ministry of Power"
+  },
+  "80": {
+   "department": "Staff, Household and Allowances of the President",
+   "ministry": "The President, Parliament, Union Public Service Commission and the Secretariat of the Vice President"
+  },
+  "81": {
+   "department": "Lok Sabha",
+   "ministry": "The President, Parliament, Union Public Service Commission and the Secretariat of the Vice President"
+  },
+  "82": {
+   "department": "Rajya Sabha",
+   "ministry": "The President, Parliament, Union Public Service Commission and the Secretariat of the Vice President"
+  },
+  "84": {
+   "department": "Union Public Service Commission",
+   "ministry": "The President, Parliament, Union Public Service Commission and the Secretariat of the Vice President"
+  },
+  "85": {
+   "department": "Ministry of Railways",
+   "ministry": "Ministry of Railways"
+  },
+  "86": {
+   "department": "Ministry of Road Transport and Highways",
+   "ministry": "Ministry of Road Transport and Highways"
+  },
+  "87": {
+   "department": "Department of Rural Development",
+   "ministry": "Ministry of Rural Development"
+  },
+  "88": {
+   "department": "Department of Land Resources",
+   "ministry": "Ministry of Rural Development"
+  },
+  "89": {
+   "department": "Department of Science and Technology",
+   "ministry": "Ministry of Science and Technology"
+  },
+  "90": {
+   "department": "Department of Biotechnology",
+   "ministry": "Ministry of Science and Technology"
+  },
+  "91": {
+   "department": "Department of Scientific and Industrial Research",
+   "ministry": "Ministry of Science and Technology"
+  },
+  "92": {
+   "department": "Ministry of Skill Development and Entrepreneurship",
+   "ministry": "Ministry of Skill Development and Entrepreneurship"
+  },
+  "93": {
+   "department": "Department of Social Justice and Empowerment",
+   "ministry": "Ministry of Social Justice and Empowerment"
+  },
+  "94": {
+   "department": "Department of Empowerment of Persons with Disabilities",
+   "ministry": "Ministry of Social Justice and Empowerment"
+  },
+  "95": {
+   "department": "Department of Space",
+   "ministry": "Department of Space"
+  },
+  "96": {
+   "department": "Ministry of Statistics and Programme Implementation",
+   "ministry": "Ministry of Statistics and Programme Implementation"
+  },
+  "97": {
+   "department": "Ministry of Steel",
+   "ministry": "Ministry of Steel"
+  },
+  "98": {
+   "department": "Ministry of Textiles",
+   "ministry": "Ministry of Textiles"
+  },
+  "99": {
+   "department": "Ministry of Tourism",
+   "ministry": "Ministry of Tourism"
+  },
+  "100": {
+   "department": "Ministry of Tribal Affairs",
+   "ministry": "Ministry of Tribal Affairs"
+  },
+  "101": {
+   "department": "Ministry of Women and Child Development",
+   "ministry": "Ministry of Women and Child Development"
+  },
+  "102": {
+   "department": "Ministry of Youth Affairs and Sports",
+   "ministry": "Ministry of Youth Affairs and Sports"
+  }
+ }
+}

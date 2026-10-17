@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>India Budget Explorer</title>
+<meta name="description" content="Union education spending and the whole Union budget, read straight from the Expenditure Budget and Demands for Grants on indiabudget.gov.in.">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" integrity="sha512-vc58qvvBdrDR4etbxMdlTt4GBQk1qjvyORR2nrsPsFPyrs+/u5c3+1Ct6upOgdZoIl7eq6k3a1UPDSNAQi/32A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <h1>India Budget Explorer</h1>
+    <p class="standfirst">
+      What the Union government budgets for education, on the three definitions
+      that do not agree with each other &mdash; and, behind it, every rupee of
+      the Union budget by ministry and by account head.
+    </p>
+    <p class="srcline" id="srcline"></p>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <p class="loading" id="loading">Loading the budget&hellip;</p>
+</main>
+
+<div class="wrap" hidden id="content">
+
+  <section id="headline">
+    <p class="kicker">Education, three ways</p>
+    <h2>There is no single education budget</h2>
+    <p class="lede">
+      Three defensible definitions, three different numbers, all for the same
+      year and the same government. Which one a headline uses changes the
+      answer by tens of thousands of crore, so each series here is labelled
+      with the definition behind it.
+    </p>
+
+    <dl class="stats" id="headline-stats"></dl>
+
+    <div class="controls">
+      <label class="ctl">
+        <span>Measure</span>
+        <span class="segmented" id="measure-toggle" role="group"></span>
+      </label>
+      <label class="ctl">
+        <span>Basis</span>
+        <span class="segmented" id="basis-toggle" role="group"></span>
+      </label>
+    </div>
+
+    <figure>
+      <div class="chart" id="edu-chart"></div>
+      <div class="legend" id="edu-legend"></div>
+      <figcaption id="edu-caption"></figcaption>
+    </figure>
+
+    <div class="note" id="definitions-note"></div>
+  </section>
+
+  <section id="utilisation">
+    <p class="kicker">Budgeted against spent</p>
+    <h2>The budget estimate is not the spending</h2>
+    <p class="lede">
+      Each year is published three times: as a budget estimate in February, as
+      a revised estimate a year later, and as an audited actual the year after
+      that. They rarely agree, and the gap runs both ways &mdash; a revised
+      estimate can cut a programme mid-year or top it up. Quoting the budget
+      estimate as though it were spending is the most common error in writing
+      about this money.
+    </p>
+    <figure>
+      <div class="chart" id="util-chart"></div>
+      <div class="legend" id="util-legend"></div>
+      <figcaption id="util-caption"></figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table id="util-table"><thead></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section id="classification">
+    <p class="kicker">Where the money sits in the accounts</p>
+    <h2>Most of the education ministry's money is not booked as education</h2>
+    <p class="lede">
+      This is the trap that makes Union and state education figures
+      irreconcilable. The ministry's largest single account head is
+      grants-in-aid to state governments, not general education: the money is
+      handed to states, which then book the spending in their own budgets
+      under education. Add the two governments' education totals together and
+      you count the same rupee twice.
+    </p>
+    <figure>
+      <div class="chart" id="class-chart"></div>
+      <div class="legend" id="class-legend"></div>
+      <figcaption id="class-caption"></figcaption>
+    </figure>
+    <div class="note warn" id="double-count-note"></div>
+  </section>
+
+  <section id="whole">
+    <p class="kicker">The whole budget</p>
+    <h2>Every ministry and department</h2>
+    <p class="lede">
+      The same pipeline, with the education filter taken off. Each row is a
+      department's demand for grants, net of the receipts the document nets
+      against it. Sorted by the latest year; click a column to re-sort.
+    </p>
+    <div class="controls">
+      <label class="ctl">
+        <span>Find a department</span>
+        <input type="search" id="dept-search" placeholder="education, defence, railways&hellip;" autocomplete="off">
+      </label>
+      <label class="ctl">
+        <span>Show</span>
+        <span class="segmented" id="whole-measure" role="group"></span>
+      </label>
+      <label class="ctl">
+        <span>&nbsp;</span>
+        <button class="rowbtn" id="export-depts">Download CSV</button>
+      </label>
+    </div>
+    <div class="tablewrap">
+      <table id="dept-table"><thead></thead><tbody></tbody></table>
+    </div>
+    <figcaption id="dept-caption"></figcaption>
+  </section>
+
+  <section id="functional">
+    <p class="kicker">By account head</p>
+    <h2>The functional classification</h2>
+    <p class="lede">
+      Major heads from the List of Major and Minor Heads of Account, which the
+      Union and every state share. 2202 means general education in Uttar
+      Pradesh exactly as it does in Delhi, which is what makes this the
+      backbone for comparing governments. Education heads are marked.
+    </p>
+    <div class="controls">
+      <label class="ctl">
+        <span>Heads</span>
+        <span class="segmented" id="head-filter" role="group"></span>
+      </label>
+      <label class="ctl">
+        <span>&nbsp;</span>
+        <button class="rowbtn" id="export-heads">Download CSV</button>
+      </label>
+    </div>
+    <div class="tablewrap">
+      <table id="head-table"><thead></thead><tbody></tbody></table>
+    </div>
+    <figcaption id="head-caption"></figcaption>
+  </section>
+
+</div>
+
+<footer class="wrap">
+  <div id="coverage"></div>
+
+  <h3>What this covers, and what it does not</h3>
+  <ul>
+    <li><strong>Union only, for now.</strong> State budgets are the next layer;
+      they need RBI's <em>State Finances: A Study of Budgets</em>, not this
+      pipeline.</li>
+    <li><strong>Nominal rupees.</strong> No inflation adjustment and no share
+      of GDP yet, because neither a deflator nor a GDP series is loaded.
+      Shares of total Union expenditure are computed and are safe to compare
+      across years.</li>
+    <li><strong>Never add Union and state education totals.</strong> Central
+      transfers appear in both. For a combined figure, the sources are the
+      ministry's <em>Analysis of Budgeted Expenditure on Education</em> or the
+      CAG's combined accounts.</li>
+  </ul>
+
+  <h3>Sources</h3>
+  <ul>
+    <li><a href="https://www.indiabudget.gov.in/">indiabudget.gov.in</a> &mdash;
+      Expenditure Budget, Demands for Grants, every edition.</li>
+    <li>Each figure in <code>data/processed/union_demands.csv</code> carries the
+      edition, URL and sheet it was read from.</li>
+  </ul>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
