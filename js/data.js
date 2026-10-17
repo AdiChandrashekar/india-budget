@@ -2,14 +2,30 @@
 
 export const PREFERENCE = ["A", "RE", "BE"];   // what "best available" means
 
-export async function load() {
-  const res = await fetch("data/union.json");
-  if (!res.ok) throw new Error(`data/union.json: ${res.status} ${res.statusText}`);
+async function loadJson(path, required) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`${path}: ${res.status} ${res.statusText}`);
   const d = await res.json();
-  if (!d.meta || !d.totals || !d.education) {
-    throw new Error("data/union.json is missing its top-level blocks");
+  for (const key of required) {
+    if (!d[key]) throw new Error(`${path} is missing its ${key} block`);
   }
   return d;
+}
+
+export function load() {
+  return loadJson("data/union.json", ["meta", "totals", "education"]);
+}
+
+// The state layer is a separate file and a separate pipeline. The page works
+// without it — the Union sections render on their own — so a failure here is
+// reported in place rather than taking the whole page down.
+export async function loadStates() {
+  try {
+    return await loadJson("data/states.json", ["meta", "states", "series"]);
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }
 
 // A series is {year: {A|RE|BE: amount}}. Pick one number per year.

@@ -6,7 +6,16 @@ An interactive tool for the Union budget. It starts from education, because
 that is where the definitional problem is sharpest, and carries the whole
 budget behind it: all 102 demands for grants, every major head of account.
 
-**The argument.** There is no single education budget. The Ministry of
+**The argument.** India has chased one education target since 1966 — six per
+cent of GDP, proposed by the Kothari Commission, restated by the National
+Education Policy in 2020. It has never reached it, and it cannot agree how far
+short it falls: published answers range from 2.7% to 4.6% of GDP depending on
+what gets counted. Meanwhile the half of the bill nobody argues about is the
+larger one. On the functional account heads both tiers share, the states and
+union territories budget about nine times what the Union does, and education's
+claim on their own budgets has fallen from 16.6% in 2010-11 to 13.1%.
+
+There is no single education budget. The Ministry of
 Education's own demands come to Rs 1.39 lakh crore in 2026-27. The functional
 account heads for education, sports, art and culture come to Rs 1.17 lakh
 crore. Education alone, without sports and culture, comes to Rs 1.10 lakh

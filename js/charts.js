@@ -645,3 +645,165 @@ export function legend(host, items) {
 }
 
 export { cssVar };
+
+// --------------------------------------------------------------------------
+// Benchmark plot: several measurements of the same quantity against one
+// target. The measurements disagree because they use different definitions,
+// so they are one hue, not a categorical set — the variation is in the method,
+// not in the thing being measured. The target is a reference rule in ink, not
+// a series.
+// --------------------------------------------------------------------------
+
+export function benchmarkPlot(host, opts) {
+  if (!d3) return;
+  const { marks, target, max, format, height = 220 } = opts;
+  const narrow = hostWidth(host) < NARROW;
+  const margin = { top: 34, right: narrow ? 16 : 30, bottom: 34, left: narrow ? 16 : 30 };
+  const { svg, g, inner } = frame(host, height, margin);
+  const tip = tooltipFor(host);
+
+  const x = d3.scaleLinear().domain([0, max]).range([0, inner.w]);
+  const ink = cssVar("--ink", "#15181c");
+  const accent = cssVar("--s1", "#2a78d6");
+  const ground = cssVar("--ground", "#faf6f0");
+
+  const axisY = inner.h - 6;
+  g.append("line")
+    .attr("x1", 0).attr("x2", inner.w).attr("y1", axisY).attr("y2", axisY)
+    .attr("stroke", cssVar("--rule-strong", "#c9c1b4"));
+  g.append("g").attr("class", "axis")
+    .attr("transform", `translate(0,${axisY})`)
+    .call(d3.axisBottom(x).ticks(narrow ? 4 : 7).tickFormat(format).tickSize(0).tickPadding(9))
+    .select(".domain").remove();
+
+  // the target
+  g.append("line")
+    .attr("x1", x(target.value)).attr("x2", x(target.value))
+    .attr("y1", -10).attr("y2", axisY)
+    .attr("stroke", ink).attr("stroke-width", 1.5);
+  const tl = g.append("text").attr("class", "annot")
+    .attr("x", x(target.value)).attr("y", -18).attr("text-anchor", "end");
+  tl.append("tspan").attr("class", "annot-strong").text(target.label);
+
+  // the measurements, stacked so their labels never collide
+  const step = Math.max(22, (axisY - 16) / Math.max(marks.length, 1));
+  marks.forEach((m, i) => {
+    const cy = 10 + i * step;
+    g.append("line")
+      .attr("x1", x(m.value)).attr("x2", x(target.value))
+      .attr("y1", cy).attr("y2", cy)
+      .attr("stroke", cssVar("--rule", "#e4ddd2")).attr("stroke-width", 1);
+    const dot = g.append("circle")
+      .attr("cx", x(m.value)).attr("cy", cy).attr("r", 6)
+      .attr("fill", accent).attr("stroke", ground).attr("stroke-width", 2);
+    const label = g.append("text")
+      .attr("class", "mark-label")
+      .attr("x", x(m.value) - 11).attr("y", cy).attr("dy", "0.34em")
+      .attr("text-anchor", "end")
+      .attr("fill", ink);
+    label.text(`${format(m.value)}`);
+    if (!narrow) {
+      g.append("text").attr("class", "annot")
+        .attr("x", x(m.value) + 12).attr("y", cy).attr("dy", "0.34em")
+        .text(m.label);
+    }
+    dot.on("pointerleave", () => hideTip(tip))
+      .on("pointermove", (event) => {
+        const [mx, my] = d3.pointer(event, g.node());
+        const pos = toHostPx(host, svg.node(), margin.left + mx, margin.top + my);
+        showTip(tip, host, pos.x, pos.y, m.label, [
+          { color: accent, label: m.detail || "share of GDP", value: format(m.value) },
+          { label: "short of target by", value: format(target.value - m.value) },
+        ]);
+      });
+  });
+}
+
+// --------------------------------------------------------------------------
+// Ranked bars: one measure across many entities, ordered. One series, so one
+// hue for every bar — colouring by value would burn the only free channel on
+// information the bar length already carries. A reference rule marks the
+// aggregate.
+// --------------------------------------------------------------------------
+
+export function rankedBars(host, opts) {
+  if (!d3) return;
+  const {
+    items, format, reference = null, highlight = [], barHeight = 17,
+  } = opts;
+  const narrow = hostWidth(host) < NARROW;
+  const margin = {
+    top: reference ? 34 : 14,
+    right: narrow ? 46 : 64,
+    bottom: 30,
+    left: narrow ? 104 : 150,
+  };
+  const height = margin.top + margin.bottom + items.length * barHeight;
+  const { svg, g, inner } = frame(host, height, margin);
+  const tip = tooltipFor(host);
+
+  const y = d3.scaleBand().domain(items.map((d) => d.name))
+    .range([0, inner.h]).padding(0.28);
+  const max = d3.max(items, (d) => d.value) ?? 1;
+  const x = d3.scaleLinear().domain([0, max * 1.02]).nice().range([0, inner.w]);
+
+  const accent = cssVar("--s1", "#2a78d6");
+  const dim = cssVar("--dim", "#d9d2c6");
+  const ink = cssVar("--ink", "#15181c");
+
+  g.append("g").attr("class", "axis")
+    .attr("transform", `translate(0,${inner.h})`)
+    .call(d3.axisBottom(x).ticks(narrow ? 4 : 6).tickFormat(format).tickSize(0).tickPadding(8))
+    .select(".domain").remove();
+  g.selectAll(null).data(x.ticks(narrow ? 4 : 6)).join("line")
+    .attr("class", "gridline")
+    .attr("x1", (d) => x(d)).attr("x2", (d) => x(d))
+    .attr("y1", 0).attr("y2", inner.h);
+
+  // Entity names are long and the gutter is short on a phone. Truncate to
+  // what fits rather than letting the text spill outside the svg, which
+  // would give the whole page a horizontal scrollbar.
+  const budget = margin.left - 10;
+  const fit = (name) => {
+    const chars = Math.floor(budget / 6.1);
+    return name.length > chars ? `${name.slice(0, Math.max(3, chars - 1))}…` : name;
+  };
+  g.append("g").attr("class", "axis")
+    .call(d3.axisLeft(y).tickSize(0).tickPadding(8).tickFormat(fit))
+    .select(".domain").remove();
+
+  for (const d of items) {
+    const strong = highlight.includes(d.name);
+    const bar = g.append("rect")
+      .attr("x", 0).attr("y", y(d.name))
+      .attr("width", Math.max(0, x(d.value)))
+      .attr("height", y.bandwidth())
+      .attr("fill", strong ? accent : dim)
+      .attr("rx", 1);
+    g.append("text").attr("class", "mark-label")
+      .attr("x", x(d.value) + 7)
+      .attr("y", y(d.name) + y.bandwidth() / 2).attr("dy", "0.34em")
+      .attr("fill", strong ? ink : cssVar("--ink-2", "#4d545c"))
+      .text(format(d.value));
+    bar.on("pointerleave", () => { hideTip(tip); bar.attr("opacity", 1); })
+      .on("pointermove", (event) => {
+        bar.attr("opacity", 0.78);
+        const [mx, my] = d3.pointer(event, g.node());
+        const pos = toHostPx(host, svg.node(), margin.left + mx, margin.top + my);
+        showTip(tip, host, pos.x, pos.y, d.name, [
+          { color: strong ? accent : dim, label: d.detail || "value", value: format(d.value) },
+        ].concat(d.extra ? [{ label: d.extra.label, value: d.extra.value }] : []));
+      });
+  }
+
+  if (reference) {
+    g.append("line")
+      .attr("x1", x(reference.value)).attr("x2", x(reference.value))
+      .attr("y1", -8).attr("y2", inner.h)
+      .attr("stroke", ink).attr("stroke-width", 1.5)
+      .attr("stroke-dasharray", "3 3");
+    const t = g.append("text").attr("class", "annot")
+      .attr("x", x(reference.value)).attr("y", -16).attr("text-anchor", "middle");
+    t.append("tspan").attr("class", "annot-strong").text(reference.label);
+  }
+}

@@ -126,8 +126,39 @@ hues, no value-ramp on nominal categories, no rainbow, no number on every
 point, no borders around marks, no dashed gridlines, no serif hero figure, no
 tooltip-gated values.
 
+## Narrative rule
+
+The page makes an argument, so two kinds of statement sit on it and they are
+never blurred:
+
+- **Computed** from the budget documents. Every rupee figure, share and ratio
+  on the page is read from `data/union.json` or `data/states.json` and
+  recomputed on render. None is typed into the markup.
+- **Cited** from outside. The 6%-of-GDP target, the published GDP ratios, the
+  devolution change and the scheme shares are not in this data. Each is
+  attributed in the "Claims from outside the data" block in the footer, and
+  the chart that uses them says in its caption that they are cited, not
+  computed.
+
+A caption states the unit, the definition and the caveat. It never repeats
+what the title already says, and it never asserts a cause the data cannot
+carry: where two things merely coincide in time, the page says so.
+
+## Forms added for the state layer
+
+| Figure | Form | Why |
+| --- | --- | --- |
+| 6% target against published measures | benchmark dot plot, one hue, target as a rule in ink | The measures differ by method, not identity, so they are not a categorical set. |
+| States against Union over time | two-series line | The gap is the subject. Both read on the same estimate basis each year. |
+| Education's share of state budgets | single line, annotated | One series needs no legend box, but gets one here because the dashed-estimate key still has to be explained. |
+| Every state ranked | ranked bars, one hue, aggregate as a reference rule | Colouring bars by value would double-encode length. |
+
 ## Change log
 
 - 2026-10-17 — Resolved: FT + NYT Upshot editorial-statistical. Replaced the
   first-pass generic dashboard look (bordered chart cards, grouped bars,
   serif stat values).
+- 2026-10-17 — Added the state layer and the narrative rule above: the
+  benchmark dot plot, the two-tier comparison and the ranked bars. Charts
+  made responsive to series length after the Union series went from 8 years
+  to 25.
