@@ -197,8 +197,12 @@ export function lineChart(host, opts) {
   const min = Math.min(0, d3.min(all) ?? 0);
   const y = d3.scaleLinear().domain([min, max * 1.1]).nice().range([inner.h, 0]);
 
+  // With a quarter-century on the axis every label collides, so thin the
+  // ticks to roughly nine on a desktop and five on a phone. The crosshair
+  // still reports the exact year, so nothing is lost by not printing them all.
+  const every = Math.max(1, Math.ceil(years.length / (narrow ? 5 : 9)));
   yAxis(g, y, inner.w, format, narrow ? 4 : 5);
-  xAxis(g, x, inner.h, null, narrow ? 2 : 1);
+  xAxis(g, x, inner.h, null, every);
 
   // the spread between the highest and lowest definition, where all are known
   if (band && series.length > 1) {
@@ -240,13 +244,16 @@ export function lineChart(host, opts) {
         .attr("stroke-dasharray", estimate ? "4 4" : null);
     }
 
+    // Markers thin out as the series lengthens; the dashed-versus-solid
+    // stroke still carries estimate-versus-outturn when they get small.
+    const dense = years.length > 16;
     g.selectAll(null).data(pts).join("circle")
       .attr("cx", (p) => x(p.year))
       .attr("cy", (p) => y(p.value))
-      .attr("r", 4)
+      .attr("r", dense ? 2.6 : 4)
       .attr("fill", (p) => (p.basis === "A" ? s.color : cssVar("--ground", "#faf6f0")))
       .attr("stroke", s.color)
-      .attr("stroke-width", 2);
+      .attr("stroke-width", dense ? 1.5 : 2);
 
     const last = pts[pts.length - 1];
     ends.push({
@@ -262,7 +269,9 @@ export function lineChart(host, opts) {
   // than squeezed over the plot.
   if (!narrow) {
     placeEndLabels(g, ends, inner.w, inner.h);
-    if (annotation) drawAnnotation(g, annotation, x, y, inner);
+    for (const a of [].concat(annotation || [])) {
+      drawAnnotation(g, a, x, y, inner);
+    }
   }
 
   // crosshair: readers aim at a year, never at a 2px line

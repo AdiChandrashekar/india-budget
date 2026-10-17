@@ -177,7 +177,7 @@ function renderDefinitions() {
   const wideYear = latest;
   const hi = Math.max(...vals);
   const lo = Math.min(...vals);
-  const annotation = state.measure === "share" ? null : {
+  const annotations = state.measure === "share" ? [] : [{
     year: wideYear,
     value: hi,
     from: hi,
@@ -187,7 +187,29 @@ function renderDefinitions() {
     dx: -14,
     dy: -34,
     anchor: "end",
-  };
+  }];
+
+  // A reader meeting a cliff in a published chart should be told whether it is
+  // the data or the parser. This one is the data: the ministry's budget fell
+  // about 17% in 2015-16 while total Union spending barely moved. The timing
+  // is that of the 14th Finance Commission award, which raised the states'
+  // share of central taxes from 32% to 42% and restructured centrally
+  // sponsored schemes - stated here as the coincidence it is, not as a
+  // proven cause, because this tool reads budget documents and nothing more.
+  const drop = "2015-16";
+  const before = valueAt(DATA.education.moe.series, "2014-15", "BE");
+  const after = valueAt(DATA.education.moe.series, drop, "BE");
+  if (state.measure !== "share" && before && after && after < before * 0.92) {
+    annotations.push({
+      year: drop,
+      value: after,
+      headline: `${(100 * (before - after) / before).toFixed(0)}% fall in 2015-16`,
+      detail: "the year the 14th Finance Commission award began",
+      dx: 10,
+      dy: 46,
+      anchor: "start",
+    });
+  }
 
   lineChart($("edu-plot"), {
     series,
@@ -195,8 +217,8 @@ function renderDefinitions() {
     format: state.measure === "share" ? (v) => `${v.toFixed(1)}%` : axisFormatter(peak),
     tipFormat: fmtValue(),
     band: true,
-    annotation,
-    height: 420,
+    annotation: annotations,
+    height: 440,
   });
 
   legend($("edu-legend"), [
@@ -251,12 +273,17 @@ function renderDefinitions() {
 
 function renderUtilisation() {
   const series = DATA.education.moe.series;
-  const rows = DATA.meta.years.map((year) => ({
+  // Only the years where the comparison can actually be made. Before the
+  // pipeline reaches the Plan-era actuals there is nothing to compare a
+  // budget estimate against, and a column of lone dots is not a dumbbell.
+  const all = DATA.meta.years.map((year) => ({
     year,
     be: valueAt(series, year, "BE"),
     re: valueAt(series, year, "RE"),
     a: valueAt(series, year, "A"),
-  })).filter((r) => r.be != null || r.re != null || r.a != null);
+  }));
+  const rows = all.filter((r) => r.be != null && r.a != null);
+  const omitted = all.length - rows.length;
 
   const utilPeak = Math.max(...rows.flatMap((r) => [r.be, r.re, r.a].filter((v) => v != null)));
   dumbbell($("util-plot"), {
@@ -266,7 +293,7 @@ function renderUtilisation() {
     // Only say what we actually know: a missing figure here means the
     // edition that carries it has not been parsed, not that the government
     // failed to publish it.
-    labelOf: (r) => (r.be != null && r.a != null ? "" : "incomplete triple"),
+    labelOf: () => "",
   });
 
   legend($("util-legend"), [
@@ -284,12 +311,17 @@ function renderUtilisation() {
         + `${Math.min(...ratios).toFixed(0)}% and ${Math.max(...ratios).toFixed(0)}% `
         + `of the opening budget estimate. `
       : "")
-    + "A row with one dot is a year whose other figures sit in an edition the "
-    + "pipeline has not parsed yet.";
+    + (omitted
+      ? `${omitted} earlier years are left out: the Demands for Grants of the `
+        + `Plan era print no actuals column, so there is nothing to compare `
+        + `their estimates against. The table below carries them.`
+      : "");
 
+  // Every year, including the ones the chart leaves out: the table view is
+  // the figure's complete twin, so nothing is reachable only by hovering.
   buildTable($("util-table"),
     ["Year", "Budget estimate", "Revised", "Actuals", "Actuals as % of BE"],
-    rows.map((r) => ({
+    all.map((r) => ({
       cells: [
         r.year, crore(r.be), crore(r.re), crore(r.a),
         r.be && r.a ? pct((100 * r.a) / r.be, 1) : "—",

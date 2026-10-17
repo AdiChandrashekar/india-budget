@@ -103,10 +103,37 @@ near("the two departments sum to the ministry",
   valueAt(school.series, "2026-27", "BE") + valueAt(higher.series, "2026-27", "BE"),
   valueAt(data.education.moe.series, "2026-27", "BE"), 0.01);
 
-// The renumbering this pipeline exists to survive.
-ok("School Education spans the 57 -> 25 renumbering",
-  school.demand_numbers["2019-20"] === "57" && school.demand_numbers["2026-27"] === "25",
+// The renumbering this pipeline exists to survive. Across the editions parsed
+// so far the School Education demand has been numbered 55, 56, 57, 58, 59, 24
+// and 25 — it wanders year to year and then jumps when the list is
+// re-alphabetised. Keying a series on the number would splice unrelated
+// ministries together, so the test is that one department holds one series
+// through all of it, not that any particular year carries any particular
+// number. Two anchors keep it honest about which end is which.
+const schoolNumbers = Object.values(school.demand_numbers);
+ok("School Education survives repeated renumbering",
+  new Set(schoolNumbers).size >= 4
+  && school.demand_numbers["2018-19"] === "58"
+  && school.demand_numbers["2026-27"] === "25",
   JSON.stringify(school.demand_numbers));
+
+ok("every year of the series carries a demand number",
+  dataYears.every((y) => typeof school.demand_numbers[y] === "string"),
+  dataYears.filter((y) => !school.demand_numbers[y]).join(", "));
+
+// Actuals stop where the Plan-era documents do: editions up to 2016-17 print
+// Plan, Non-Plan and Total for three years and no actuals column at all. The
+// charts must not imply an outturn exists for those years.
+const actualYears = dataYears.filter((y) => valueAt(data.totals, y, "A") != null);
+// The newest edition reports actuals for t-2, so the run ends two years
+// short of the latest budget estimate. What matters is that it has no holes.
+ok("actuals form one unbroken run at the recent end",
+  actualYears.length > 0
+  && fyStart(dataYears[dataYears.length - 1])
+    - fyStart(actualYears[actualYears.length - 1]) <= 2
+  && actualYears.every((y, i) => i === 0
+    || fyStart(y) === fyStart(actualYears[i - 1]) + 1),
+  actualYears.join(", "));
 
 // ---------------------------------------------------------------------------
 // Relationships that must hold
