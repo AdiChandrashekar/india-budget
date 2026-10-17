@@ -10,3 +10,9 @@ node_modules/
 Thumbs.db
 *.tmp
 data/processed/union_pdf_cache/
+
+# The PDF-era extraction before it is merged into union_demands.csv. It is an
+# intermediate: regenerable with scripts/parse_union_pdf.py from the cached
+# raw PDFs, 32 MB, and nothing reads it. The merged long table is the archive
+# worth keeping, and the site reads only data/union.json.
+data/processed/union_demands_pdf.csv
