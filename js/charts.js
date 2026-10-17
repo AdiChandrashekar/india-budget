@@ -807,3 +807,232 @@ export function rankedBars(host, opts) {
     t.append("tspan").attr("class", "annot-strong").text(reference.label);
   }
 }
+
+// --------------------------------------------------------------------------
+// Choropleth. Sequential encoding: one hue, light to dark, because the thing
+// shown is magnitude, not identity. The ramp is the documented blue scale;
+// its lightest step may recede toward the surface, since near-zero should
+// read as near-nothing.
+// --------------------------------------------------------------------------
+
+const BLUE_RAMP_LIGHT = [
+  "#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b",
+];
+const BLUE_RAMP_DARK = [
+  "#15314f", "#1c4472", "#215898", "#2a6fbe", "#3987e5", "#6da7ec", "#9ec5f4",
+];
+
+function isDark() {
+  const stamped = document.documentElement.getAttribute("data-theme");
+  if (stamped) return stamped === "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+export function choropleth(host, opts) {
+  if (!d3) return null;
+  const {
+    features, values, format, height = 520, label,
+    noDataLabel = "no state budget of its own",
+  } = opts;
+  host.textContent = "";
+  const width = hostWidth(host);
+  const svg = d3.select(host).append("svg")
+    .attr("viewBox", "0 0 " + width + " " + height)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .attr("role", "img");
+  const tip = tooltipFor(host);
+
+  const collection = { type: "FeatureCollection", features };
+  // India is roughly as tall as it is wide, so on a wide figure the map is
+  // limited by height and the sides go empty. Fit it to a centred column and
+  // use the space that frees up for the key.
+  const mapW = Math.min(width, height * 0.95);
+  const left = (width - mapW) / 2;
+  const projection = d3.geoMercator().fitExtent(
+    [[left + 10, 12], [left + mapW - 10, height - 16]], collection);
+  const path = d3.geoPath(projection);
+
+  const ramp = isDark() ? BLUE_RAMP_DARK : BLUE_RAMP_LIGHT;
+  const nums = features
+    .map((f) => values.get(f.properties.code))
+    .filter((v) => v != null);
+  if (!nums.length) return null;
+  const extent = d3.extent(nums);
+  const scale = d3.scaleQuantize().domain(extent).range(ramp);
+  const ground = cssVar("--ground", "#faf6f0");
+  const noData = cssVar("--dim-2", "#e8e2d7");
+  const ink = cssVar("--ink", "#15181c");
+
+  svg.append("g").selectAll("path").data(features).join("path")
+    .attr("d", path)
+    .attr("class", "map-state")
+    .attr("fill", (f) => {
+      const v = values.get(f.properties.code);
+      return v == null ? noData : scale(v);
+    })
+    .attr("stroke", ground)
+    .attr("stroke-width", 0.8)
+    .on("pointerleave", function onLeave() {
+      hideTip(tip);
+      d3.select(this).attr("stroke-width", 0.8).attr("stroke", ground);
+    })
+    .on("pointermove", function onMove(event, f) {
+      d3.select(this).attr("stroke-width", 2).attr("stroke", ink).raise();
+      const v = values.get(f.properties.code);
+      const [mx, my] = d3.pointer(event, svg.node());
+      const pos = toHostPx(host, svg.node(), mx, my);
+      showTip(tip, host, pos.x, pos.y, f.properties.name, [
+        v == null
+          ? { label: noDataLabel, value: "—" }
+          : { color: scale(v), label: label || "value", value: format(v) },
+      ]);
+    });
+
+  // A sequential scale is meaningless without its key.
+  const legendW = Math.min(230, width - 32);
+  const lgX = width > mapW + legendW + 40 ? 8 : (width - legendW) / 2;
+  const lgY = width > mapW + legendW + 40 ? 40 : height - 26;
+  const lg = svg.append("g")
+    .attr("transform", "translate(" + lgX + "," + lgY + ")");
+  const step = legendW / ramp.length;
+  ramp.forEach((colour, i) => {
+    lg.append("rect")
+      .attr("x", i * step).attr("y", 0)
+      .attr("width", Math.max(1, step - 1.5)).attr("height", 9)
+      .attr("fill", colour);
+  });
+  lg.append("text").attr("class", "mark-label")
+    .attr("x", 0).attr("y", 23).text(format(extent[0]));
+  lg.append("text").attr("class", "mark-label")
+    .attr("x", legendW).attr("y", 23).attr("text-anchor", "end")
+    .text(format(extent[1]));
+  if (label) {
+    lg.append("text").attr("class", "mark-label")
+      .attr("x", legendW / 2).attr("y", -7).attr("text-anchor", "middle")
+      .text(label);
+  }
+  return { scale, extent };
+}
+
+// --------------------------------------------------------------------------
+// Motion. A figure draws itself in the first time it comes into view, once.
+//
+// prefers-reduced-motion is honoured by rendering the finished state
+// immediately rather than by withholding it: the chart is the point, the
+// animation is decoration, and decoration is what gets dropped.
+// --------------------------------------------------------------------------
+
+function reduced() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+export function animateIn(host) {
+  if (!host || reduced()) return;
+  const svg = host.querySelector("svg");
+  if (!svg) return;
+
+  const lines = [...svg.querySelectorAll("path.series-line")];
+  // A dashed stroke already means "estimate" here, so those lines fade in
+  // rather than draw: animating them would have to overwrite the dash array
+  // and destroy the idiom.
+  const solid = lines.filter((p) => !p.getAttribute("stroke-dasharray"));
+  const dashed = lines.filter((p) => p.getAttribute("stroke-dasharray"));
+
+  for (const p of solid) {
+    const len = p.getTotalLength ? p.getTotalLength() : 0;
+    if (!len) continue;
+    p.style.transition = "none";
+    p.style.strokeDasharray = len + " " + len;
+    p.style.strokeDashoffset = String(len);
+  }
+  for (const p of dashed) p.style.opacity = "0";
+
+  const bars = [...svg.querySelectorAll("rect")]
+    .filter((r) => !r.classList.contains("hit"));
+  for (const r of bars) {
+    r.style.transformBox = "fill-box";
+    r.style.transformOrigin = "left center";
+    r.style.transform = "scaleX(0.001)";
+  }
+  const dots = [...svg.querySelectorAll("circle")];
+  for (const c of dots) c.style.opacity = "0";
+  const labels = [...svg.querySelectorAll("text")];
+  for (const t of labels) t.style.opacity = "0";
+
+  requestAnimationFrame(() => {
+    solid.forEach((p, i) => {
+      p.style.transition =
+        "stroke-dashoffset 950ms cubic-bezier(.22,.61,.36,1) " + (i * 70) + "ms";
+      p.style.strokeDashoffset = "0";
+    });
+    dashed.forEach((p, i) => {
+      p.style.transition = "opacity 520ms ease " + (420 + i * 70) + "ms";
+      p.style.opacity = "1";
+    });
+    bars.forEach((r, i) => {
+      r.style.transition =
+        "transform 640ms cubic-bezier(.22,.61,.36,1) " + Math.min(i * 13, 420) + "ms";
+      r.style.transform = "scaleX(1)";
+    });
+    dots.forEach((c, i) => {
+      c.style.transition = "opacity 420ms ease " + (380 + Math.min(i * 7, 320)) + "ms";
+      c.style.opacity = "1";
+    });
+    labels.forEach((t, i) => {
+      t.style.transition = "opacity 520ms ease " + (460 + Math.min(i * 5, 340)) + "ms";
+      t.style.opacity = "1";
+    });
+  });
+}
+
+export function animateMap(host) {
+  if (!host || reduced()) return;
+  const paths = [...host.querySelectorAll("path.map-state")];
+  for (const p of paths) {
+    p.style.opacity = "0";
+    p.style.transformBox = "fill-box";
+    p.style.transformOrigin = "center";
+    p.style.transform = "scale(0.9)";
+  }
+  requestAnimationFrame(() => {
+    paths.forEach((p, i) => {
+      const delay = i * 12;
+      p.style.transition =
+        "opacity 430ms ease " + delay + "ms, transform 560ms cubic-bezier(.22,.61,.36,1) " + delay + "ms";
+      p.style.opacity = "1";
+      p.style.transform = "scale(1)";
+    });
+  });
+}
+
+// Count a figure up when it first appears. The final value is written at the
+// end regardless, so the DOM is correct even if the animation never runs.
+export function countUp(el, value, format, duration = 950) {
+  if (!el) return;
+  if (reduced() || !Number.isFinite(value)) {
+    el.textContent = format(value);
+    return;
+  }
+  const start = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = format(value * eased);
+    if (t < 1) requestAnimationFrame(tick);
+    else el.textContent = format(value);
+  };
+  requestAnimationFrame(tick);
+}
+
+// Run `fn` the first time `el` scrolls into view, then stop watching.
+export function onFirstView(el, fn, opts) {
+  const threshold = (opts && opts.threshold) || 0.2;
+  if (!el) return;
+  if (!("IntersectionObserver" in window)) { fn(); return; }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { io.disconnect(); fn(); return; }
+    }
+  }, { threshold });
+  io.observe(el);
+}

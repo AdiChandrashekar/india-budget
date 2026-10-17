@@ -152,6 +152,26 @@ carry: where two things merely coincide in time, the page says so.
 | States against Union over time | two-series line | The gap is the subject. Both read on the same estimate basis each year. |
 | Education's share of state budgets | single line, annotated | One series needs no legend box, but gets one here because the dashed-estimate key still has to be explained. |
 | Every state ranked | ranked bars, one hue, aggregate as a reference rule | Colouring bars by value would double-encode length. |
+| The same figure as geography | choropleth, sequential blue ramp, quantized | Magnitude, not identity, so one hue light to dark. Entities with no budget of their own are left unfilled, never shaded as zero. |
+
+## Motion
+
+A figure draws itself in the first time it is scrolled to, and never again: a
+control change redraws instantly rather than replaying. Lines draw along their
+own length, bars grow from the baseline, the map settles in.
+
+Two rules keep it honest:
+
+- **A dashed line fades in rather than drawing.** Drawing it would have to
+  overwrite its dash array, and the dash array is the estimate idiom.
+- **`prefers-reduced-motion` renders the finished state immediately** rather
+  than withholding it. The chart is the point; the animation is decoration,
+  and decoration is what gets dropped.
+
+Boundaries are decoded from TopoJSON to GeoJSON at build time
+(`scripts/build_map.py`), so the page takes no extra script-tag dependency.
+They come from the sibling delimitation project and are for reading a
+choropleth, not for any question about where a border runs.
 
 ## Change log
 

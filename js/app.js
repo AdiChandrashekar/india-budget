@@ -2,12 +2,12 @@
 // House style and the reasoning behind it are locked in DESIGN.md.
 
 import {
-  load, loadStates, pointsFor, valueAt, shareOfTotal, crore, lakhCrore, pct,
-  csv, download, fyStart,
+  load, loadStates, loadMap, pointsFor, valueAt, shareOfTotal, crore,
+  lakhCrore, pct, csv, download, fyStart,
 } from "./data.js";
 import {
   lineChart, dumbbell, stackedBarH, treemap, benchmarkPlot, rankedBars,
-  legend, cssVar,
+  choropleth, animateIn, animateMap, onFirstView, legend, cssVar,
 } from "./charts.js";
 
 const state = {
@@ -49,6 +49,7 @@ const GDP_BENCHMARKS = {
 
 let DATA = null;
 let STATES = null;
+let MAP = null;
 
 const EDU_DEFS = [
   { key: "moe", slot: "--s1", short: "Ministry" },
@@ -600,6 +601,7 @@ function renderRanking() {
     }
     if (value == null) continue;
     items.push({
+      code: e.code,
       name: e.name,
       value,
       detail: byShare ? "share of its own budget" : "share of GSDP",
@@ -620,6 +622,28 @@ function renderRanking() {
         : null;
       if (basis) { refValue = (100 * e[basis]) / a[basis]; break; }
     }
+  }
+
+  if (MAP) {
+    const values = new Map(items.map((d) => [d.code, d.value]));
+    choropleth($("map-plot"), {
+      features: MAP.features,
+      values,
+      format: (v) => `${v.toFixed(1)}%`,
+      height: 620,
+      label: byShare ? "share of own budget" : "share of GSDP",
+      noDataLabel: "no state budget of its own",
+    });
+    const years = [...new Set(items.map((d) => d.extra.value))].sort();
+    $("map-caption").textContent = byShare
+      ? `Education as a share of each government's own aggregate expenditure, `
+        + `${years.length === 1 ? years[0] : years[0] + " to " + years[years.length - 1]}. `
+        + `Darker is a larger share. The five union territories without a `
+        + `legislature have no budget of their own and are left unfilled; `
+        + `their schools are funded through the Union budget.`
+      : `Education spending as a share of each state's GSDP. Darker is a `
+        + `larger share. States without a published GSDP are left unfilled.`;
+    animateMap($("map-plot"));
   }
 
   rankedBars($("rank-plot"), {
@@ -1086,6 +1110,25 @@ function renderChrome() {
   cov.appendChild(ul);
 }
 
+// Every plot that can draw itself in, and whether it has been armed yet. A
+// figure animates the first time it is scrolled to and never again, so a
+// re-render from a control change redraws instantly instead of replaying.
+const PLOTS = [
+  "edu-plot", "promise-plot", "whopays-plot", "stateshare-plot",
+  "rank-plot", "util-plot", "class-plot", "treemap-plot",
+];
+const armed = new Set();
+
+function armMotion() {
+  for (const id of PLOTS) {
+    if (armed.has(id)) continue;
+    const host = $(id);
+    if (!host) continue;
+    armed.add(id);
+    onFirstView(host, () => animateIn(host));
+  }
+}
+
 function renderAll() {
   renderDefinitions();
   renderPromise();
@@ -1095,6 +1138,7 @@ function renderAll() {
   renderClassification();
   renderScale();
   renderHeads();
+  armMotion();
 }
 
 function wireControls() {
@@ -1171,10 +1215,11 @@ function wireOnce() {
     .addEventListener("change", () => setTimeout(renderAll, 60));
 }
 
-Promise.all([load(), loadStates()])
-  .then(([data, states]) => {
+Promise.all([load(), loadStates(), loadMap()])
+  .then(([data, states, map]) => {
     DATA = data;
     STATES = states;
+    MAP = map;
     $("loading").remove();
     $("content").hidden = false;
     renderChrome();

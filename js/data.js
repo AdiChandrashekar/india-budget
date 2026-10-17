@@ -28,6 +28,20 @@ export async function loadStates() {
   }
 }
 
+// Boundaries are decoded to plain GeoJSON at build time, so the page needs no
+// TopoJSON library. Absence is survivable: the ranked bars say the same thing.
+export async function loadMap() {
+  try {
+    const res = await fetch("data/india-states.geo.json");
+    if (!res.ok) throw new Error(res.status + " " + res.statusText);
+    const d = await res.json();
+    return d.features && d.features.length ? d : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 // A series is {year: {A|RE|BE: amount}}. Pick one number per year.
 //
 // "best" prefers audited actuals, then the revised estimate, then the budget
