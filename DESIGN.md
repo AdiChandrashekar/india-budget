@@ -1,184 +1,215 @@
 # Design lock
 
-Resolved 17 October 2026. Design-languages catalogue v1.0; charts follow the
-dataviz method, palette validated with its `validate_palette.js`.
+Re-resolved 17 October 2026 at the owner's request for "a real amazing visual
+style" and "a motion graphic visual experience". Design-languages catalogue
+v1.0; charts follow the dataviz method, every palette validated with its
+`validate_palette.js`.
 
-Anything added later — the state layer especially — follows this file. Don't
-re-decide what it settles.
+Anything added later follows this file. Don't re-decide what it settles.
 
 ## Direction
 
-**Editorial-statistical: FT chart style crossed with NYT Upshot.** A warm paper
-ground, serif headlines that state the finding rather than name the variable,
-charts annotated in place instead of explained in a caption, and axes stripped
-to a hairline. The page should read as a statistical publication making an
-argument, not as a dashboard reporting metrics.
+Three catalogue references, each owning a layer:
 
-Three rules carry most of the look:
+| Reference | Layer it owns |
+| --- | --- |
+| **Data Journalism / Interactive Explainers** (The Pudding, NYT Graphics) — dominant | Structure, tone, motion. Scroll-driven chapters, a sticky graphic with steps passing it, annotation in the chart, reader participation. |
+| **Swiss International Style** | Typography and grid. A neo-grotesque, enormous numerals, flush-left ragged-right, asymmetric composition on a 12-column grid, mathematical spacing, no ornament. |
+| **Bloomberg Graphics** | Colour mood. Confident saturated colour on a dark ground. |
 
-1. **Titles are takeaways.** "Most of the education ministry's money is not
-   booked as education", never "MoE by major head". If a chart's title could sit
-   above a different chart, it is not doing its job.
-2. **Annotate in the chart.** The thing the reader should notice gets a label
-   and a leader line on the plot itself. Captions carry units and caveats only.
-3. **Charts sit on the paper.** No cards, no panel borders, no boxes around
-   plots. The data is the only ink that gets to be strong.
+The page should read as a data-journalism feature with an argument, not as a
+dashboard. Four rules carry the look:
+
+1. **One semantic colour system, everywhere.** Coral is the Union. Blue is the
+   states. Amber is the 6% promise. Grey is everything else. A reader who
+   learns this in chapter one can read every later chart without its legend.
+   When grants-in-aid leave the Union for the states they are drawn blue,
+   because blue is the government that ends up spending them.
+2. **Titles are takeaways.** The heading states the finding, not the variable.
+3. **Annotate in the chart.** Captions carry units, definitions and caveats only.
+4. **Charts sit on the ground.** No cards, no boxes, no panel borders.
 
 ## Tokens
 
-All defined in `css/style.css` on `:root`, redefined for dark under both the
-`prefers-color-scheme` media query and `[data-theme="dark"]`.
+All in `css/style.css`. Light on `:root`; dark under the
+`prefers-color-scheme` query (guarded by `:where(:not([data-theme="light"]))`)
+and again under `[data-theme="dark"]`. The page follows the system until the
+reader uses the theme toggle, then remembers the choice.
 
 ### Surfaces and ink
 
 | Role | Light | Dark |
 | --- | --- | --- |
-| Page ground | `#faf6f0` | `#14171a` |
-| Raised (tables, controls) | `#fffdfa` | `#1a1e22` |
-| Primary ink | `#15181c` | `#eceae5` |
-| Secondary ink | `#4d545c` | `#aeb4bb` |
-| Muted (axis, labels) | `#8a9099` | `#7e868f` |
-| Hairline rule | `#e4ddd2` | `#2a3035` |
-| Baseline / axis | `#c9c1b4` | `#394046` |
+| Ground (charts render on this) | `#f6f3ed` | `#0c0f14` |
+| Ground, alternate | `#efebe3` | `#11151c` |
+| Raised (tooltips) | `#fbf9f5` | `#151a22` |
+| Primary ink | `#111418` | `#f1eee8` |
+| Secondary ink | `#464c54` | `#b3b9c2` |
+| Muted | `#7c838c` | `#7b838e` |
+| Rule | `#e1dbd0` | `#1f252e` |
+| Rule, strong | `#c8c0b2` | `#2f3741` |
 
-Charts render on the **page ground**, so that is the surface the palette was
-validated against — not the raised colour.
+### The semantic colours
 
-### Categorical series (dataviz slots 1-3, fixed order, never cycled)
-
-| Slot | Role in this project | Light | Dark |
+| Role | Token | Light | Dark |
 | --- | --- | --- | --- |
-| 1 blue | Ministry of Education definition; education generally | `#2a78d6` | `#3987e5` |
-| 2 orange | Functional definition; grants-in-aid | `#eb6834` | `#d95926` |
-| 3 aqua | Functional, narrow | `#1baf7a` | `#199e70` |
+| The Union | `--union` | `#d8501f` | `#e65d31` |
+| The states | `--states` | `#2a6fe0` | `#3d8bff` |
+| The 6% promise | `--target` | `#b77d06` | `#f2b02e` |
+| Functional definition | `--def-functional` | `#0f8c71` | `#17a588` |
+| Functional, narrow | `--def-narrow` | `#6a55d8` | `#8a78f0` |
+| Everything else | `--dim` | `#d9d2c6` | `#262c35` |
 
-Validated all-pairs on both grounds: worst CVD ΔE 9.2 light / 9.4 dark, worst
-normal-vision ΔE 24.0 / 20.9. On the light ground orange (2.97:1) and aqua
-(2.61:1) fall below 3:1, so the **relief rule** applies and is satisfied: every
-chart ships direct labels and a table view. Do not add a fourth series hue —
-fold the tail into "other" or facet.
+The two `--def-*` colours appear only in chapter two, where the three
+definitions are the subject.
 
-### Sequential (one hue, blue) — for the dumbbell
+**Validation, on each ground:**
 
-Budget estimate is the recessive step, actuals the strong one.
+- coral / functional / narrow, all pairs: worst CVD ΔE 11.9 dark / 11.2 light,
+  worst normal-vision ΔE 24.7 / 25.6. All inside the lightness band, all
+  ≥ 3:1 contrast.
+- states / Union, all pairs: worst CVD ΔE 28.7 dark / 28.1 light.
+- amber target: ≥ 3:1 on both grounds.
 
-| | Light | Dark |
-| --- | --- | --- |
-| Estimate | `#86b6ef` | `#184f95` |
-| Outturn | `#2a78d6` | `#3987e5` |
+**No contrast warnings in either mode.** The previous palette needed the
+relief rule on three hues; this one does not. Direct labels and table views
+remain, but now as good practice rather than as a fix.
 
-Ordinal floors respected: no lighter than step 250 on light, no darker than
-step 600 on dark.
+Two dark candidates (`#f0663a`, `#19b394`) failed the dark lightness cap at
+0.676 and 0.686 and were stepped down. Do not brighten the dark accents for
+more "glow" — they will leave the band.
 
-### Emphasis grey (the de-emphasis channel)
+### The map ramp (sequential, one hue)
 
-`#d9d2c6` light, `#2b3137` dark. Used for "everything that is not the subject"
-— the 99 non-education demands in the treemap, non-education account heads.
-Emphasis, not a series: it never carries identity.
+Six steps, validated as ordinal ramps: monotone lightness, adjacent steps
+≥ 0.06 apart, low end ≥ 2:1 against the ground so the lowest share still reads
+as a value and never as empty.
+
+| | low → high |
+| --- | --- |
+| Light | `#6aa4ea` `#418bdf` `#2b72cc` `#205ca9` `#174886` `#0e3466` |
+| Dark | `#184f95` `#2266c0` `#3d8bff` `#6aa6ff` `#97c1ff` `#c6dcff` |
+
+On the dark ground, brighter means more. A seven-step light ramp failed on the
+warm ground (steps 0.047 apart, low end 1.91:1) and was replaced.
 
 ## Type
 
-| Role | Face | Notes |
-| --- | --- | --- |
-| Headlines, section titles | Serif (`Iowan Old Style`, `Palatino`, Georgia) | The editorial voice. Headlines only. |
-| Body, UI, labels | System sans | |
-| Metadata, axis ticks, codes, table numbers | Mono | `tabular-nums` |
-| Hero figures, stat values | **Sans, proportional figures** | Never the serif, never `tabular-nums` — a display-size serif number reads as decoration and tabular figures look loose. |
+| Role | Face |
+| --- | --- |
+| Display: hero numeral, headlines, big chart labels | **Inter Tight** 700–800, tight tracking (−0.035 to −0.07em) |
+| Body, UI | **Inter** 400–600 |
+| Metadata, axis ticks, codes, table numbers | **JetBrains Mono**, `tabular-nums` |
 
-That last row is the one exception to "serif carries the editorial voice", and
-it is deliberate: it comes from the dataviz method, which the charts follow.
+One grotesque family for UI and display, so the dataviz rule that a hero figure
+uses the same sans as everything else holds without exception. The serif is
+gone. Big standalone figures use proportional numerals; only aligned columns
+use tabular. Loaded from Google Fonts with `display=swap` and system
+fallbacks.
+
+## Structure
+
+- **Hero.** Full viewport. The amber "6%" at up to 22rem, glowing on the dark
+  ground, rising in on load.
+- **Scrolly chapters** (`js/scrolly.js`). A sticky graphic in columns 5–12,
+  steps in columns 1–4. A step activates when it crosses the middle tenth of
+  the viewport. On a phone the graphic pins to the top and the steps scroll
+  over it as cards.
+- **Standard chapters.** Takeaway headline, lede, figure, table toggle.
+- **Progress bar** in amber along the top edge.
+
+## The motion pieces
+
+| Chapter | Graphic | Steps |
+| --- | --- | --- |
+| 1 — the target | gauge: published measures against the 6% rule | target alone → 2.7% → 4.1% → 4.6% → the 1.9-point spread shaded |
+| 3 — who pays | two bars on one scale | Union → states → the Union's length laid end to end along the states' bar |
+| 4 — state share | choropleth with play and scrub, 1990-91 to 2025-26 | reader-driven |
+| 7 — the scale | treemap of every demand | all grey → interest payments → education |
+
+Rules each one keeps:
+
+- **`step(n)` reaches step n from any other step**, forwards or back. Readers
+  scroll both ways and skip.
+- **Length, not area, for the 9-to-1.** An area or unit grid would either
+  exaggerate the ratio or imply the two tiers can be summed, and they cannot.
+- **The ruler numbers every segment, including a partial last one.** The ratio
+  is 8.99; numbering only whole lengths would show eight against a caption
+  saying nine.
+- **The map's colour scale is fixed across all years.** That is what makes the
+  animation honest: a colour means the same share in 1990-91 as in 2025-26.
+  Its ends are the 2nd and 98th percentiles so a few small entities cannot wash
+  out everyone else; values beyond take the end colours and the key says
+  "≤" and "≥".
+- **States that did not yet exist are grey, not zero.** Playing the map, you
+  watch Chhattisgarh, Jharkhand and Uttarakhand appear in 2000 and Telangana in
+  2014.
 
 ## Marks
 
-Fixed, from the dataviz method:
-
-- Lines 2px, round cap and join. Markers r≥4 with a 2px ring in the ground
+- Lines 2.25px, round cap and join. Markers r ≥ 4 with a ring in the ground
   colour.
-- Bars capped at 24px thick; 4px rounded data-end, square at the baseline.
-- **2px gap in the ground colour** between touching fills — stacked segments
-  and adjacent bars alike. Never a stroke around a mark.
-- Area washes at ~10% opacity.
-- Gridlines and axes: solid hairlines one step off the ground. Never dashed —
-  dashing means "estimate" here and must not be spent on chrome.
-- **Dashed stroke means forecast.** A line is solid where it plots audited
-  actuals and dashed where it plots an estimate, and the point marker is
-  filled for an outturn, hollow for an estimate. This is the page's one
-  consistent visual idiom; do not reuse dashing for anything else.
-- **A gap in the data is a gap in the line.** Never interpolate across the
-  years the pipeline could not parse.
+- Bars capped at 24px thick.
+- A 2px gap in the ground colour between touching fills. Never a stroke.
+- Gridlines and axes: solid hairlines. **Never dashed.**
+- **Dashed stroke means estimate.** Solid where a line plots audited actuals,
+  dashed where it plots an estimate; filled marker for an outturn, hollow for
+  an estimate. This is the page's one recurring idiom and is spent on nothing
+  else — not reference rules, not annotation leaders.
+- **A gap in the data is a gap in the line.**
+
+## Motion
+
+- Standard figures draw in the first time they are scrolled to, once. A
+  control change redraws instantly.
+- **A dashed line fades in rather than drawing**, because drawing would
+  overwrite the dash array that means "estimate".
+- **`prefers-reduced-motion` renders the finished state immediately**, it does
+  not withhold it.
+- The map's fill transition belongs to the stylesheet (`.map-state`), not to
+  d3, so a year change animates once rather than twice.
+
+## A trap worth knowing
+
+**Any CSS `fill` rule beats an SVG `fill` attribute**, however unspecific the
+selector. Label classes therefore set their default fill only under
+`:not([fill])`; a class-level `fill` silently overrode every label the charts
+coloured, drawing the treemap's 26.3% cream-on-cream and the tier figures in
+white instead of coral and blue.
 
 ## Interaction
 
-- Line charts: crosshair snapping to the nearest year, one tooltip listing
-  every series at that year.
-- Bars, cells, treemap tiles: the mark is the hit target, minimum ~24px,
-  hovered mark lifts.
-- Every figure has a **table view** toggle. Tooltips enhance and never gate;
-  the table is the WCAG-clean twin and the relief for the sub-3:1 hues.
-- Controls sit in one row above the content they scope.
-- Series names reach the DOM via `textContent`, never `innerHTML` — they come
-  from government spreadsheets.
+- Line charts: crosshair to the nearest year, one tooltip for every series.
+- Bars, tiles, states: the mark is the hit target and lifts on hover.
+- Every standard figure has a table-view toggle. Tooltips enhance, never gate.
+- Series names reach the DOM via `textContent` — they come from government
+  spreadsheets.
+
+## Narrative rule
+
+Two kinds of statement sit on the page and are never blurred: **computed** from
+the budget documents and injected at render, never typed into markup; and
+**cited** from outside, each attributed in the footer's claims block. A caption
+states the unit, the definition and the caveat, and never asserts a cause the
+data cannot carry. The explainer copy itself is being rewritten separately; see
+`docs/COPY-HANDOFF.md`.
 
 ## Checked against
 
 `references/anti-patterns.md`: no dual axes, no recolor-on-filter, no cycled
 hues, no value-ramp on nominal categories, no rainbow, no number on every
-point, no borders around marks, no dashed gridlines, no serif hero figure, no
-tooltip-gated values.
-
-## Narrative rule
-
-The page makes an argument, so two kinds of statement sit on it and they are
-never blurred:
-
-- **Computed** from the budget documents. Every rupee figure, share and ratio
-  on the page is read from `data/union.json` or `data/states.json` and
-  recomputed on render. None is typed into the markup.
-- **Cited** from outside. The 6%-of-GDP target, the published GDP ratios, the
-  devolution change and the scheme shares are not in this data. Each is
-  attributed in the "Claims from outside the data" block in the footer, and
-  the chart that uses them says in its caption that they are cited, not
-  computed.
-
-A caption states the unit, the definition and the caveat. It never repeats
-what the title already says, and it never asserts a cause the data cannot
-carry: where two things merely coincide in time, the page says so.
-
-## Forms added for the state layer
-
-| Figure | Form | Why |
-| --- | --- | --- |
-| 6% target against published measures | benchmark dot plot, one hue, target as a rule in ink | The measures differ by method, not identity, so they are not a categorical set. |
-| States against Union over time | two-series line | The gap is the subject. Both read on the same estimate basis each year. |
-| Education's share of state budgets | single line, annotated | One series needs no legend box, but gets one here because the dashed-estimate key still has to be explained. |
-| Every state ranked | ranked bars, one hue, aggregate as a reference rule | Colouring bars by value would double-encode length. |
-| The same figure as geography | choropleth, sequential blue ramp, quantized | Magnitude, not identity, so one hue light to dark. Entities with no budget of their own are left unfilled, never shaded as zero. |
-
-## Motion
-
-A figure draws itself in the first time it is scrolled to, and never again: a
-control change redraws instantly rather than replaying. Lines draw along their
-own length, bars grow from the baseline, the map settles in.
-
-Two rules keep it honest:
-
-- **A dashed line fades in rather than drawing.** Drawing it would have to
-  overwrite its dash array, and the dash array is the estimate idiom.
-- **`prefers-reduced-motion` renders the finished state immediately** rather
-  than withholding it. The chart is the point; the animation is decoration,
-  and decoration is what gets dropped.
-
-Boundaries are decoded from TopoJSON to GeoJSON at build time
-(`scripts/build_map.py`), so the page takes no extra script-tag dependency.
-They come from the sibling delimitation project and are for reading a
-choropleth, not for any question about where a border runs.
+point, no borders around marks, no dashed gridlines or chrome, no serif hero
+figure, no tooltip-gated values, no large saturated blocks (the treemap's large
+tiles are grey; only the small subject tiles carry colour).
 
 ## Change log
 
-- 2026-10-17 — Resolved: FT + NYT Upshot editorial-statistical. Replaced the
-  first-pass generic dashboard look (bordered chart cards, grouped bars,
-  serif stat values).
-- 2026-10-17 — Added the state layer and the narrative rule above: the
-  benchmark dot plot, the two-tier comparison and the ranked bars. Charts
-  made responsive to series length after the Union series went from 8 years
-  to 25.
+- 2026-10-17 — First resolution: FT + NYT Upshot editorial-statistical.
+- 2026-10-17 — State layer: benchmark plot, two-tier comparison, ranked bars,
+  choropleth; charts made responsive to series length.
+- 2026-10-17 — **Re-resolved** at the owner's request: data-journalism
+  interactive × Swiss × Bloomberg Graphics, dark-first. New semantic colour
+  system, validated in both modes with no contrast warnings. Serif dropped for
+  a single grotesque family. Scrollytelling engine, hero, four motion pieces,
+  animated map, theme toggle, progress bar. Fixed the CSS-fill-over-attribute
+  trap above.

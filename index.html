@@ -5,43 +5,106 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>India Budget Explorer</title>
 <meta name="description" content="India's 6%-of-GDP education target, set in 1966 and restated in 2020, measured against what the Union and the states actually budget - read from the budget documents themselves, 1990-91 to 2026-27.">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark light">
+<script>
+  // Apply a saved theme before first paint, so the page never flashes the
+  // wrong one. Storage can throw in private windows; the OS setting is then
+  // the default, which is the right fallback.
+  try {
+    var saved = localStorage.getItem("budget-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" integrity="sha512-vc58qvvBdrDR4etbxMdlTt4GBQk1qjvyORR2nrsPsFPyrs+/u5c3+1Ct6upOgdZoIl7eq6k3a1UPDSNAQi/32A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
 
-<header class="masthead wrap">
-  <p class="eyebrow">Union Budget &middot; Education</p>
-  <h1>There is no single education budget</h1>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<div class="topbar">
+  <span>India &middot; Education &middot; Public finance</span>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch colour theme">Theme</button>
+</div>
+
+<!-- ================================================================ hero -->
+<header class="hero wrap" id="top">
+  <p class="eyebrow">The target, since 1966</p>
+  <div class="hero-numeral" id="hero-numeral" aria-label="6 per cent">6<span class="unit">%</span></div>
+  <h1>India's oldest education promise</h1>
   <p class="standfirst">
-    India has chased one education target since 1966: six per cent of GDP. It
-    has never got there, and it cannot even agree how far short it falls,
-    because three defensible definitions of the education budget give three
-    different answers. This reads all of them from the budget documents
-    themselves &mdash; the Union back to 2002-03, the states back to 1990-91
-    &mdash; and finds that the half of the bill nobody argues about is nine
-    times the size of the half everybody does.
+    Six per cent of GDP on education. Proposed in 1966, restated in 1968, 1986
+    and 2020, never reached. What the country actually spends, who spends it,
+    and why nobody can say exactly how far short it falls.
   </p>
   <p class="byline" id="byline"></p>
+  <span class="scroll-cue">Scroll</span>
 </header>
 
 <main class="wrap" id="main">
-  <p class="loading" id="loading">Reading the budget&hellip;</p>
+  <p class="loading" id="loading">Reading the budget</p>
 </main>
 
 <div class="wrap" hidden id="content">
 
-  <!-- 1 ------------------------------------------------------------------ -->
-  <section id="definitions">
-    <p class="kicker">The disagreement</p>
-    <h2>The same year, measured three ways</h2>
-    <p class="lede">
-      Ask what the Union government spends on education and the honest answer
-      is a question back: by which definition? Each of these is published by
-      the government, each is used in public argument, and they do not
-      reconcile.
-    </p>
+  <!-- ====================================================== 1. the target -->
+  <section class="chapter" id="promise">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter one</p>
+      <h2>A target nobody can measure</h2>
+    </div>
+
+    <div class="scrolly" id="promise-scrolly">
+      <div class="scrolly-graphic">
+        <div class="plot" id="gauge-plot"></div>
+      </div>
+      <div class="scrolly-steps">
+        <div class="step"><div class="step-card">
+          <span class="step-figure c-target">6%</span>
+          of GDP. The Education Commission of 1964-66 set it as the level of
+          public spending on education India should reach. Three national
+          policies have repeated it since.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure">2.7%</span>
+          is what India spends by the Economic Survey's count for 2023-24 -
+          the money that flows through education departments.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure">4.1%</span>
+          is the World Bank figure for 2022, as cited by PRS Legislative
+          Research - centre and states together.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure">4.6%</span>
+          is the Ministry of Education's own broader measure for 2020-21, which
+          adds education and training run by other ministries.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure">1.9 points</span>
+          separate the lowest reading from the highest. The gap between the
+          measurements is larger than most annual changes anyone argues about.
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================ 2. three definitions -->
+  <section class="chapter" id="definitions">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter two</p>
+      <h2>The same budget, counted three ways</h2>
+      <p class="lede">
+        The disagreement starts with the Union budget itself. Three defensible
+        definitions of what counts as education spending give three different
+        totals for the same year.
+      </p>
+    </div>
 
     <div class="hero-figure">
       <span class="value" id="hero-spread"></span>
@@ -76,39 +139,38 @@
     <div class="note" id="definitions-note"></div>
   </section>
 
+  <!-- ========================================================= 3. who pays -->
+  <section class="chapter" id="whopays">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter three</p>
+      <h2>The half nobody argues about</h2>
+    </div>
 
-  <!-- 2 ------------------------------------------------------------------ -->
-  <section id="promise">
-    <p class="kicker">The benchmark</p>
-    <h2>A target set in 1966, and still not agreed on</h2>
-    <p class="lede">
-      India has had one headline education target for sixty years: spend
-      <strong>6% of GDP</strong>. The Kothari Commission proposed it in 1966,
-      the National Policy on Education adopted it in 1968 and repeated it in
-      1986, and the National Education Policy 2020 committed the centre and
-      states to it again. The country has never reached it. What is less often
-      said is that there is no agreement on how far short it falls &mdash; the
-      published answers differ by almost two percentage points, because they
-      count different things.
-    </p>
-    <figure>
-      <div class="plot" id="promise-plot"></div>
-      <figcaption id="promise-caption"></figcaption>
-    </figure>
-    <div class="note" id="promise-note"></div>
-  </section>
+    <div class="scrolly" id="whopays-scrolly">
+      <div class="scrolly-graphic">
+        <div class="plot" id="tier-plot"></div>
+      </div>
+      <div class="scrolly-steps">
+        <div class="step"><div class="step-card">
+          <span class="step-figure c-union" id="tier-union"></span>
+          is what the <span class="c-union">Union</span> budgets for education,
+          sports, art and culture on the functional account heads both tiers
+          share.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure c-states" id="tier-states"></span>
+          is what the <span class="c-states">states and union territories</span>
+          budget on the same heads, in the same year.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure" id="tier-ratio"></span>
+          The national argument about education spending happens almost
+          entirely over the smaller of the two numbers.
+        </div></div>
+      </div>
+    </div>
 
-  <!-- 3 ------------------------------------------------------------------ -->
-  <section id="whopays">
-    <p class="kicker">Who actually pays</p>
-    <h2>The Union is the smaller half, by a factor of eight</h2>
-    <p class="lede">
-      Education sits on the Concurrent List, and almost every national
-      conversation about the education budget is about the Union's share of
-      it. On the functional account heads both tiers share, the states and
-      union territories budget several times what the centre does &mdash; and
-      the gap has widened, not closed.
-    </p>
+    <h3>Over time</h3>
     <dl class="statrow" id="whopays-stats"></dl>
     <figure>
       <div class="plot" id="whopays-plot"></div>
@@ -124,16 +186,18 @@
     <div class="note flag" id="whopays-note"></div>
   </section>
 
-  <!-- 4 ------------------------------------------------------------------ -->
-  <section id="stateshare">
-    <p class="kicker">Priority, not just quantity</p>
-    <h2>Education is claiming a shrinking share of state budgets</h2>
-    <p class="lede">
-      Rupee totals always rise. The more revealing measure is how much of its
-      own budget a government chooses to spend on education &mdash; and across
-      all states together that share has fallen by a quarter since 2010-11.
-      The spread between states is far wider than the change over time.
-    </p>
+  <!-- ===================================================== 4. state share -->
+  <section class="chapter" id="stateshare">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter four</p>
+      <h2>A shrinking share of state budgets</h2>
+      <p class="lede">
+        Rupee totals always rise. How much of its own budget a government
+        gives to education is the choice - and across all states together
+        that share has fallen since 2010-11.
+      </p>
+    </div>
+
     <figure>
       <div class="plot" id="stateshare-plot"></div>
       <div class="figbar">
@@ -146,35 +210,43 @@
       <figcaption id="stateshare-caption"></figcaption>
     </figure>
 
-    <h3 id="map-heading">The same figure, as geography</h3>
+    <h3 id="map-heading">Every state, every year since 1990-91</h3>
+    <div class="controls">
+      <label class="ctl">
+        <span>Measure</span>
+        <span class="segmented" id="rank-measure" role="group" aria-label="Measure"></span>
+      </label>
+    </div>
+    <div class="timeline">
+      <button class="play" id="map-play" type="button" aria-pressed="false" aria-label="Play through the years">
+        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>
+      </button>
+      <span class="year-readout" id="map-year"></span>
+      <input type="range" id="map-range" min="0" max="0" value="0" step="1" aria-label="Year">
+    </div>
     <figure>
       <div class="plot" id="map-plot"></div>
       <figcaption id="map-caption"></figcaption>
     </figure>
 
-    <h3 id="rank-heading">Every state, ranked</h3>
-    <div class="controls">
-      <label class="ctl">
-        <span>Measure</span>
-        <span class="segmented" id="rank-measure" role="group" aria-label="Ranking measure"></span>
-      </label>
-    </div>
+    <h3 id="rank-heading">Ranked, latest year</h3>
     <figure>
       <div class="plot" id="rank-plot"></div>
       <figcaption id="rank-caption"></figcaption>
     </figure>
   </section>
 
-  <!-- 5 ------------------------------------------------------------------ -->
-  <section id="utilisation">
-    <p class="kicker">Promise against outturn</p>
-    <h2>A budget estimate is not spending</h2>
-    <p class="lede">
-      Every year is published three times: a budget estimate in February, a
-      revised estimate a year later, an audited actual the year after that.
-      Quoting the first as though it were the last is the commonest error in
-      writing about this money &mdash; and the gap runs both ways.
-    </p>
+  <!-- ===================================================== 5. utilisation -->
+  <section class="chapter" id="utilisation">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter five</p>
+      <h2>A budget estimate is not spending</h2>
+      <p class="lede">
+        Every year is published three times: a budget estimate in February, a
+        revised estimate a year later, an audited actual the year after that.
+        The gap between the first and the last runs in both directions.
+      </p>
+    </div>
     <figure>
       <div class="plot" id="util-plot"></div>
       <div class="figbar">
@@ -188,17 +260,17 @@
     </figure>
   </section>
 
-  <!-- 6 ------------------------------------------------------------------ -->
-  <section id="classification">
-    <p class="kicker">Where it sits in the accounts</p>
-    <h2>Most of the ministry's money is not booked as education</h2>
-    <p class="lede">
-      The Ministry of Education's largest account head is not education. It is
-      grants-in-aid to state governments: money handed over, and then booked as
-      education a second time in the states' own budgets. This is why the
-      Union's functional education figure understates what the centre funds,
-      and why adding Union and state education budgets together double-counts.
-    </p>
+  <!-- =================================================== 6. classification -->
+  <section class="chapter" id="classification">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter six</p>
+      <h2>Most of the ministry's money becomes state money</h2>
+      <p class="lede">
+        The Ministry of Education's largest account head is not education. It
+        is <span class="c-states">grants-in-aid to state governments</span>,
+        which the states then spend and book as education themselves.
+      </p>
+    </div>
     <figure>
       <div class="plot" id="class-plot"></div>
       <div class="figbar">
@@ -213,31 +285,46 @@
     <div class="note flag" id="double-count-note"></div>
   </section>
 
-  <!-- 7 ------------------------------------------------------------------ -->
-  <section id="scale">
-    <p class="kicker">The whole budget, at scale</p>
-    <h2>Against everything else, education is a sliver</h2>
-    <p class="lede">
-      Every demand for grants in the Union budget, drawn to scale. The two
-      education departments are picked out; everything else is the rest of the
-      government. The share is easy to state and hard to feel until you see
-      the area.
-    </p>
-    <dl class="statrow" id="scale-stats"></dl>
-    <figure>
-      <div class="plot" id="treemap-plot"></div>
-      <div class="figbar">
-        <div class="legend" id="treemap-legend"></div>
-        <button class="linkbtn" data-table="dept-block">Show the full table</button>
+  <!-- ============================================================ 7. scale -->
+  <section class="chapter" id="scale">
+    <div class="chapter-head">
+      <p class="chapter-no">Chapter seven</p>
+      <h2>Against everything else</h2>
+    </div>
+
+    <div class="scrolly" id="scale-scrolly">
+      <div class="scrolly-graphic">
+        <div class="plot" id="treemap-plot"></div>
       </div>
-      <figcaption id="treemap-caption"></figcaption>
-    </figure>
+      <div class="scrolly-steps">
+        <div class="step"><div class="step-card">
+          <span class="step-figure" id="scale-total"></span>
+          is the whole Union budget, every demand for grants drawn to scale.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure" id="scale-interest"></span>
+          of it goes on interest payments on past borrowing - the single
+          largest claim on the budget.
+        </div></div>
+        <div class="step"><div class="step-card">
+          <span class="step-figure c-union" id="scale-education"></span>
+          goes to the Ministry of Education's two departments.
+        </div></div>
+      </div>
+    </div>
+
+    <dl class="statrow" id="scale-stats"></dl>
+    <div class="figbar">
+      <div class="legend" id="treemap-legend"></div>
+      <button class="linkbtn" data-table="dept-block">Show every department</button>
+    </div>
+    <figcaption id="treemap-caption"></figcaption>
 
     <div id="dept-block" hidden>
-      <div class="controls">
+      <div class="controls" style="margin-top:32px">
         <label class="ctl">
           <span>Find a department</span>
-          <input type="search" id="dept-search" placeholder="education, defence, railways&hellip;" autocomplete="off">
+          <input type="search" id="dept-search" placeholder="education, defence, railways" autocomplete="off">
         </label>
         <label class="ctl">
           <span>Show</span>
@@ -255,17 +342,17 @@
     </div>
   </section>
 
-  <!-- 8 ------------------------------------------------------------------ -->
-  <section id="functional">
-    <p class="kicker">The shared classification</p>
-    <h2>Major heads, the one language every government shares</h2>
-    <p class="lede">
-      Major heads come from the List of Major and Minor Heads of Account, used
-      by the Union and every state alike. Head 2202 means general education in
-      Uttar Pradesh exactly as it does in Delhi. That is what will make a
-      state-by-state comparison possible, and it is why this pipeline keeps
-      every figure tagged with its head.
-    </p>
+  <!-- ======================================================= 8. functional -->
+  <section class="chapter" id="functional">
+    <div class="chapter-head">
+      <p class="chapter-no">Appendix</p>
+      <h2>The account heads every government shares</h2>
+      <p class="lede">
+        Major head 2202 means general education in Uttar Pradesh exactly as it
+        does in the Union budget. That shared classification is what makes the
+        comparison in chapter three possible.
+      </p>
+    </div>
     <div class="controls">
       <label class="ctl">
         <span>Heads</span>
@@ -298,10 +385,8 @@
           are the ministry's <em>Analysis of Budgeted Expenditure on
           Education</em> or the CAG's combined accounts.</li>
         <li><strong>Nominal rupees.</strong> No inflation adjustment and no
-          share of GDP yet. Shares of total Union expenditure are computed and
-          are safe to compare across years.</li>
-        <li><strong>Union only, so far.</strong> States are the next layer and
-          the larger half of the question.</li>
+          share of GDP computed here yet. Shares of total expenditure are
+          computed and are safe to compare across years.</li>
       </ul>
     </div>
     <div>
@@ -309,15 +394,14 @@
       <ul>
         <li><strong>Union figures</strong> are read from
           <a href="https://www.indiabudget.gov.in/">indiabudget.gov.in</a>,
-          the Expenditure Budget and Demands for Grants, 24 editions. Every
-          figure carries the edition, URL and sheet it came from.</li>
+          the Expenditure Budget and Demands for Grants, 24 editions.</li>
         <li><strong>State figures</strong> are read from the Reserve Bank of
           India's <a href="https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets"><em>State
           Finances: A Study of Budgets</em></a> e-STATES database and
           Statement 26.</li>
-        <li>Validation reproduces the published Union total to within
-          Rs 0.19 crore across 102 demands, and all 570 percentages RBI
-          publishes in Statement 26.</li>
+        <li>The Union total reproduces to within Rs 0.19 crore across 102
+          demands, and all 570 percentages RBI publishes in Statement 26
+          reproduce exactly.</li>
       </ul>
     </div>
   </div>
@@ -325,10 +409,9 @@
   <div id="claims">
     <h3>Claims from outside the data, and their sources</h3>
     <p style="max-width:68ch">
-      Everything else on this page is computed from the budget documents
-      above. These statements are not, so each one is attributed. Where
-      published figures disagree, both are given rather than one being
-      picked.
+      Every other figure on this page is computed from the budget documents
+      above. These are not, so each is attributed. Where published figures
+      disagree, all are given rather than one being picked.
     </p>
     <ul style="max-width:72ch">
       <li><strong>The 6% of GDP target.</strong> Proposed by the Education
@@ -349,8 +432,7 @@
       <li><strong>4.6% of GDP.</strong> The Ministry of Education's
         <em>Analysis of Budgeted Expenditure on Education</em> measure for
         2020-21, which adds education and training spending by departments
-        other than education &mdash; health, tribal affairs, labour and
-        others.</li>
+        other than education - health, tribal affairs, labour and others.</li>
       <li><strong>Devolution rose from 32% to 42%.</strong> The Fourteenth
         Finance Commission's recommendation, effective from 2015-16, raising
         the states' share of the divisible pool of central taxes.</li>
@@ -361,8 +443,7 @@
         Shiksha Abhiyan was reset at the same time as the devolution change.</li>
       <li><strong>Scheme shares of the ministry's budget.</strong> Samagra
         Shiksha Rs 42,100 crore and PM POSHAN Rs 12,750 crore in 2026-27,
-        per PRS as above. This pipeline reads account heads, not schemes, so
-        scheme figures are cited rather than computed.</li>
+        per PRS as above.</li>
     </ul>
   </div>
 </footer>

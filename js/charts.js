@@ -310,8 +310,7 @@ function drawAnnotation(g, a, x, y, inner) {
   const ty = py + (a.dy ?? -44);
   if (a.from != null) {
     g.append("path").attr("class", "annot-leader")
-      .attr("d", `M${px},${y(a.from)}L${px},${y(a.to ?? a.value)}`)
-      .attr("stroke-dasharray", "2 2");
+      .attr("d", `M${px},${y(a.from)}L${px},${y(a.to ?? a.value)}`);
     g.append("path").attr("class", "annot-leader")
       .attr("d", `M${px},${ty + 6}L${px},${y(a.from)}`);
   }
@@ -345,8 +344,10 @@ export function dumbbell(host, opts) {
   const max = d3.max(rows, (r) => Math.max(r.be ?? 0, r.re ?? 0, r.a ?? 0)) ?? 1;
   const x = d3.scaleLinear().domain([0, max * 1.08]).nice().range([0, inner.w]);
 
-  const est = cssVar("--seq-estimate", "#86b6ef");
-  const out = cssVar("--seq-outturn", "#2a78d6");
+  // One hue - the ministry is the Union - with the page's idiom carrying the
+  // difference: hollow for an estimate, filled for an audited outturn.
+  const est = cssVar("--union", "#e65d31");
+  const out = cssVar("--union", "#e65d31");
   const ground = cssVar("--ground", "#faf6f0");
 
   g.append("g").attr("class", "axis")
@@ -664,7 +665,7 @@ export function benchmarkPlot(host, opts) {
 
   const x = d3.scaleLinear().domain([0, max]).range([0, inner.w]);
   const ink = cssVar("--ink", "#15181c");
-  const accent = cssVar("--s1", "#2a78d6");
+  const accent = cssVar("--ink", "#15181c");
   const ground = cssVar("--ground", "#faf6f0");
 
   const axisY = inner.h - 6;
@@ -747,7 +748,7 @@ export function rankedBars(host, opts) {
   const max = d3.max(items, (d) => d.value) ?? 1;
   const x = d3.scaleLinear().domain([0, max * 1.02]).nice().range([0, inner.w]);
 
-  const accent = cssVar("--s1", "#2a78d6");
+  const accent = cssVar("--states", "#3d8bff");
   const dim = cssVar("--dim", "#d9d2c6");
   const ink = cssVar("--ink", "#15181c");
 
@@ -800,8 +801,8 @@ export function rankedBars(host, opts) {
     g.append("line")
       .attr("x1", x(reference.value)).attr("x2", x(reference.value))
       .attr("y1", -8).attr("y2", inner.h)
-      .attr("stroke", ink).attr("stroke-width", 1.5)
-      .attr("stroke-dasharray", "3 3");
+      .attr("stroke", ink).attr("stroke-width", 1.25)
+      .attr("opacity", 0.7);
     const t = g.append("text").attr("class", "annot")
       .attr("x", x(reference.value)).attr("y", -16).attr("text-anchor", "middle");
     t.append("tspan").attr("class", "annot-strong").text(reference.label);
@@ -815,11 +816,14 @@ export function rankedBars(host, opts) {
 // read as near-nothing.
 // --------------------------------------------------------------------------
 
+// Validated as ordinal ramps against each ground: monotone lightness, every
+// adjacent step at least 0.06 apart, and the low end clearing 2:1 - so the
+// lowest share still reads as a value and never as an empty state.
 const BLUE_RAMP_LIGHT = [
-  "#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b",
+  "#6aa4ea", "#418bdf", "#2b72cc", "#205ca9", "#174886", "#0e3466",
 ];
 const BLUE_RAMP_DARK = [
-  "#15314f", "#1c4472", "#215898", "#2a6fbe", "#3987e5", "#6da7ec", "#9ec5f4",
+  "#184f95", "#2266c0", "#3d8bff", "#6aa6ff", "#97c1ff", "#c6dcff",
 ];
 
 function isDark() {
@@ -860,7 +864,7 @@ export function choropleth(host, opts) {
   const extent = d3.extent(nums);
   const scale = d3.scaleQuantize().domain(extent).range(ramp);
   const ground = cssVar("--ground", "#faf6f0");
-  const noData = cssVar("--dim-2", "#e8e2d7");
+  const noData = cssVar("--dim", "#262c35");
   const ink = cssVar("--ink", "#15181c");
 
   svg.append("g").selectAll("path").data(features).join("path")
@@ -1036,3 +1040,5 @@ export function onFirstView(el, fn, opts) {
   }, { threshold });
   io.observe(el);
 }
+
+export { tooltipFor, showTip, hideTip, toHostPx, isDark, BLUE_RAMP_LIGHT, BLUE_RAMP_DARK };

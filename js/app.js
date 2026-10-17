@@ -6,9 +6,11 @@ import {
   lakhCrore, pct, csv, download, fyStart,
 } from "./data.js";
 import {
-  lineChart, dumbbell, stackedBarH, treemap, benchmarkPlot, rankedBars,
-  choropleth, animateIn, animateMap, onFirstView, legend, cssVar,
+  lineChart, dumbbell, stackedBarH, rankedBars, animateIn, onFirstView,
+  legend, cssVar,
 } from "./charts.js";
+import { scrolly, progressBar } from "./scrolly.js";
+import { gauge, tierBars, treemapStory, mapChart } from "./story.js";
 
 const state = {
   measure: "cr",
@@ -27,21 +29,24 @@ const state = {
 // education statistic. Sources are listed in the page footer; none of these
 // is computed here, because no GDP series is loaded.
 const GDP_BENCHMARKS = {
-  target: { value: 6, label: "6% target, set 1966, restated 2020" },
+  target: { value: 6, label: "6% target, set 1966, restated 2020", short: "the target" },
   marks: [
     {
       value: 2.7,
       label: "Economic Survey 2024-25, for 2023-24",
+      short: "Economic Survey",
       detail: "education departments only",
     },
     {
       value: 4.1,
       label: "PRS, citing World Bank, for 2022",
+      short: "World Bank",
       detail: "centre and states together",
     },
     {
       value: 4.6,
       label: "Ministry of Education, for 2020-21",
+      short: "Ministry, broad",
       detail: "including other departments",
     },
   ],
@@ -51,10 +56,38 @@ let DATA = null;
 let STATES = null;
 let MAP = null;
 
+// The three scroll-driven graphics. Each is rebuilt on every render (a
+// resize, a theme change) and then put back on whichever step the reader had
+// reached, so re-rendering never yanks the story back to the start.
+const STORY = {
+  promise: { graphic: null, step: 0 },
+  whopays: { graphic: null, step: 0 },
+  scale: { graphic: null, step: 0 },
+};
+
+function mountStory(key, graphic) {
+  STORY[key].graphic = graphic;
+  if (graphic) graphic.step(STORY[key].step);
+}
+
+function wireStories() {
+  const pairs = [
+    ["promise", "promise-scrolly"],
+    ["whopays", "whopays-scrolly"],
+    ["scale", "scale-scrolly"],
+  ];
+  for (const [key, id] of pairs) {
+    scrolly($(id), (i) => {
+      STORY[key].step = i;
+      if (STORY[key].graphic) STORY[key].graphic.step(i);
+    });
+  }
+}
+
 const EDU_DEFS = [
-  { key: "moe", slot: "--s1", short: "Ministry" },
-  { key: "functional", slot: "--s2", short: "Functional" },
-  { key: "functional_narrow", slot: "--s3", short: "Functional, narrow" },
+  { key: "moe", slot: "--union", short: "Ministry" },
+  { key: "functional", slot: "--def-functional", short: "Functional" },
+  { key: "functional_narrow", slot: "--def-narrow", short: "Functional, narrow" },
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -183,7 +216,7 @@ function renderDefinitions() {
     const dt = document.createElement("dt");
     const k = document.createElement("i");
     k.className = "key";
-    k.style.background = cssVar(slot, "#2a78d6");
+    k.style.background = cssVar(slot, "#e65d31");
     const name = document.createElement("span");
     name.textContent = block.label;
     dt.append(k, name);
@@ -200,7 +233,7 @@ function renderDefinitions() {
   const series = EDU_DEFS.map(({ key, slot, short }) => ({
     label: DATA.education[key].label,
     short,
-    color: cssVar(slot, "#2a78d6"),
+    color: cssVar(slot, "#e65d31"),
     points: seriesPoints(DATA.education[key].series),
   }));
   const peak = Math.max(...series.flatMap((s) => s.points.map((p) => p.value)));
@@ -305,34 +338,18 @@ function renderDefinitions() {
 
 function renderPromise() {
   const { target, marks } = GDP_BENCHMARKS;
-  benchmarkPlot($("promise-plot"), {
-    marks,
-    target,
-    max: 6.6,
-    format: (v) => `${v.toFixed(1)}%`,
-    height: 40 + marks.length * 34 + 60,
-  });
-
   const lo = Math.min(...marks.map((m) => m.value));
   const hi = Math.max(...marks.map((m) => m.value));
-  $("promise-caption").textContent =
-    "Public spending on education as a share of GDP, as published. These are "
-    + "cited figures, not computed here: this pipeline reads budget documents "
-    + "and no GDP series is loaded. Each is sourced at the foot of the page.";
-
-  const note = $("promise-note");
-  note.textContent = "";
-  const strong = document.createElement("strong");
-  strong.textContent = "The shortfall depends on the definition. ";
-  note.appendChild(strong);
-  note.appendChild(document.createTextNode(
-    `On the narrowest published measure India spends ${lo.toFixed(1)}% of GDP `
-    + `on education and falls ${(target.value - lo).toFixed(1)} points short; `
-    + `on the broadest it spends ${hi.toFixed(1)}% and falls `
-    + `${(target.value - hi).toFixed(1)} points short. The gap between those `
-    + `two readings is ${(hi - lo).toFixed(1)} points, wider than most of the `
-    + `annual movement anyone argues about. It is the same disagreement this `
-    + `page opens with, reaching the one number everybody quotes.`));
+  mountStory("promise", gauge($("gauge-plot"), {
+    marks,
+    target,
+    max: 7,
+    format: (v) => v.toFixed(1).replace(/\.0$/, "") + "%",
+    ariaLabel:
+      "Public education spending as a share of GDP against the 6% target: "
+      + marks.map((m) => m.value + "% (" + m.label + ")").join(", ")
+      + ". The published measures differ by " + (hi - lo).toFixed(1) + " points.",
+  }));
 }
 
 // ------------------------------------------------------------- 3. who pays
@@ -406,13 +423,13 @@ function renderWhoPays() {
       label: `States and UTs, ${sLast.year} ${sLast.basis}`,
       value: lakhCrore(sLast.value),
       sub: "on the shared functional heads",
-      colour: cssVar("--s1", "#2a78d6"),
+      colour: cssVar("--states", "#3d8bff"),
     },
     {
       label: `Union, ${uLast.year} ${uLast.basis}`,
       value: lakhCrore(uLast.value),
       sub: "the same heads, the same definition",
-      colour: cssVar("--s2", "#eb6834"),
+      colour: cssVar("--union", "#e65d31"),
     },
     {
       label: "Ratio",
@@ -422,19 +439,37 @@ function renderWhoPays() {
     },
   ]);
 
+  // The scroll-driven version: the two tiers on one scale, counted.
+  const uColour = cssVar("--union", "#e65d31");
+  const sColour = cssVar("--states", "#3d8bff");
+  $("tier-union").textContent = lakhCrore(uLast.value);
+  $("tier-states").textContent = lakhCrore(sLast.value);
+  $("tier-ratio").textContent = `${ratio.toFixed(1)} to 1`;
+  mountStory("whopays", tierBars($("tier-plot"), {
+    rows: [
+      { label: `Union, ${uLast.year}`, value: uLast.value, color: uColour },
+      { label: `States and union territories, ${sLast.year}`, value: sLast.value, color: sColour },
+    ],
+    format: (v) => lakhCrore(v),
+    ariaLabel:
+      `Education, sports, art and culture, ${sLast.year} ${sLast.basis}: `
+      + `the Union ${lakhCrore(uLast.value)}, the states and union territories `
+      + `${lakhCrore(sLast.value)}, a ratio of ${ratio.toFixed(1)} to 1.`,
+  }));
+
   const peak = Math.max(...statePts.map((p) => p.value));
   lineChart($("whopays-plot"), {
     series: [
       {
         label: "States and union territories",
         short: "States",
-        color: cssVar("--s1", "#2a78d6"),
+        color: cssVar("--states", "#3d8bff"),
         points: statePts,
       },
       {
         label: "Union government",
         short: "Union",
-        color: cssVar("--s2", "#eb6834"),
+        color: cssVar("--union", "#e65d31"),
         points: unionPts,
       },
     ],
@@ -445,8 +480,8 @@ function renderWhoPays() {
   });
 
   legend($("whopays-legend"), [
-    { label: "States and union territories", color: cssVar("--s1", "#2a78d6") },
-    { label: "Union government", color: cssVar("--s2", "#eb6834") },
+    { label: "States and union territories", color: cssVar("--states", "#3d8bff") },
+    { label: "Union government", color: cssVar("--union", "#e65d31") },
     {
       label: "dashed line, hollow dot = estimate, not an outturn",
       color: cssVar("--ink-muted", "#8a9099"),
@@ -537,7 +572,7 @@ function renderStateShare() {
     series: [{
       label: "All states and UTs",
       short: "All states",
-      color: cssVar("--s1", "#2a78d6"),
+      color: cssVar("--states", "#3d8bff"),
       points: pts,
     }],
     years,
@@ -550,7 +585,7 @@ function renderStateShare() {
   legend($("stateshare-legend"), [
     {
       label: "All states and UTs, RBI's own aggregate",
-      color: cssVar("--s1", "#2a78d6"),
+      color: cssVar("--states", "#3d8bff"),
     },
     {
       label: "dashed line, hollow dot = estimate, not an outturn",
@@ -624,27 +659,7 @@ function renderRanking() {
     }
   }
 
-  if (MAP) {
-    const values = new Map(items.map((d) => [d.code, d.value]));
-    choropleth($("map-plot"), {
-      features: MAP.features,
-      values,
-      format: (v) => `${v.toFixed(1)}%`,
-      height: 620,
-      label: byShare ? "share of own budget" : "share of GSDP",
-      noDataLabel: "no state budget of its own",
-    });
-    const years = [...new Set(items.map((d) => d.extra.value))].sort();
-    $("map-caption").textContent = byShare
-      ? `Education as a share of each government's own aggregate expenditure, `
-        + `${years.length === 1 ? years[0] : years[0] + " to " + years[years.length - 1]}. `
-        + `Darker is a larger share. The five union territories without a `
-        + `legislature have no budget of their own and are left unfilled; `
-        + `their schools are funded through the Union budget.`
-      : `Education spending as a share of each state's GSDP. Darker is a `
-        + `larger share. States without a published GSDP are left unfilled.`;
-    animateMap($("map-plot"));
-  }
+  renderMap();
 
   rankedBars($("rank-plot"), {
     items,
@@ -668,6 +683,118 @@ function renderRanking() {
       + `both figures. GSDP is published only from 2011-12 and not for every `
       + `entity, so some are absent. A poorer state can spend a large share of `
       + `a small economy and still spend little per child.`;
+}
+
+// ------------------------------------------------- the map, through time
+
+const MAPSTATE = { years: [], index: -1, timer: null, chart: null, measure: null };
+
+// Each state's figure for one year. Numerator and denominator are always read
+// on the same estimate basis, so a share never mixes a budget estimate with an
+// audited outturn.
+function stateValuesFor(year, byShare) {
+  const out = new Map();
+  for (const e of STATES.states) {
+    if (e.kind === "aggregate") continue;
+    const ser = STATES.series[e.code];
+    if (!ser) continue;
+    const edu = (ser.education_spend || {})[year];
+    if (!edu) continue;
+    if (byShare) {
+      const agg = (ser.aggregate_expenditure || {})[year];
+      if (!agg) continue;
+      const t = ["A", "RE", "BE"].find((k) => edu[k] != null && agg[k] != null);
+      if (t && agg[t]) out.set(e.code, (100 * edu[t]) / agg[t]);
+    } else {
+      const gsdp = (ser.gsdp || {})[year];
+      const t = ["A", "RE", "BE"].find((k) => edu[k] != null);
+      if (t && typeof gsdp === "number" && gsdp) out.set(e.code, (100 * edu[t]) / gsdp);
+    }
+  }
+  return out;
+}
+
+function stopPlay() {
+  if (MAPSTATE.timer) clearInterval(MAPSTATE.timer);
+  MAPSTATE.timer = null;
+  const btn = $("map-play");
+  if (btn) {
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-label", "Play through the years");
+    btn.querySelector("path").setAttribute("d", "M3 1.5v11l9-5.5z");
+  }
+}
+
+function showYear(i) {
+  const years = MAPSTATE.years;
+  if (!years.length || !MAPSTATE.chart) return;
+  MAPSTATE.index = Math.max(0, Math.min(years.length - 1, i));
+  const year = years[MAPSTATE.index];
+  $("map-year").textContent = year;
+  $("map-range").value = String(MAPSTATE.index);
+  MAPSTATE.chart.update(stateValuesFor(year, state.rankMeasure === "share"), year);
+}
+
+function togglePlay() {
+  if (MAPSTATE.timer) { stopPlay(); return; }
+  const last = MAPSTATE.years.length - 1;
+  if (MAPSTATE.index >= last) showYear(0);
+  const btn = $("map-play");
+  btn.setAttribute("aria-pressed", "true");
+  btn.setAttribute("aria-label", "Pause");
+  btn.querySelector("path").setAttribute("d", "M3 1.5h3v11H3zM8 1.5h3v11H8z");
+  MAPSTATE.timer = setInterval(() => {
+    if (MAPSTATE.index >= MAPSTATE.years.length - 1) { stopPlay(); return; }
+    showYear(MAPSTATE.index + 1);
+  }, 650);
+}
+
+function renderMap() {
+  if (!STATES || !MAP) return;
+  stopPlay();
+  const byShare = state.rankMeasure === "share";
+  const years = STATES.meta.years.filter((y) => stateValuesFor(y, byShare).size > 0);
+  if (!years.length) return;
+
+  // One colour scale for every year, which is what makes the animation
+  // honest. Its ends are the 2nd and 98th percentiles across all states and
+  // years, so a handful of small entities cannot wash out everyone else;
+  // values beyond them take the end colours, and the key says so.
+  const all = years.flatMap((y) => [...stateValuesFor(y, byShare).values()])
+    .sort((a, b) => a - b);
+  const q = (p) => all[Math.round(p * (all.length - 1))];
+  const domain = [q(0.02), q(0.98)];
+  const fmt = (v) => `${v.toFixed(1)}%`;
+
+  MAPSTATE.chart = mapChart($("map-plot"), {
+    features: MAP.features,
+    format: fmt,
+    legendFormat: (v, end) => (end === 0 ? "\u2264 " : "\u2265 ") + fmt(v),
+    label: byShare ? "share of own budget" : "share of GSDP",
+    domain,
+    noDataLabel: "no figure this year",
+    ariaLabel: byShare
+      ? "Map of India: education as a share of each state's own budget, by year."
+      : "Map of India: education spending as a share of each state's GSDP, by year.",
+  });
+
+  const changed = MAPSTATE.measure !== state.rankMeasure;
+  MAPSTATE.measure = state.rankMeasure;
+  MAPSTATE.years = years;
+  const range = $("map-range");
+  range.max = String(years.length - 1);
+  if (changed || MAPSTATE.index < 0 || MAPSTATE.index > years.length - 1) {
+    MAPSTATE.index = years.length - 1;
+  }
+  showYear(MAPSTATE.index);
+
+  $("map-caption").textContent = byShare
+    ? `Darker blue is a larger share of the state's own budget. The colour `
+      + `scale is the same in every year, so a change of colour is a change in `
+      + `the share. Union territories without a legislature have no budget of `
+      + `their own and stay grey.`
+    : `Darker blue is a larger share of the state's economy. GSDP is published `
+      + `from ${years[0]}, so the map starts there.`;
 }
 
 // --------------------------------------------------- 5. promise and outturn
@@ -698,9 +825,9 @@ function renderUtilisation() {
   });
 
   legend($("util-legend"), [
-    { label: "Budget estimate", color: cssVar("--seq-estimate", "#86b6ef"), hollow: true },
+    { label: "Budget estimate", color: cssVar("--union", "#e65d31"), hollow: true },
     { label: "Revised estimate (tick)", color: cssVar("--ink-muted", "#8a9099") },
-    { label: "Actuals", color: cssVar("--seq-outturn", "#2a78d6"), shape: "rect" },
+    { label: "Actuals", color: cssVar("--union", "#e65d31"), shape: "rect" },
   ]);
 
   const settled = rows.filter((r) => r.be != null && r.a != null);
@@ -735,8 +862,8 @@ function renderUtilisation() {
 function renderClassification() {
   const latest = latestYear();
   const years = axisYears();
-  const accent = cssVar("--s1", "#2a78d6");
-  const grants = cssVar("--s2", "#eb6834");
+  const accent = cssVar("--union", "#e65d31");
+  const grants = cssVar("--states", "#3d8bff");
   const dim = cssVar("--dim", "#d9d2c6");
 
   // Emphasis, not categorical: education heads, the grants that leave the
@@ -836,22 +963,41 @@ function isEduDept(name) {
 
 function renderScale() {
   const latest = latestYear();
-  const accent = cssVar("--s1", "#2a78d6");
-  const dim = cssVar("--dim", "#d9d2c6");
+  const accent = cssVar("--union", "#e65d31");
+  const dim = cssVar("--dim", "#262c35");
+  const ink = cssVar("--ink", "#f1eee8");
 
   const items = DATA.demands
-    .map((d) => ({
-      name: d.name,
-      value: valueAt(d.series, latest, "BE") ?? 0,
-      highlight: isEduDept(d.name),
-    }))
+    .map((d) => {
+      const edu = isEduDept(d.name);
+      const interest = /^interest payments$/i.test(d.name.trim());
+      return {
+        name: d.name,
+        shortName: edu ? d.name.replace(/^Department of /i, "") : d.name,
+        value: valueAt(d.series, latest, "BE") ?? 0,
+        group: edu ? "education" : (interest ? "interest" : null),
+      };
+    })
     .filter((d) => d.value > 0);
 
   const total = items.reduce((a, d) => a + d.value, 0);
-  const edu = items.filter((d) => d.highlight).reduce((a, d) => a + d.value, 0);
-  const biggest = items.slice().sort((a, b) => b.value - a.value)[0];
+  const edu = items.filter((d) => d.group === "education").reduce((a, d) => a + d.value, 0);
+  const interest = items.filter((d) => d.group === "interest").reduce((a, d) => a + d.value, 0);
 
-  const tiles = [
+  $("scale-total").textContent = lakhCrore(total);
+  $("scale-interest").textContent = pct((100 * interest) / total, 1);
+  $("scale-education").textContent = pct((100 * edu) / total, 1);
+
+  mountStory("scale", treemapStory($("treemap-plot"), {
+    items,
+    format: (v) => `${crore(v)} cr`,
+    ariaLabel:
+      `The Union budget for ${latest}, every demand for grants drawn to scale. `
+      + `Interest payments are ${pct((100 * interest) / total, 1)} of it; the `
+      + `Ministry of Education's two departments are ${pct((100 * edu) / total, 1)}.`,
+  }));
+
+  statTiles($("scale-stats"), [
     {
       label: "Education's share",
       value: pct((100 * edu) / total),
@@ -859,10 +1005,10 @@ function renderScale() {
       colour: accent,
     },
     {
-      label: "Largest single demand",
-      value: lakhCrore(biggest.value),
-      sub: biggest.name,
-      colour: dim,
+      label: "Interest payments",
+      value: pct((100 * interest) / total),
+      sub: `${(interest / edu).toFixed(1)} times the education ministry`,
+      colour: ink,
     },
     {
       label: "Demands for grants",
@@ -870,27 +1016,17 @@ function renderScale() {
       sub: "every ministry and department",
       colour: dim,
     },
-  ];
-  statTiles($("scale-stats"), tiles);
-
-  treemap($("treemap-plot"), {
-    items,
-    format: (v) => `${crore(v)} cr`,
-    height: 470,
-    accent,
-    dim,
-    onFillAccent: "#fff",
-  });
+  ]);
 
   legend($("treemap-legend"), [
-    { label: "Education departments", color: accent, shape: "rect" },
+    { label: "Ministry of Education", color: accent, shape: "rect" },
+    { label: "Interest payments", color: ink, shape: "rect" },
     { label: "Every other demand", color: dim, shape: "rect" },
   ]);
 
   $("treemap-caption").textContent =
-    `Every demand for grants, ${latest} budget estimate, area proportional to `
-    + `provision net of receipts. Tiles too small to label carry their name on `
-    + `hover; the full table has every figure.`;
+    `Every demand for grants in the ${latest} budget estimate, area in `
+    + `proportion to provision. Hover any tile for its figure.`;
 
   renderDepartments();
 }
@@ -1113,9 +1249,11 @@ function renderChrome() {
 // Every plot that can draw itself in, and whether it has been armed yet. A
 // figure animates the first time it is scrolled to and never again, so a
 // re-render from a control change redraws instantly instead of replaying.
+// The scroll-driven graphics and the map animate themselves, so they are not
+// in this list.
 const PLOTS = [
-  "edu-plot", "promise-plot", "whopays-plot", "stateshare-plot",
-  "rank-plot", "util-plot", "class-plot", "treemap-plot",
+  "edu-plot", "whopays-plot", "stateshare-plot",
+  "rank-plot", "util-plot", "class-plot",
 ];
 const armed = new Set();
 
@@ -1205,14 +1343,57 @@ function wireOnce() {
     download(`union-major-heads-${state.basis}.csv`, csv(rows));
   });
 
+  $("map-play").addEventListener("click", togglePlay);
+  $("map-range").addEventListener("input", (e) => {
+    stopPlay();
+    showYear(Number(e.target.value));
+  });
+
+  progressBar($("progress"));
+  wireTheme();
+
+  // Only re-render when the width actually changes. Mobile browsers fire
+  // resize as the address bar shows and hides, which would otherwise rebuild
+  // every chart mid-scroll.
   let timer;
+  let lastWidth = window.innerWidth;
   window.addEventListener("resize", () => {
+    if (window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
     clearTimeout(timer);
     timer = setTimeout(renderAll, 200);
   });
 
   window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", () => setTimeout(renderAll, 60));
+}
+
+// The page follows the system theme until the reader picks one, and then
+// remembers it. Storage can throw in a private window; the toggle still works
+// for the session, it just is not remembered.
+function effectiveTheme() {
+  const stamped = document.documentElement.getAttribute("data-theme");
+  if (stamped) return stamped;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function labelTheme() {
+  const btn = $("theme-toggle");
+  if (btn) btn.textContent = effectiveTheme() === "dark" ? "Light" : "Dark";
+}
+
+function wireTheme() {
+  const btn = $("theme-toggle");
+  if (!btn) return;
+  labelTheme();
+  btn.addEventListener("click", () => {
+    const next = effectiveTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("budget-theme", next); } catch (e) { /* not remembered */ }
+    labelTheme();
+    // colours are read from the stylesheet at draw time, so redraw
+    requestAnimationFrame(renderAll);
+  });
 }
 
 Promise.all([load(), loadStates(), loadMap()])
@@ -1226,6 +1407,7 @@ Promise.all([load(), loadStates(), loadMap()])
     wireControls();
     wireOnce();
     renderAll();
+    wireStories();
   })
   .catch((err) => {
     const el = $("loading");
