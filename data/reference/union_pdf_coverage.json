@@ -1,0 +1,163 @@
+{
+ "2003-04": {
+  "files": 104,
+  "demands_parsed": 103,
+  "demands_with_a_total": 102,
+  "problems": [
+   "2003-04: dg31.pdf: demand 31 printed twice, second copy ignored",
+   "2003-04: dg94.pdf: demand 94 has no total",
+   "2003-04: dg104.pdf: no demand table"
+  ]
+ },
+ "2004-05": {
+  "files": 105,
+  "demands_parsed": 105,
+  "demands_with_a_total": 105,
+  "problems": []
+ },
+ "2005-06": {
+  "files": 105,
+  "demands_parsed": 105,
+  "demands_with_a_total": 104,
+  "problems": [
+   "2005-06: dg12.pdf: demand 12 has no total"
+  ]
+ },
+ "2006-07": {
+  "files": 105,
+  "demands_parsed": 105,
+  "demands_with_a_total": 104,
+  "problems": [
+   "2006-07: dg17.pdf: demand 17 has no total"
+  ]
+ },
+ "2007-08": {
+  "files": 104,
+  "demands_parsed": 104,
+  "demands_with_a_total": 103,
+  "problems": [
+   "2007-08: dg17.pdf: demand 17 has no total"
+  ]
+ },
+ "2008-09": {
+  "files": 105,
+  "demands_parsed": 104,
+  "demands_with_a_total": 104,
+  "problems": [
+   "2008-09: dg58.pdf: Unknown filter: param={}"
+  ]
+ },
+ "2009-10": {
+  "files": 105,
+  "demands_parsed": 105,
+  "demands_with_a_total": 105,
+  "problems": []
+ },
+ "2010-11": {
+  "files": 105,
+  "demands_parsed": 105,
+  "demands_with_a_total": 105,
+  "problems": []
+ },
+ "2011-12": {
+  "files": 1,
+  "demands_parsed": 106,
+  "demands_with_a_total": 106,
+  "problems": []
+ },
+ "2012-13": {
+  "files": 1,
+  "demands_parsed": 106,
+  "demands_with_a_total": 106,
+  "problems": []
+ },
+ "2013-14": {
+  "files": 1,
+  "demands_parsed": 106,
+  "demands_with_a_total": 106,
+  "problems": [
+   "2013-14: alldg.pdf: demand 33 printed twice, second copy ignored"
+  ]
+ },
+ "2014-15": {
+  "files": 1,
+  "demands_parsed": 108,
+  "demands_with_a_total": 108,
+  "problems": [
+   "2014-15: alldg.pdf: demand 89 printed twice, second copy ignored",
+   "2014-15: alldg.pdf: demand 103 printed twice, second copy ignored"
+  ]
+ },
+ "2015-16": {
+  "files": 1,
+  "demands_parsed": 109,
+  "demands_with_a_total": 109,
+  "problems": []
+ },
+ "2016-17": {
+  "files": 1,
+  "demands_parsed": 98,
+  "demands_with_a_total": 98,
+  "problems": []
+ },
+ "2017-18": {
+  "files": 1,
+  "demands_parsed": 100,
+  "demands_with_a_total": 100,
+  "problems": []
+ },
+ "2018-19": {
+  "files": 1,
+  "demands_parsed": 99,
+  "demands_with_a_total": 99,
+  "problems": []
+ },
+ "2019-20": {
+  "files": 1,
+  "demands_parsed": 100,
+  "demands_with_a_total": 100,
+  "problems": []
+ },
+ "2020-21": {
+  "files": 1,
+  "demands_parsed": 101,
+  "demands_with_a_total": 101,
+  "problems": []
+ },
+ "2021-22": {
+  "files": 1,
+  "demands_parsed": 101,
+  "demands_with_a_total": 101,
+  "problems": []
+ },
+ "2022-23": {
+  "files": 1,
+  "demands_parsed": 102,
+  "demands_with_a_total": 102,
+  "problems": []
+ },
+ "2023-24": {
+  "files": 1,
+  "demands_parsed": 102,
+  "demands_with_a_total": 102,
+  "problems": []
+ },
+ "2024-25": {
+  "files": 1,
+  "demands_parsed": 102,
+  "demands_with_a_total": 102,
+  "problems": []
+ },
+ "2025-26": {
+  "files": 1,
+  "demands_parsed": 102,
+  "demands_with_a_total": 102,
+  "problems": []
+ },
+ "2026-27": {
+  "files": 1,
+  "demands_parsed": 102,
+  "demands_with_a_total": 102,
+  "problems": []
+ }
+}

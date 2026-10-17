@@ -194,45 +194,54 @@ def parse_ministries(path: Path, edition_fy: str):
 
 
 def pick_best(rows):
-    """Resolve the overlap between editions, one whole demand-year at a time.
+    """Resolve the overlap between editions: one edition owns a year.
 
-    Editions overlap by design: each reports four years, so up to three of them
-    describe the same (year, estimate_type) for the same demand. The later
-    edition is the more revised, so it wins.
+    Editions overlap by design. Each reports three or four fiscal years, so
+    up to four of them describe the same (year, estimate_type). The later
+    edition is the more revised, so it wins - on its date alone, never on
+    whether it arrived as a workbook or as a PDF.
 
-    The unit of choice is the whole (year, estimate_type, demand) group, not
-    the individual line. Matching line by line looks tidier but is wrong: the
-    documents do not always lay a demand out the same way twice. Demand 40
-    (Repayment of Debt) nets its receipts off under one note in the 2026-27
-    edition and two in the 2025-26 one, so a line-level merge kept a line from
-    each and double-counted Rs 90 lakh crore. Taking the group whole means a
-    demand-year is always internally consistent, because it comes from a
-    single published statement.
+    The unit of choice is the whole (year, estimate_type), not the line and
+    not the demand. Two reasons, and the second is why this is stricter than
+    it first was:
+
+    *   Line by line looks tidier and is wrong. The documents do not lay a
+        demand out the same way twice: demand 40 (Repayment of Debt) nets its
+        receipts off under one note in the 2026-27 edition and two in the
+        2025-26 one, so a line-level merge kept a line from each and
+        double-counted Rs 90 lakh crore.
+
+    *   Demand by demand is not safe either once every edition is in the
+        table, because demand numbers are renumbered between editions and
+        departments are renamed. (2021-22, BE) is published by both the
+        2021-22 and the 2022-23 editions; demand 1 is the Department of
+        Agriculture, Cooperation and Farmers' Welfare in the first and the
+        Department of Agriculture and Farmers Welfare in the second. Keyed on
+        the number, a year can splice two different departments into one
+        line; keyed on the name, a rename counts the same demand twice.
+
+    Taking the year whole means every figure for a year comes from one
+    published document, so it is internally consistent and the demand
+    numbering within it means one thing.
     """
     owner = {}
     for r in rows:
-        key = (r.fiscal_year, r.estimate_type, r.source_page.split("!")[-1])
+        key = (r.fiscal_year, r.estimate_type)
         edition = c.fy_start(r.source_edition.split()[-1])
         if key not in owner or edition > owner[key]:
             owner[key] = edition
     return [r for r in rows
-            if owner[(r.fiscal_year, r.estimate_type,
-                      r.source_page.split("!")[-1])]
+            if owner[(r.fiscal_year, r.estimate_type)]
             == c.fy_start(r.source_edition.split()[-1])]
 
 
-def main(argv) -> None:
-    editions = c.read_json(c.REFERENCE / "union_editions.json")
-    have = []
+def read_workbooks(editions):
+    """Parse every alldg.xlsx on disk -> (rows, ministries, problems)."""
+    all_rows, ministries, problems = [], {}, []
     for ed in editions:
         path = c.RAW / "union" / ed["fiscal_year"] / "alldg.xlsx"
-        if path.exists() and not ed["interim"]:
-            have.append((ed, path))
-    if not have:
-        raise SystemExit("no raw workbooks; run scripts/fetch_union.py first")
-
-    all_rows, ministries, problems = [], {}, []
-    for ed, path in have:
+        if ed["interim"] or not path.exists():
+            continue
         fy = ed["fiscal_year"]
         wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
         url = ed["eb_base"] + "alldg.xlsx"
@@ -248,12 +257,50 @@ def main(argv) -> None:
         dgsum = path.parent / "dgsum.xlsx"
         if dgsum.exists():
             ministries[fy] = parse_ministries(dgsum, fy)
+        print("  %-9s xlsx  %3d sheets  %6d rows"
+              % (fy, len(names), len(all_rows) - n_before))
+    return all_rows, ministries, problems
 
-        print("  %-9s %3d sheets  %6d rows" % (
-            fy, len(names), len(all_rows) - n_before))
+
+def read_pdfs(editions, done):
+    """Parse the PDF editions that no workbook already covers.
+
+    An edition that ships both is read from the workbook only. They are the
+    same document in two containers, so reading both would put two copies of
+    one edition into pick_best(), where the tie between them would be decided
+    by nothing better than iteration order.
+    """
+    all_rows, ministries, problems = [], {}, []
+    for ed, paths, url in pdfp.pdf_editions():
+        fy = ed["fiscal_year"]
+        if fy in done:
+            continue
+        rows, demands, probs = pdfp.cached_edition(paths, fy, url)
+        problems += probs
+        all_rows += rows
+        if demands:
+            ministries[fy] = demands
+        print("  %-9s pdf   %3d demands %6d rows" % (fy, len(demands), len(rows)))
+    return all_rows, ministries, problems
+
+
+def main(argv) -> None:
+    editions = c.read_json(c.REFERENCE / "union_editions.json")
+
+    all_rows, ministries, problems = read_workbooks(editions)
+    pdf_rows, pdf_ministries, pdf_problems = read_pdfs(editions, set(ministries)
+                                                       | {r.source_edition.split()[-1]
+                                                          for r in all_rows})
+    all_rows += pdf_rows
+    problems += pdf_problems
+    for fy, names in pdf_ministries.items():
+        ministries.setdefault(fy, names)
+
+    if not all_rows:
+        raise SystemExit("nothing parsed; run scripts/fetch_union.py first")
 
     if problems:
-        print("\n%d sheets could not be parsed:" % len(problems))
+        print("%d statements could not be parsed:" % len(problems))
         for p in problems[:12]:
             print("   ", p)
 
@@ -277,10 +324,10 @@ def main(argv) -> None:
         c.write_json(ministries, c.REFERENCE / "union_ministries.json")
 
     years = sorted({r.fiscal_year for r in rows})
-    print("\nfiscal years covered: %s .. %s (%d)" % (years[0], years[-1], len(years)))
+    print(chr(10) + "fiscal years covered: %s .. %s (%d)" % (years[0], years[-1], len(years)))
     for etype in ("A", "RE", "BE"):
         ys = sorted({r.fiscal_year for r in rows if r.estimate_type == etype})
-        print("  %-3s %s" % (etype, ", ".join(ys) if ys else "-"))
+        print("  %-3s %2d  %s" % (etype, len(ys), ", ".join(ys) if ys else "-"))
 
 
 if __name__ == "__main__":

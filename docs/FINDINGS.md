@@ -10,7 +10,7 @@ the next person to extend this will hit the same things.
 | --- | --- |
 | RBI Statement 26 at `website.rbi.org.in/documents/d/rbi/statement-26_sf2026` | Redirects to the RBI home page. The state layer needs a new entry point before work starts. |
 | ABE PDF at `education.gov.in/.../budget_exp_2020_22.pdf` | 404. |
-| Excel for Expenditure Budget "from about 2012-13" | Per-demand Excel starts with the **2017-18** edition. The bundled `alldg.xlsx` exists only for 2019-20, 2024-25, 2025-26 and 2026-27. Everything earlier is PDF. |
+| Excel for Expenditure Budget "from about 2012-13" | Per-demand Excel starts with the **2017-18** edition. The bundled `alldg.xlsx` exists only for 2019-20, 2024-25, 2025-26 and 2026-27. Everything earlier is PDF, and is now read as PDF; see "The PDF era" below. |
 | Union data "1996-97 to 2026-27 digital" | True for documents, but 1996-97 and 1997-98 have no reachable Expenditure Budget directory. Verified coverage starts at **1998-99**. |
 | "Key on ministry and department names, not on demand numbers" | Correct, and more important than it sounds — see below. |
 
@@ -105,24 +105,173 @@ Things that bite:
 
 ## Why an edition is chosen whole
 
-Editions overlap: up to three describe the same year and estimate type for the
-same demand. The later edition wins, because it is the more revised.
+Editions overlap: up to four describe the same year and estimate type. The
+later edition wins, because it is the more revised — on its date alone, never
+on whether it arrived as a workbook or as a PDF.
 
-The unit of choice has to be the whole `(year, estimate_type, demand)` group,
-not the individual line. A line-level merge looked tidier and was wrong: the
-documents do not lay a demand out the same way twice, so it kept a line from
-each edition and double-counted Rs 90 lakh crore on demand 40. Taking the
-group whole guarantees a demand-year comes from a single published statement.
+The unit of choice is the whole `(year, estimate_type)`. It began as the
+`(year, estimate_type, demand)` group, because a line-level merge kept a line
+from each edition and double-counted Rs 90 lakh crore on demand 40. Adding
+the PDF editions made even the demand too small a unit, for the reason set
+out under "Demand numbers are not identifiers" above: `(2021-22, BE)` is
+published by both the 2021-22 and the 2022-23 editions, and between them
+demand 1 changed from the Department of Agriculture, Cooperation and Farmers'
+Welfare to the Department of Agriculture and Farmers Welfare. Keyed on the
+number, a year splices two departments into one line; keyed on the name, a
+rename counts the same demand twice. Taking the year whole means every figure
+for a year comes from one published document, and the demand numbering
+within it means one thing.
+
+## The PDF era
+
+`alldg.xlsx` exists for four editions. Every edition from 2003-04 publishes
+the same statements as PDF — `alldg.pdf` as one bundle from 2011-12, and
+`dg<N>.pdf` one file per demand from 2003-04 — and reading those closes the
+2020-21 and 2021-22 hole and takes the series back to **2002-03**,
+twenty-five fiscal years. `scripts/parse_union_pdf.py` does it with
+`pdfplumber`.
+
+The statement is the same statement, so the layout rules it needs are the
+ones the workbook parser already had. They were moved into
+`scripts/union_statement.py`, which both parsers now call, because the one
+thing worse than a layout trap is two copies of the fix for it.
+
+### What a PDF makes harder than a spreadsheet
+
+**A PDF has no columns, only x coordinates.** A row prints only the figures
+it has. Demand 25 of 2021-22 shows a single `-0.06` against
+Secretariat-Social Services, and that is the 2019-20 actuals column, not the
+first column of anything; reading the words in order files it under actuals
+by luck and under something else the next time. Figures are therefore placed
+by their right edge, against column edges clustered from every figure in the
+file. Two details earn their keep:
+
+- The nil marker `...` is clustered separately, because up to the 2010-11
+  editions it is set centred rather than flush right. It still proves a
+  column is there, and that matters: demand 61 of 2003-04 is wholly non-Plan
+  and prints nothing but `...` in three of its nine columns, so without the
+  nils the remaining six fit one column to the left — which would put its
+  Non-Plan figures under Plan and leave the Total column, the only one that
+  is read, empty.
+- Columns are clustered per file *and per layout*. The 2016-17 bundle holds
+  three typesettings of the same table, their columns a few points apart;
+  clustering the bundle as a whole blurs them into each other.
+
+**There are two header shapes, and the older one has no actuals.** From the
+2017-18 edition the table is four columns — t-2 actuals, t-1 BE, t-1 RE, t BE
+— exactly as the workbooks. Before that, every year is split Plan / Non-Plan
+/ Total and there are only three year groups: t-1 BE, t-1 RE, t BE. The
+Demands for Grants of the Plan era never print an actual at all, so 2002-03
+to 2014-15 can only ever be budget and revised estimates. Of the nine columns
+the Total of each group is read, which is Plan plus Non-Plan.
+
+Because the shape is one of exactly two, it is derived from the number of
+column groups and the edition's own year, and then checked against whatever
+the header did extract. That is what makes the legacy files readable at all:
+demand 62 of 2003-04 prints `2002-2003 Budget Revised 2003-2004 Budget`,
+having lost the second year outright, and the whole 2014-15 bundle sets its
+years in the legacy font, so its header extracts as the bare words `Budget
+Revised Budget`. A header that contradicts the shape is rejected, so a real
+change of layout still fails loudly.
+
+**The Devanagari half is not always Devanagari.** Up to the 2018-19 edition
+it is set in a legacy font with no usable encoding and extracts as Latin-1
+noise. It cannot be stripped by script, so a word is kept only if it is ASCII
+once the typographic quotes are folded.
+
+**Words that should not be one word.** The legacy typesetting runs tokens
+together, and every case is fatal rather than untidy, because what
+disappears is always a landmark or a figure:
+
+| Printed | Is | Found in |
+| --- | --- | --- |
+| `2009-2010Budget` | year + estimate | demand 2 of 2010-11 |
+| `2013.432708.43` | two figures | demand 5 of 2003-04 |
+| `...14318.18` | nil + figure | demand 24 of 2010-11 |
+| `3452107.50` | major head + figure | demand 91 of 2003-04 |
+| `Institutions3466` | head name + major head | demand 33 of 2003-04 |
+
+The first three are split by decomposing the token; the last two only where
+the part that would be the code really does end at the Major Head column,
+since `123456.78` must not become head 1234 and Rs 56.78. Left alone,
+`2013.432708.43` costs more than the Rs 20 lakh crore it looks like: it is
+part of a `GRAND TOTAL` row, so the label becomes `GRAND TOTAL
+2013.432708.43`, the landmark stops matching, the parser never learns that
+the recoveries have started, and the demand reports its recoveries as its
+expenditure.
+
+**One printed row, two baselines.** The 2017-18 bundle sets a head's name a
+few points above its own figures. The two are rejoined when the lower row is
+nothing but figures — allowing for a stray dash left where the Devanagari
+was, without which the Defence demands lose their entire recovery block.
+
+### Three more things the documents do
+
+- **A demand of one head prints no total**, because the head is the total.
+  Defence Pensions is one: demand 21 of 2010-11 is a single line against
+  major head 2071 and stops. Read strictly it adds nothing to the year and
+  Rs 25,000 crore goes missing, so the total is added up from the components
+  the document does print. Likewise a demand of one section closes with a
+  bare `Total` rather than a `GRAND TOTAL`.
+- **An appropriation of one head prints no GRAND TOTAL either**, and goes
+  straight from its section total to the note introducing the receipts netted
+  against it — demand 34 of 2003-04, Interest Payments. The note is therefore
+  a landmark in its own right; without it the receipts below are added to the
+  expenditure above instead of netted off it, and interest payments come out
+  Rs 5,704 crore too small.
+- **A Union Territory's demand is nested.** Demand 93 of 2003-04 (Andaman and
+  Nicobar Islands) runs to sixteen blocks, one per ministry, each with its own
+  revenue and capital section totals, and then totals the sections again for
+  the demand as a whole. Its section totals therefore come to exactly twice
+  its major heads. That is how the document reads, so the parser records the
+  block totals under a `*_block` account and `validate.py` counts those
+  demand-years out of the heads-sum-to-section identity rather than failing
+  on them.
+
+Four files ship the same demand twice — `dg31.pdf` of 2003-04 is one page
+printed two pages long, and the 2013-14 and 2014-15 bundles repeat a page
+each. The second copy is ignored, which is worth doing
+explicitly: parsing both doubles the demand, and every identity inside it
+still holds, so nothing downstream would complain.
+
+### What this costs, and what is left
+
+Reading 2,400 pages takes about ten minutes, so each edition is cached under
+`data/processed/union_pdf_cache/`, keyed by a hash of the parser's own
+source. Change `parse_union_pdf.py`, `union_statement.py` or `common.py` and
+every cache is stale and reparsed, so a cached run cannot disagree with a
+fresh one.
+
+`data/reference/union_pdf_coverage.json` records, per edition, how many
+demands were read and what was given up. The residue is small and all of it
+is in the per-demand-PDF editions of 2003-04 to 2010-11:
+
+- `dg58.pdf` of 2008-09 is encrypted with a filter pdfminer does not know.
+- `dg104.pdf` of 2003-04 is not a demand at all but a statement of New
+  Service.
+- Four demands across four editions (94 of 2003-04, 12 of 2005-06, 17 of
+  2006-07 and 17 of 2007-08) print no total this parser can find, so those
+  four years are short by one demand each.
+
+Everything else reads: 2,474 demands over twenty-four editions, and every
+one of the identities in `validate.py` holds across all 6,073 demand-years.
+
+An edition whose layout defeats the parser altogether should be marked
+`"unparsed": true` in `data/reference/union_editions.json`, which
+`pdf_editions()` honours; none currently needs it. A year short of a demand
+looks perfectly reasonable on a chart, which is why the count is written down
+rather than left in a console log.
 
 ## Next
 
-1. **PDF era.** `dg<N>.pdf` exists for every edition from 2003-04. Parsing it
-   closes the 2020-21 and 2021-22 gap and extends the series back twenty
-   years. The table shape is the same as the Excel; needs `pdfplumber`, which
-   is not currently installed.
-2. **Statements of Budget Estimates** (`sbe<N>`) for scheme-level detail —
+1. **Statements of Budget Estimates** (`sbe<N>`) for scheme-level detail —
    Samagra Shiksha, PM POSHAN and so on, with the lineage table the brief
    asks for.
+2. **Actuals before 2015-16.** The Demands for Grants of the Plan era print
+   only estimates, so the Union series has budget and revised estimates from
+   2002-03 but actuals only from 2015-16. Actuals for the earlier years are
+   published, but in the Finance Accounts and in the Expenditure Budget's
+   own summary statements, not in the demands.
 3. **Denominators.** GDP, a deflator and UDISE+ enrolment, to get off nominal
    rupees. State GSDP is now loaded, so state ratios exist from 2011-12; the
    Union half is still nominal only.
