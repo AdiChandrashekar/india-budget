@@ -24,6 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import common as c  # noqa: E402
+import validate_states  # noqa: E402
 
 TOLERANCE = 1.0          # Rs crore; the documents round to two decimals
 
@@ -168,6 +169,9 @@ def main() -> None:
 
     failures = check_fixtures(rows) + check_identities(rows)
     check_coverage(rows)
+
+    # The state layer's own fixtures and identities live in validate_states.py.
+    failures += validate_states.run()
 
     if failures:
         print("\n%d FAILURES" % len(failures))

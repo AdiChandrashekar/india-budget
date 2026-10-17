@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import http.cookiejar
 import json
 import re
 import sys
@@ -147,6 +148,175 @@ def _record(dest: Path, url: str, body: bytes) -> None:
             time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             len(body), hashlib.sha256(body).hexdigest(),
         ])
+
+
+# --------------------------------------------------------------------------- #
+# RBI's document host, which fights back
+# --------------------------------------------------------------------------- #
+
+# rbi.org.in serves its HTML indexes to anything, but the documents those
+# indexes link to live on rbidocs.rbi.org.in behind an F5/Shape bot defence.
+# Ask it for a workbook with a plain urllib request and you get HTTP 200, a
+# Content-Type of text/html and 45 kB of obfuscated JavaScript -- a challenge
+# page, not the file. So the usual existence check is worse than useless here:
+# the request succeeds, the bytes arrive, and nothing looks wrong until a
+# parser chokes on "not a zip file".
+#
+# Three things fix it, and all three are needed:
+#
+# 1. A cookie jar shared across the whole run.
+# 2. Visiting the HTML index on rbi.org.in *first*. That page sets an `f5_cspm`
+#    cookie which is what actually gets a document request through; without it
+#    the challenge repeats indefinitely, and retrying alone does not help. This
+#    is also honest behaviour: we arrive at a document by reading the page that
+#    links to it, the way a reader would.
+# 3. Sending that index as the Referer, and checking the magic number rather
+#    than the status code -- exactly as discover_union.py has to for
+#    indiabudget.gov.in. Different site, different bot defence, same lesson:
+#    trust the bytes, not the response.
+BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+
+_JAR = http.cookiejar.CookieJar()
+_OPENER = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(_JAR))
+_WARMED = set()
+
+MAGIC = {
+    ".xlsx": (b"PK",),
+    ".xls": (b"PK", b"\xd0\xcf\x11\xe0"),
+    ".pdf": (b"%PDF",),
+}
+
+
+def magic_for(url: str):
+    """The byte prefixes a URL's suffix promises, or None if we make no claim."""
+    suffix = "." + url.rsplit(".", 1)[-1].lower()
+    return MAGIC.get(suffix)
+
+
+def _looks_right(head: bytes, wanted) -> bool:
+    if not head:
+        return False
+    if wanted:
+        return head.lstrip()[:8].startswith(wanted)
+    return b"<html" not in head[:400].lower()
+
+
+def warm(page_url: str) -> str:
+    """Visit an HTML index so its host's bot-defence cookies land in the jar.
+
+    Returns the page text. Cached per URL: calling it before every document is
+    the intended usage and costs nothing after the first time.
+    """
+    if page_url in _WARMED:
+        return ""
+    headers = {
+        "User-Agent": BROWSER_UA,
+        "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,"
+                   "*/*;q=0.8"),
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    try:
+        req = urllib.request.Request(safe_url(page_url), headers=headers)
+        with _OPENER.open(req, timeout=120) as resp:
+            raw = resp.read()
+    except (urllib.error.URLError, OSError) as exc:
+        eprint("  ! could not warm %s: %s" % (page_url, exc))
+        return ""
+    _WARMED.add(page_url)
+    for enc in ("utf-8", "cp1252", "latin-1"):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("utf-8", "replace")
+
+
+def _doc_headers(referer: str, *, ranged: bool = False) -> dict:
+    headers = {"User-Agent": BROWSER_UA, "Accept": "*/*",
+               "Accept-Language": "en-US,en;q=0.9"}
+    if referer:
+        headers["Referer"] = referer
+    if ranged:
+        headers["Range"] = "bytes=0-2047"
+    return headers
+
+
+def doc_get(url: str, *, referer: str = "", tries: int = 5,
+            pause: float = 1.5):
+    """Fetch a document from RBI's document host, surviving the challenge.
+
+    Returns the bytes, or None if every attempt came back as something other
+    than the file type the URL's suffix claims.
+    """
+    wanted = magic_for(url)
+    if referer:
+        warm(referer)
+    for attempt in range(tries):
+        try:
+            req = urllib.request.Request(safe_url(url),
+                                         headers=_doc_headers(referer))
+            with _OPENER.open(req, timeout=240) as resp:
+                body = resp.read()
+        except (urllib.error.URLError, OSError) as exc:
+            eprint("  ! %s (attempt %d): %s" % (url.rsplit("/", 1)[-1],
+                                                attempt + 1, exc))
+            time.sleep(pause * (attempt + 1))
+            continue
+        if _looks_right(body, wanted):
+            return body
+        # A challenge page. Re-warm in case the cookie has aged out, then retry.
+        _WARMED.discard(referer)
+        if referer:
+            warm(referer)
+        time.sleep(pause * (attempt + 1))
+    return None
+
+
+def doc_ok(url: str, *, referer: str = "", tries: int = 3) -> bool:
+    """True if the URL really serves a document of the type its suffix claims.
+
+    Costs one ranged GET per attempt rather than pulling a 15 MB workbook, so
+    it is cheap enough to verify every candidate URL before fetching any.
+    """
+    wanted = magic_for(url)
+    if referer:
+        warm(referer)
+    for attempt in range(tries):
+        try:
+            req = urllib.request.Request(
+                safe_url(url), headers=_doc_headers(referer, ranged=True))
+            with _OPENER.open(req, timeout=90) as resp:
+                if resp.status not in (200, 206):
+                    return False
+                head = resp.read(2048)
+        except (urllib.error.URLError, OSError, ValueError):
+            time.sleep(1.0 * (attempt + 1))
+            continue
+        if _looks_right(head, wanted):
+            return True
+        _WARMED.discard(referer)
+        if referer:
+            warm(referer)
+        time.sleep(1.0 * (attempt + 1))
+    return False
+
+
+def fetch_doc(url: str, dest, *, referer: str = "", force: bool = False,
+              tries: int = 5) -> Path:
+    """doc_get, cached on disk and recorded in the sibling manifest.csv."""
+    dest = Path(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if dest.exists() and dest.stat().st_size > 0 and not force:
+        return dest
+    body = doc_get(url, referer=referer, tries=tries)
+    if body is None:
+        raise RuntimeError(
+            "%s never served a real %s -- %d attempts all returned a bot "
+            "challenge or an error" % (url, dest.suffix, tries))
+    dest.write_bytes(body)
+    _record(dest, url, body)
+    return dest
 
 
 def get_text(url: str, retries: int = 3) -> str:

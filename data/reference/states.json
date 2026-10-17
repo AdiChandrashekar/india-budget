@@ -1,0 +1,335 @@
+{
+ "generated": "2026-10-17",
+ "code_standard": "ISO 3166-2:IN subdivision codes, without the IN- prefix",
+ "note": "`formed` is the first fiscal year for which RBI publishes this entity's own budget. parse_states.py checks every one of these against the data and fails if they disagree, because the workbook pads a state's pre-formation years with zeros rather than leaving them blank. Parent and successor states are kept as separate series and are never merged: adding Andhra Pradesh to Telangana double counts nothing before 2014-15 and everything after.",
+ "states": [
+  {
+   "code": "ALL",
+   "name": "All States and UTs",
+   "rbi_name": "All States/UT",
+   "kind": "aggregate",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": "RBI's own all-states aggregate, not a sum of the series below. It excludes the union territories before 2017-18 (except 2000-01 to 2004-05, which include them), so it is not additive with the state series in every year. Use it as published, never recomputed."
+  },
+  {
+   "code": "AP",
+   "name": "Andhra Pradesh",
+   "rbi_name": "Andhra Pradesh",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [
+    "TG"
+   ],
+   "note": "Undivided Andhra Pradesh up to 2013-14; residual Andhra Pradesh from 2014-15, after Telangana was formed on 2 June 2014. The two halves of this series are not comparable across that break."
+  },
+  {
+   "code": "AR",
+   "name": "Arunachal Pradesh",
+   "rbi_name": "Arunachal Pradesh",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "AS",
+   "name": "Assam",
+   "rbi_name": "Assam",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "BR",
+   "name": "Bihar",
+   "rbi_name": "Bihar",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [
+    "JH"
+   ],
+   "note": "Undivided Bihar up to 2000-01; residual Bihar from 2001-02, after Jharkhand was formed on 15 November 2000."
+  },
+  {
+   "code": "CT",
+   "name": "Chhattisgarh",
+   "rbi_name": "Chhattisgarh",
+   "kind": "state",
+   "formed": "2000-01",
+   "parent": "MP",
+   "successors": [],
+   "note": "Formed from Madhya Pradesh on 1 November 2000."
+  },
+  {
+   "code": "GA",
+   "name": "Goa",
+   "rbi_name": "Goa",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "GJ",
+   "name": "Gujarat",
+   "rbi_name": "Gujarat",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "HR",
+   "name": "Haryana",
+   "rbi_name": "Haryana",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "HP",
+   "name": "Himachal Pradesh",
+   "rbi_name": "Himachal Pradesh",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "JK",
+   "name": "Jammu and Kashmir",
+   "rbi_name": "Jammu and Kashmir",
+   "kind": "ut_with_legislature",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": "A state until 31 October 2019, then reorganised into the union territories of Jammu and Kashmir and Ladakh. RBI keeps one series under this name; from 2019-20 it excludes Ladakh, which has no legislature and so no budget of its own and appears nowhere here."
+  },
+  {
+   "code": "JH",
+   "name": "Jharkhand",
+   "rbi_name": "Jharkhand",
+   "kind": "state",
+   "formed": "2001-02",
+   "parent": "BR",
+   "successors": [],
+   "note": "Formed from Bihar on 15 November 2000. RBI's first full year for it is 2001-02, so 2000-01 is reported under Bihar alone."
+  },
+  {
+   "code": "KA",
+   "name": "Karnataka",
+   "rbi_name": "Karnataka",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "KL",
+   "name": "Kerala",
+   "rbi_name": "Kerala",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "MP",
+   "name": "Madhya Pradesh",
+   "rbi_name": "Madhya Pradesh",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [
+    "CT"
+   ],
+   "note": "Undivided Madhya Pradesh up to 1999-2000; residual Madhya Pradesh from 2000-01, after Chhattisgarh was formed on 1 November 2000."
+  },
+  {
+   "code": "MH",
+   "name": "Maharashtra",
+   "rbi_name": "Maharashtra",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "MN",
+   "name": "Manipur",
+   "rbi_name": "Manipur",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "ML",
+   "name": "Meghalaya",
+   "rbi_name": "Meghalaya",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "MZ",
+   "name": "Mizoram",
+   "rbi_name": "Mizoram",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "NL",
+   "name": "Nagaland",
+   "rbi_name": "Nagaland",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "OR",
+   "name": "Odisha",
+   "rbi_name": "Odisha",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": "Renamed from Orissa in 2011; RBI backdates the current name."
+  },
+  {
+   "code": "PB",
+   "name": "Punjab",
+   "rbi_name": "Punjab",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "RJ",
+   "name": "Rajasthan",
+   "rbi_name": "Rajasthan",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "SK",
+   "name": "Sikkim",
+   "rbi_name": "Sikkim",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "TN",
+   "name": "Tamil Nadu",
+   "rbi_name": "Tamil Nadu",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "TG",
+   "name": "Telangana",
+   "rbi_name": "Telangana",
+   "kind": "state",
+   "formed": "2014-15",
+   "parent": "AP",
+   "successors": [],
+   "note": "Formed from Andhra Pradesh on 2 June 2014, so 2014-15 is a part year for Telangana and for residual Andhra Pradesh alike."
+  },
+  {
+   "code": "TR",
+   "name": "Tripura",
+   "rbi_name": "Tripura",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "UP",
+   "name": "Uttar Pradesh",
+   "rbi_name": "Uttar Pradesh",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [
+    "UT"
+   ],
+   "note": "Undivided Uttar Pradesh up to 1999-2000; residual Uttar Pradesh from 2000-01, after Uttarakhand was formed on 9 November 2000."
+  },
+  {
+   "code": "UT",
+   "name": "Uttarakhand",
+   "rbi_name": "Uttarakhand",
+   "kind": "state",
+   "formed": "2000-01",
+   "parent": "UP",
+   "successors": [],
+   "note": "Formed from Uttar Pradesh on 9 November 2000, as Uttaranchal; renamed Uttarakhand in 2007."
+  },
+  {
+   "code": "WB",
+   "name": "West Bengal",
+   "rbi_name": "West Bengal",
+   "kind": "state",
+   "formed": "1990-91",
+   "parent": "",
+   "successors": [],
+   "note": ""
+  },
+  {
+   "code": "DL",
+   "name": "Delhi",
+   "rbi_name": "NCT Delhi",
+   "kind": "ut_with_legislature",
+   "formed": "1993-94",
+   "parent": "",
+   "successors": [],
+   "note": "The National Capital Territory got a legislative assembly in 1993, which is why its budget series starts then."
+  },
+  {
+   "code": "PY",
+   "name": "Puducherry",
+   "rbi_name": "Puducherry",
+   "kind": "ut_with_legislature",
+   "formed": "2005-06",
+   "parent": "",
+   "successors": [],
+   "note": "A union territory with a legislature since 1963, but RBI's state finances series carries it only from 2005-06."
+  }
+ ]
+}

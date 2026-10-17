@@ -1,0 +1,63 @@
+{
+ "generated": "2026-10-17",
+ "edition": "2025-26",
+ "note": "Resolved from the live indexes, not from documented paths: the brief's Statement 26 URL now redirects to the RBI home page. Every url below was verified with a ranged GET and a magic-number check on the day shown. The file names carry a publication date and a content hash, so they change with every edition -- re-run this script rather than editing them by hand.",
+ "state_finances": {
+  "index": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets",
+  "documents": {
+   "estates": {
+    "ok": true,
+    "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/ESTATES23012026AB138FB463474EBFBCC03A8FC878C45A.XLSX",
+    "label": "e-STATES Database",
+    "referer": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets",
+    "checked": "2026-10-17",
+    "note": ""
+   },
+   "statement_26": {
+    "ok": true,
+    "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/26_ST23012026EEBC26225EBB446BB92149E55FCBF22C.XLSX",
+    "label": "Statement 26: Expenditure on Education - As per cent of Aggregate Expenditure",
+    "referer": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets",
+    "checked": "2026-10-17",
+    "note": ""
+   },
+   "statement_31": {
+    "ok": true,
+    "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/31_ST23012026067BE416FA494AA1A34CAE2F12A1C4EA.XLSX",
+    "label": "Statement 31: Social Sector Expenditure",
+    "referer": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets",
+    "checked": "2026-10-17",
+    "note": ""
+   },
+   "appendix_7": {
+    "ok": true,
+    "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/07_APP2301202696F6E863855C4EC399EC0B941483720D.XLSX",
+    "label": "Appendix Table 7: Composition of Social Sector Expenditure",
+    "referer": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets",
+    "checked": "2026-10-17",
+    "note": ""
+   }
+  }
+ },
+ "handbook": {
+  "index": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=Handbook+of+Statistics+on+Indian+States",
+  "documents": {
+   "gsdp_current": {
+    "ok": true,
+    "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/21T_11122025D994949B48C44B68B4465FBB9ADDFF3D.XLSX",
+    "label": "Table 21: Gross State Domestic Product (Current Prices)",
+    "referer": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=Handbook+of+Statistics+on+Indian+States",
+    "checked": "2026-10-17",
+    "note": ""
+   },
+   "social_sector": {
+    "ok": true,
+    "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/175T_11122025D34EA0C055B346B68166B96A2A083DE6.XLSX",
+    "label": "Table 175: State-wise Social Sector Expenditure",
+    "referer": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=Handbook+of+Statistics+on+Indian+States",
+    "checked": "2026-10-17",
+    "note": ""
+   }
+  }
+ }
+}

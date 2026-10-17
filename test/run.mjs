@@ -144,6 +144,164 @@ ok("gap years are not also data years",
   (data.meta.gap_years || []).every((y) => !dataYears.includes(y)));
 
 // ---------------------------------------------------------------------------
+// data/states.json — the state layer
+// ---------------------------------------------------------------------------
+
+const states = JSON.parse(readFileSync(join(ROOT, "data", "states.json"), "utf8"));
+
+ok("states.json has its top-level blocks",
+  !!(states.meta && states.states && states.series));
+
+const sYears = states.meta.years;
+ok("state years run 1990-91 to 2025-26",
+  sYears[0] === "1990-91" && sYears[sYears.length - 1] === "2025-26",
+  `${sYears[0]}..${sYears[sYears.length - 1]}`);
+ok("state years have no gaps", sYears.every(
+  (y, i) => i === 0 || fyStart(y) === fyStart(sYears[i - 1]) + 1));
+ok("31 states and UTs plus the all-states aggregate",
+  states.states.length === 32, String(states.states.length));
+ok("the all-states aggregate is present", !!states.series.ALL);
+
+// The share definition, read off data/states.json exactly as the page reads
+// it, against the percentages RBI prints in Statement 26.
+function stateShare(code, year, etype) {
+  const s = states.series[code];
+  const spend = s?.education_spend?.[year]?.[etype];
+  const agg = s?.aggregate_expenditure?.[year]?.[etype];
+  if (spend == null || agg == null || agg === 0) return null;
+  return (100 * spend) / agg;
+}
+
+near("all states, education share 2010-11 actuals (RBI Statement 26: 16.6%)",
+  stateShare("ALL", "2010-11", "A"), 16.6, 0.051);
+near("all states, education share 2025-26 BE (RBI Statement 26: 13.1%)",
+  stateShare("ALL", "2025-26", "BE"), 13.1, 0.051);
+near("Bihar, education share 2025-26 BE (RBI Statement 26: 20.0%)",
+  stateShare("BR", "2025-26", "BE"), 20.0, 0.051);
+near("Telangana, education share 2025-26 BE (RBI Statement 26: 7.8%)",
+  stateShare("TG", "2025-26", "BE"), 7.8, 0.051);
+
+// Published absolute amounts, from Appendix Table 7.
+near("all states, revenue expenditure on education 2020-21 (Appendix 7)",
+  states.series.ALL.education_revenue["2020-21"].A, 512428.9, 1);
+
+// The two derived series must be exactly their parts, on the same basis.
+ok("education spend is revenue expenditure plus capital outlay", (() => {
+  const s = states.series.ALL;
+  return sYears.every((y) => ["A", "RE", "BE"].every((t) => {
+    const got = s.education_spend?.[y]?.[t];
+    if (got == null) return true;
+    const parts = (s.education_revenue?.[y]?.[t] ?? 0)
+      + (s.education_capital?.[y]?.[t] ?? 0);
+    return Math.abs(got - parts) <= 0.02;
+  }));
+})());
+
+// A missing part silently drops a whole cell, so assert nothing was dropped.
+// A future edition that stops publishing one of the four lines should fail
+// here rather than quietly shortening every series.
+ok("no state-year was dropped for want of a component", (() => {
+  for (const [, s] of Object.entries(states.series)) {
+    for (const [y, byType] of Object.entries(s.education_revenue ?? {})) {
+      for (const t of Object.keys(byType)) {
+        if (s.education_spend?.[y]?.[t] == null) return false;
+        if (s.aggregate_expenditure?.[y]?.[t] == null) return false;
+      }
+    }
+  }
+  return true;
+})());
+
+// Containment: education is one item inside social services, which is inside
+// total revenue expenditure.
+ok("education revenue <= social services <= total revenue expenditure", (() => {
+  for (const [, s] of Object.entries(states.series)) {
+    for (const [y, byType] of Object.entries(s.education_revenue ?? {})) {
+      for (const [t, v] of Object.entries(byType)) {
+        const social = s.social_services?.[y]?.[t];
+        const total = s.total_revenue?.[y]?.[t];
+        if (social != null && v > social + 1) return false;
+        if (social != null && total != null && social > total + 1) return false;
+      }
+    }
+  }
+  return true;
+})());
+
+ok("education spending never exceeds aggregate expenditure", (() => {
+  for (const [, s] of Object.entries(states.series)) {
+    for (const [y, byType] of Object.entries(s.education_spend ?? {})) {
+      for (const [t, v] of Object.entries(byType)) {
+        const agg = s.aggregate_expenditure?.[y]?.[t];
+        if (agg != null && v > agg + 1) return false;
+      }
+    }
+  }
+  return true;
+})());
+
+// The reorganisations. e-STATES pads a state's pre-formation years with zeros,
+// so the real test is that nothing was published for a state before it
+// existed — a chart drawing Telangana back to 1990 would look entirely
+// plausible and be entirely wrong.
+const formation = {
+  CT: "2000-01", UT: "2000-01", JH: "2001-02",
+  TG: "2014-15", DL: "1993-94", PY: "2005-06",
+};
+for (const [code, first] of Object.entries(formation)) {
+  const meta = states.states.find((s) => s.code === code);
+  ok(`${code} series starts at ${first}`,
+    meta?.first_year === first, `got ${meta?.first_year}`);
+  const before = Object.keys(states.series[code]?.education_spend ?? {})
+    .filter((y) => fyStart(y) < fyStart(first));
+  ok(`${code} has nothing before ${first}`,
+    before.length === 0, before.join(", "));
+}
+
+// Parent and successor are kept apart, never merged.
+ok("Andhra Pradesh and Telangana are separate series",
+  !!states.series.AP && !!states.series.TG
+  && states.series.AP.education_spend["2013-14"] != null
+  && states.series.TG.education_spend?.["2013-14"] == null);
+ok("a split state names its parent",
+  states.states.find((s) => s.code === "TG")?.parent === "AP");
+ok("a parent state names its successor",
+  (states.states.find((s) => s.code === "AP")?.successors ?? []).includes("TG"));
+
+// GSDP is a shorter series than the budgets, so no ratio may be implied
+// outside the window the Handbook actually publishes.
+const gy = states.meta.gsdp?.years ?? [];
+ok("GSDP starts in 2011-12", gy[0] === "2011-12", gy[0]);
+ok("no GSDP figure outside the published window", (() => {
+  const lo = fyStart(gy[0]);
+  const hi = fyStart(gy[gy.length - 1]);
+  for (const [, s] of Object.entries(states.series)) {
+    for (const y of Object.keys(s.gsdp ?? {})) {
+      if (fyStart(y) < lo || fyStart(y) > hi) return false;
+    }
+  }
+  return true;
+})());
+ok("the all-states aggregate has no GSDP, because there is no all-India row",
+  states.series.ALL.gsdp == null);
+
+// The warning has to be in the data, not only in the prose, so that any
+// consumer of states.json meets it.
+ok("states.json carries the double-counting warning",
+  /never be added/i.test(states.meta.never_add || "")
+  && /3601/.test(states.meta.never_add || ""));
+ok("the share definition is recorded with the data",
+  /Statement 26/.test(states.meta.share_definition || ""));
+ok("no combined centre-plus-state total is published anywhere",
+  !JSON.stringify(states).includes("combined_total"));
+
+// The Union figure is carried for contrast and is labelled as the same
+// functional definition, which is the only way the comparison is honest.
+ok("the Union functional series is carried for comparison",
+  !!states.union_functional?.series
+  && Object.keys(states.union_functional.series).length > 0);
+
+// ---------------------------------------------------------------------------
 
 console.log(`${passed} passed, ${failures.length} failed`);
 if (failures.length) {
