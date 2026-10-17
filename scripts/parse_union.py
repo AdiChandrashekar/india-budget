@@ -49,20 +49,12 @@ try:
 except ImportError:
     raise SystemExit("openpyxl is required: python -m pip install openpyxl")
 
-ESTIMATE_WORDS = [
-    (re.compile(r"\bactual", re.I), "A"),
-    (re.compile(r"\brevised\s+estimate", re.I), "RE"),
-    (re.compile(r"\bbudget\s+estimate", re.I), "BE"),
-]
+import parse_union_pdf as pdfp  # noqa: E402
+import union_statement as us  # noqa: E402
 
-FY_IN_TEXT = re.compile(r"((?:19|20)\d{2})\s*-\s*((?:19|20)?\d{2})")
-MAJOR_HEAD = re.compile(r"^(\d{4})$")
-
-SECTION_HEAD = re.compile(r"^(revenue|capital)\s+section$", re.I)
-SECTION_TOTAL = re.compile(r"^total\s*-?\s*(revenue|capital)\s+section$", re.I)
-GRAND_TOTAL = re.compile(r"^grand\s+total$", re.I)
-NET_LABEL = re.compile(r"^(revenue|capital|total)$", re.I)
-DEMAND_NO = re.compile(r"(?:DEMAND\s+)?NO\.?\s*(\d+)", re.I)
+FY_IN_TEXT = us.FY_IN_TEXT
+DEMAND_NO = us.DEMAND_NO
+MAJOR_HEAD = us.MAJOR_HEAD
 
 # The two departments that make up the Ministry of Education. Kept as a
 # reference list because the demand numbers move between editions and the
@@ -86,7 +78,7 @@ def year_columns(rows):
             m = FY_IN_TEXT.search(text)
             if not m:
                 continue
-            etype = next((tag for pat, tag in ESTIMATE_WORDS if pat.search(text)), None)
+            etype = us.estimate_type(text)
             if not etype:
                 continue
             try:
@@ -126,11 +118,12 @@ def sheet_header(rows):
     return demand_no, dept, appropriation
 
 
-# Rows that break a head down by who authorises it, repeating the amount above.
-SUBTOTAL_LABEL = re.compile(r"^(charged|voted)$", re.I)
-
-
 def parse_sheet(ws, edition_fy: str, source_url: str):
+    """One sheet of alldg.xlsx -> long-table rows.
+
+    The sheet is turned into union_statement.Line records and walked there,
+    so the Excel and the PDF go through exactly the same layout rules.
+    """
     rows = [list(r) for r in ws.iter_rows(values_only=True)]
     hdr_idx, cols = year_columns(rows)
     if not cols:
@@ -145,75 +138,21 @@ def parse_sheet(ws, edition_fy: str, source_url: str):
     if demand_no is None:
         return [], "no demand number"
 
-    out = []
-    section = ""
-    basis = "gross"
-    edition = "ExpBudget " + edition_fy
-    seen = {}
-
-    def emit(account, amounts, *, major_head="", head_name="", definition):
-        slot = (account, major_head, head_name)
-        seen[slot] = seen.get(slot, 0) + 1
-        nth = seen[slot]
-        for j, (fy, etype) in cols.items():
-            v = c.num(amounts[j]) if j < len(amounts) else None
-            if v is None:
-                continue
-            out.append(c.Row(
-                fiscal_year=fy, govt="union", estimate_type=etype,
-                source_edition=edition, definition=definition,
-                major_head=major_head, ministry_or_dept=dept,
-                scheme=head_name, account=account, amount_cr=v,
-                occurrence=nth, source_url=source_url,
-                source_page="%s!dg%d" % (edition_fy, demand_no),
-            ))
-
+    lines = []
     for row in rows[hdr_idx + 1:]:
         head = [c.latin_part(v) for v in row[:first_amt]]
         code = next((t for t in head if MAJOR_HEAD.match(t)), "")
         named = [t for t in head if re.search(r"[A-Za-z]", t)]
-        label = max(named, key=len) if named else ""
+        lines.append(us.Line(
+            label=max(named, key=len) if named else "",
+            code=code,
+            amounts={j: c.num(row[j]) for j in cols if j < len(row)},
+        ))
 
-        if not label:
-            continue
-        if SUBTOTAL_LABEL.match(label):
-            continue                    # repeats the head above it
-        if SECTION_TOTAL.match(label):
-            section = SECTION_TOTAL.match(label).group(1).lower()
-            emit("%s_%s" % (basis, section), row, definition="whole")
-            continue
-        if SECTION_HEAD.match(label):
-            section = SECTION_HEAD.match(label).group(1).lower()
-            continue
-        if GRAND_TOTAL.match(label):
-            emit("gross_total", row, definition="whole")
-            basis = "recovery"          # everything below is netted-off receipts
-            continue
-        if code:
-            emit("%s_%s" % (basis, section or "revenue"), row,
-                 major_head=code, head_name=label, definition="functional")
-            continue
-        # The closing block, after the recoveries: bare Revenue / Capital /
-        # Total, which is the demand net of them.
-        if NET_LABEL.match(label) and basis == "recovery":
-            emit("net_" + label.lower(), row, definition="whole")
-
-    # A demand with nothing netted against it prints no closing block, because
-    # its gross *is* its net. Say so explicitly rather than leaving every
-    # consumer to rediscover the rule: without this, summing net_total across
-    # demands silently drops the 8 demands that have no recoveries, and the
-    # Union total comes out about 5% light.
-    if not any(r.account.startswith("net_") for r in out):
-        for r in list(out):
-            # Section and grand totals only: a major-head line shares the
-            # account name but is a component, not a total.
-            if r.definition == "whole" and not r.major_head and \
-                    r.account in ("gross_total", "gross_revenue", "gross_capital"):
-                clone = c.Row(**{k: v for k, v in r.__dict__.items()})
-                clone.account = "net_" + r.account.split("_", 1)[1]
-                out.append(clone)
-
-    return out, ""
+    return us.walk(lines, cols, dept=dept,
+                   edition="ExpBudget " + edition_fy,
+                   source_url=source_url,
+                   source_page="%s!dg%d" % (edition_fy, demand_no)), ""
 
 
 def has_name(text) -> bool:
