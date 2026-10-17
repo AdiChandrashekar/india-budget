@@ -1,191 +1,638 @@
-// Charts, drawn with d3 v7 loaded from a CDN as a global.
+// Charts, drawn with d3 v7 from a CDN global.
 //
-// Budget series have a quirk worth drawing honestly: within one line, early
-// years are audited outturns and the last year or two are forecasts. So every
-// line here can change stroke partway along, and estimate points are drawn
-// hollow. A reader should be able to see where the facts stop.
+// House style is locked in DESIGN.md: charts sit on the page ground with no
+// card around them, axes are hairlines, the thing worth noticing is annotated
+// on the plot, and every figure has a table view behind a toggle.
+//
+// One idiom runs through all of it and is never spent on anything else:
+// **solid stroke and filled marker mean an audited outturn; dashed stroke and
+// hollow marker mean an estimate.** A budget series is part fact and part
+// forecast, and a reader should be able to see where one becomes the other.
 
 const d3 = window.d3;
 
-const MARGIN = { top: 14, right: 18, bottom: 34, left: 66 };
+const M = { top: 26, right: 132, bottom: 36, left: 72 };
 
-function frame(host, height) {
-  host.innerHTML = "";
-  const width = Math.max(host.clientWidth || 680, 320);
+// Spell the estimate basis out in tooltips. "A" is clear in a column header
+// and opaque in a readout.
+const BASIS_WORD = { A: "actuals", RE: "revised", BE: "budget estimate" };
+
+function cssVar(name, fallback) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name);
+  return (v || fallback).trim();
+}
+
+export function hostWidth(host) {
+  return Math.max(host.clientWidth || 720, 300);
+}
+
+// Below this the right-hand label gutter costs more than it gives, so the
+// legend carries identity instead. Every chart checks it the same way.
+const NARROW = 560;
+
+function frame(host, height, margin = M) {
+  host.textContent = "";
+  const width = Math.max(host.clientWidth || 720, 300);
   const svg = d3
     .select(host)
     .append("svg")
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet")
     .attr("role", "img");
+  const inner = {
+    w: Math.max(width - margin.left - margin.right, 60),
+    h: Math.max(height - margin.top - margin.bottom, 60),
+  };
   return {
     svg,
     width,
-    height,
-    inner: {
-      w: width - MARGIN.left - MARGIN.right,
-      h: height - MARGIN.top - MARGIN.bottom,
-    },
-    g: svg.append("g").attr("transform", `translate(${MARGIN.left},${MARGIN.top})`),
+    inner,
+    g: svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`),
   };
 }
 
-function yAxis(g, scale, innerW, format) {
-  const axis = d3.axisLeft(scale).ticks(6).tickFormat(format).tickSize(0).tickPadding(8);
-  const sel = g.append("g").attr("class", "axis").call(axis);
-  sel.select(".domain").remove();
-  sel
-    .selectAll(".tick")
-    .append("line")
-    .attr("class", "gridline")
-    .attr("x1", 0)
-    .attr("x2", innerW);
-  return sel;
-}
-
-function xAxisBand(g, scale, innerH) {
+function yAxis(g, scale, innerW, format, ticks = 5) {
   const sel = g
     .append("g")
     .attr("class", "axis")
-    .attr("transform", `translate(0,${innerH})`)
-    .call(d3.axisBottom(scale).tickSize(0).tickPadding(8));
-  sel.select(".domain").attr("stroke", "currentColor").attr("opacity", 0.25);
+    .call(d3.axisLeft(scale).ticks(ticks).tickFormat(format).tickSize(0).tickPadding(10));
+  sel.select(".domain").remove();
+  sel.selectAll(".tick").append("line")
+    .attr("class", "gridline").attr("x1", 0).attr("x2", innerW);
   return sel;
 }
 
-// ---------------------------------------------------------------------------
-// Line chart. `series` is [{label, color, points:[{year,value,basis}]}].
-// ---------------------------------------------------------------------------
-
-export function lineChart(host, { series, years, format, height = 330 }) {
-  if (!d3) {
-    host.innerHTML = '<p class="loading">d3 did not load.</p>';
-    return;
+function xAxis(g, scale, innerH, tickFormat, every = 1) {
+  const axis = d3.axisBottom(scale).tickSize(0).tickPadding(10);
+  if (tickFormat) axis.tickFormat(tickFormat);
+  if (every > 1 && scale.domain) {
+    axis.tickValues(scale.domain().filter((_, i) => i % every === 0));
   }
-  const { g, inner } = frame(host, height);
-  const x = d3.scalePoint().domain(years).range([0, inner.w]).padding(0.5);
-  const values = series.flatMap((s) => s.points.map((p) => p.value));
-  const max = d3.max(values) ?? 1;
-  const y = d3.scaleLinear().domain([0, max * 1.08]).nice().range([inner.h, 0]);
+  const sel = g.append("g").attr("class", "axis")
+    .attr("transform", `translate(0,${innerH})`).call(axis);
+  sel.select(".domain").attr("stroke", cssVar("--rule-strong", "#c9c1b4"));
+  return sel;
+}
 
-  yAxis(g, y, inner.w, format);
-  xAxisBand(g, x, inner.h);
+// --------------------------------------------------------------------------
+// One tooltip per plot. Built with textContent throughout: every label here
+// originates in a government spreadsheet and is untrusted input.
+// --------------------------------------------------------------------------
+
+function tooltipFor(host) {
+  let tip = host.querySelector(":scope > .tip");
+  if (!tip) {
+    tip = document.createElement("div");
+    tip.className = "tip";
+    tip.setAttribute("role", "status");
+    host.appendChild(tip);
+  }
+  return tip;
+}
+
+function showTip(tip, host, x, y, title, rows) {
+  tip.textContent = "";
+  const h = document.createElement("h4");
+  h.textContent = title;
+  tip.appendChild(h);
+  for (const r of rows) {
+    const line = document.createElement("div");
+    line.className = "tip-row";
+    if (r.color) {
+      const k = document.createElement("i");
+      k.className = "line-key";
+      k.style.background = r.color;
+      line.appendChild(k);
+    }
+    const n = document.createElement("span");
+    n.className = "n";
+    n.textContent = r.label;
+    const v = document.createElement("span");
+    v.className = "v";
+    v.textContent = r.value;
+    line.append(n, v);
+    tip.appendChild(line);
+  }
+  tip.dataset.show = "true";
+  const box = host.getBoundingClientRect();
+  const tw = tip.offsetWidth || 170;
+  const th = tip.offsetHeight || 70;
+  let left = x + 16;
+  if (left + tw > box.width) left = Math.max(4, x - tw - 16);
+  tip.style.left = `${left}px`;
+  tip.style.top = `${Math.max(2, Math.min(y - th / 2, box.height - th - 2))}px`;
+}
+
+function hideTip(tip) { tip.dataset.show = "false"; }
+
+// Convert a point in the svg's viewBox space to host pixels, so the tooltip
+// lands correctly however the svg has been scaled to fit.
+function toHostPx(host, svgNode, vx, vy) {
+  const vb = svgNode.viewBox.baseVal;
+  const box = host.getBoundingClientRect();
+  return { x: (vx / vb.width) * box.width, y: (vy / vb.height) * box.height };
+}
+
+// --------------------------------------------------------------------------
+// End labels. Direct labels are mandatory at this series count, so when lines
+// converge the labels are spread apart and tied back with leader lines rather
+// than left overlapping.
+// --------------------------------------------------------------------------
+
+function placeEndLabels(g, items, innerW, innerH) {
+  const MIN = 15;
+  const sorted = items.slice().sort((a, b) => a.y - b.y);
+  for (let i = 1; i < sorted.length; i += 1) {
+    if (sorted[i].y - sorted[i - 1].y < MIN) sorted[i].y = sorted[i - 1].y + MIN;
+  }
+  let shift = sorted.length ? Math.max(0, sorted[sorted.length - 1].y - innerH) : 0;
+  for (const s of sorted) s.y -= shift;
+
+  for (const it of items) {
+    if (Math.abs(it.y - it.anchorY) > 2) {
+      g.append("path")
+        .attr("class", "annot-leader")
+        .attr("d", `M${it.anchorX + 4},${it.anchorY}L${it.anchorX + 12},${it.y}`);
+    }
+    const t = g.append("text")
+      .attr("class", "series-label")
+      .attr("x", it.anchorX + 16)
+      .attr("y", it.y)
+      .attr("dy", "0.34em")
+      .attr("fill", it.color);
+    t.text(it.label);
+    if (it.sub) {
+      g.append("text")
+        .attr("class", "mark-label")
+        .attr("x", it.anchorX + 16)
+        .attr("y", it.y + 14)
+        .attr("dy", "0.34em")
+        .text(it.sub);
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Line chart, with the spread between series drawn as a band. The band is the
+// subject of the first figure: the disagreement between definitions is the
+// story, so it gets ink of its own rather than being left as white space.
+// --------------------------------------------------------------------------
+
+export function lineChart(host, opts) {
+  if (!d3) { host.textContent = "d3 did not load."; return; }
+  const {
+    series, years, format, height = 400, band = false, annotation = null,
+    tipFormat = format,
+  } = opts;
+  const narrow = hostWidth(host) < NARROW;
+  const margin = narrow
+    ? { top: 20, right: 16, bottom: 34, left: 48 }
+    : M;
+  const { svg, g, inner } = frame(host, height, margin);
+  const tip = tooltipFor(host);
+
+  const x = d3.scalePoint().domain(years).range([0, inner.w]).padding(0.5);
+  const all = series.flatMap((s) => s.points.map((p) => p.value));
+  const max = d3.max(all) ?? 1;
+  const min = Math.min(0, d3.min(all) ?? 0);
+  const y = d3.scaleLinear().domain([min, max * 1.1]).nice().range([inner.h, 0]);
+
+  yAxis(g, y, inner.w, format, narrow ? 4 : 5);
+  xAxis(g, x, inner.h, null, narrow ? 2 : 1);
+
+  // the spread between the highest and lowest definition, where all are known
+  if (band && series.length > 1) {
+    const rows = years.map((year) => {
+      const vals = series
+        .map((s) => s.points.find((p) => p.year === year))
+        .filter(Boolean)
+        .map((p) => p.value);
+      return vals.length === series.length ? { year, hi: d3.max(vals), lo: d3.min(vals) } : null;
+    });
+    // split into runs of consecutive years so the band breaks where data does
+    let run = [];
+    const runs = [];
+    for (const r of rows) {
+      if (!r) { if (run.length > 1) runs.push(run); run = []; } else run.push(r);
+    }
+    if (run.length > 1) runs.push(run);
+    const area = d3.area()
+      .x((d) => x(d.year)).y0((d) => y(d.lo)).y1((d) => y(d.hi));
+    for (const r of runs) g.append("path").attr("class", "band").attr("d", area(r));
+  }
+
+  const line = d3.line().x((p) => x(p.year)).y((p) => y(p.value));
+  const ends = [];
 
   for (const s of series) {
     const pts = s.points.slice().sort((a, b) => years.indexOf(a.year) - years.indexOf(b.year));
     if (!pts.length) continue;
 
-    // Split into runs of outturn and runs of estimate so the stroke can change
-    // where the data stops being an actual.
-    const line = d3.line().x((p) => x(p.year)).y((p) => y(p.value));
     for (let i = 0; i < pts.length - 1; i += 1) {
       const pair = [pts[i], pts[i + 1]];
-      // Leave a break where years are missing. Joining 2019-20 straight to
-      // 2022-23 would draw three years of trend that was never measured.
-      const span = parseInt(pair[1].year.slice(0, 4), 10)
-        - parseInt(pair[0].year.slice(0, 4), 10);
-      if (span > 1) continue;
+      // A gap in the data is a gap in the line, never an interpolation.
+      if (parseInt(pair[1].year, 10) - parseInt(pair[0].year, 10) > 1) continue;
       const estimate = pair.some((p) => p.basis !== "A");
       g.append("path")
         .attr("class", "series-line")
         .attr("d", line(pair))
         .attr("stroke", s.color)
-        .attr("stroke-dasharray", estimate ? "5 4" : null)
-        .attr("opacity", estimate ? 0.85 : 1);
+        .attr("stroke-dasharray", estimate ? "4 4" : null);
     }
-    g.selectAll(null)
-      .data(pts)
-      .join("circle")
-      .attr("class", "series-dot")
+
+    g.selectAll(null).data(pts).join("circle")
       .attr("cx", (p) => x(p.year))
       .attr("cy", (p) => y(p.value))
-      .attr("r", 3.6)
-      .attr("fill", (p) => (p.basis === "A" ? s.color : "var(--panel)"))
+      .attr("r", 4)
+      .attr("fill", (p) => (p.basis === "A" ? s.color : cssVar("--ground", "#faf6f0")))
       .attr("stroke", s.color)
-      .append("title")
-      .text((p) => `${s.label}\n${p.year} ${p.basis}: ${format(p.value)}`);
+      .attr("stroke-width", 2);
+
+    const last = pts[pts.length - 1];
+    ends.push({
+      // the short name: a full series name does not fit the right margin,
+      // and the legend already carries it in full
+      label: s.short || s.label, color: s.color, sub: s.sub || "",
+      anchorX: x(last.year), anchorY: y(last.value), y: y(last.value),
+    });
+  }
+
+  // Direct labels need a gutter to live in. On a phone there isn't one, and
+  // the legend below the chart is always present, so they are dropped rather
+  // than squeezed over the plot.
+  if (!narrow) {
+    placeEndLabels(g, ends, inner.w, inner.h);
+    if (annotation) drawAnnotation(g, annotation, x, y, inner);
+  }
+
+  // crosshair: readers aim at a year, never at a 2px line
+  const hair = g.append("line").attr("class", "crosshair")
+    .attr("y1", 0).attr("y2", inner.h).attr("opacity", 0);
+
+  g.append("rect").attr("class", "hit")
+    .attr("width", inner.w).attr("height", inner.h)
+    .on("pointerleave", () => { hideTip(tip); hair.attr("opacity", 0); })
+    .on("pointermove", (event) => {
+      const [mx, my] = d3.pointer(event);
+      let best = years[0];
+      let bestD = Infinity;
+      for (const yr of years) {
+        const d = Math.abs(x(yr) - mx);
+        if (d < bestD) { bestD = d; best = yr; }
+      }
+      hair.attr("x1", x(best)).attr("x2", x(best)).attr("opacity", 1);
+      const rows = series.map((s) => {
+        const p = s.points.find((q) => q.year === best);
+        return {
+          color: s.color,
+          label: p ? `${s.label} (${BASIS_WORD[p.basis] || p.basis})` : s.label,
+          value: p ? tipFormat(p.value) : "not parsed",
+        };
+      });
+      const pos = toHostPx(host, svg.node(), margin.left + x(best), margin.top + my);
+      showTip(tip, host, pos.x, pos.y, best, rows);
+    });
+}
+
+function drawAnnotation(g, a, x, y, inner) {
+  const px = x(a.year);
+  const py = y(a.value);
+  const tx = Math.min(px + (a.dx ?? -16), inner.w - 8);
+  const ty = py + (a.dy ?? -44);
+  if (a.from != null) {
+    g.append("path").attr("class", "annot-leader")
+      .attr("d", `M${px},${y(a.from)}L${px},${y(a.to ?? a.value)}`)
+      .attr("stroke-dasharray", "2 2");
+    g.append("path").attr("class", "annot-leader")
+      .attr("d", `M${px},${ty + 6}L${px},${y(a.from)}`);
+  }
+  const text = g.append("text").attr("class", "annot")
+    .attr("x", tx).attr("y", ty)
+    .attr("text-anchor", a.anchor || "end");
+  text.append("tspan").attr("class", "annot-strong").text(a.headline);
+  if (a.detail) {
+    text.append("tspan").attr("x", tx).attr("dy", "1.25em").text(a.detail);
   }
 }
 
-// ---------------------------------------------------------------------------
-// Grouped bars, for comparing the three estimate types in the same year.
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// Dumbbell: what was budgeted against what was spent, one row per year.
+// The form the data asks for — before and after, per item — and it reads the
+// gap directly instead of making the eye difference two bar heights.
+// --------------------------------------------------------------------------
 
-export function groupedBars(host, { years, groups, format, height = 330 }) {
+export function dumbbell(host, opts) {
   if (!d3) return;
-  const { g, inner } = frame(host, height);
-  const x0 = d3.scaleBand().domain(years).range([0, inner.w]).paddingInner(0.25).paddingOuter(0.1);
-  const x1 = d3
-    .scaleBand()
-    .domain(groups.map((s) => s.key))
-    .range([0, x0.bandwidth()])
-    .padding(0.08);
-  const max = d3.max(groups.flatMap((s) => years.map((yr) => s.values[yr] ?? 0))) ?? 1;
-  const y = d3.scaleLinear().domain([0, max * 1.1]).nice().range([inner.h, 0]);
+  const { rows, format, height = 380, labelOf } = opts;
+  const narrow = hostWidth(host) < NARROW;
+  const margin = narrow
+    ? { top: 24, right: 16, bottom: 34, left: 58 }
+    : { top: 28, right: 124, bottom: 34, left: 70 };
+  const { svg, g, inner } = frame(host, height, margin);
+  const tip = tooltipFor(host);
 
-  yAxis(g, y, inner.w, format);
-  xAxisBand(g, x0, inner.h);
+  const y = d3.scaleBand().domain(rows.map((r) => r.year))
+    .range([0, inner.h]).padding(0.42);
+  const max = d3.max(rows, (r) => Math.max(r.be ?? 0, r.re ?? 0, r.a ?? 0)) ?? 1;
+  const x = d3.scaleLinear().domain([0, max * 1.08]).nice().range([0, inner.w]);
 
-  for (const s of groups) {
-    g.selectAll(null)
-      .data(years.filter((yr) => s.values[yr] != null))
-      .join("rect")
-      .attr("x", (yr) => x0(yr) + x1(s.key))
-      .attr("width", x1.bandwidth())
-      .attr("y", (yr) => y(s.values[yr]))
-      .attr("height", (yr) => inner.h - y(s.values[yr]))
-      .attr("fill", s.color)
-      .attr("rx", 2)
-      .append("title")
-      .text((yr) => `${s.label}\n${yr}: ${format(s.values[yr])}`);
+  const est = cssVar("--seq-estimate", "#86b6ef");
+  const out = cssVar("--seq-outturn", "#2a78d6");
+  const ground = cssVar("--ground", "#faf6f0");
+
+  g.append("g").attr("class", "axis")
+    .call(d3.axisLeft(y).tickSize(0).tickPadding(10))
+    .select(".domain").remove();
+  xAxis(g, x, inner.h, format, 1);
+  g.selectAll(null).data(x.ticks(narrow ? 3 : 5)).join("line")
+    .attr("class", "gridline")
+    .attr("x1", (d) => x(d)).attr("x2", (d) => x(d))
+    .attr("y1", 0).attr("y2", inner.h);
+
+  for (const r of rows) {
+    const cy = y(r.year) + y.bandwidth() / 2;
+    const has = r.be != null && r.a != null;
+
+    if (has) {
+      g.append("line")
+        .attr("x1", x(r.be)).attr("x2", x(r.a))
+        .attr("y1", cy).attr("y2", cy)
+        .attr("stroke", cssVar("--rule-strong", "#c9c1b4"))
+        .attr("stroke-width", 2).attr("stroke-linecap", "round");
+    }
+
+    // the revised estimate, a tick on the way from promise to outturn
+    if (r.re != null) {
+      g.append("line")
+        .attr("x1", x(r.re)).attr("x2", x(r.re))
+        .attr("y1", cy - 7).attr("y2", cy + 7)
+        .attr("stroke", cssVar("--ink-muted", "#8a9099"))
+        .attr("stroke-width", 1.5);
+    }
+
+    // The page's one idiom, carried over from the line chart: hollow is an
+    // estimate, filled is an audited outturn. It also solves the real problem
+    // with a one-hue dumbbell, which is that two shades of the same blue are
+    // hard to tell apart at 11px.
+    if (r.be != null) {
+      g.append("circle")
+        .attr("cx", x(r.be)).attr("cy", cy).attr("r", 5)
+        .attr("fill", ground)
+        .attr("stroke", est).attr("stroke-width", 2.5);
+    }
+    if (r.a != null) {
+      g.append("circle")
+        .attr("cx", x(r.a)).attr("cy", cy).attr("r", 5.5)
+        .attr("fill", out)
+        .attr("stroke", ground).attr("stroke-width", 2);
+    }
+
+    // Label only the years where the comparison can actually be made; the
+    // table carries the rest. Saying "not yet audited" for a year we simply
+    // have not parsed would be a claim about the government, not about us.
+    if (has && !narrow) {
+      const pctOf = (100 * r.a) / r.be;
+      g.append("text").attr("class", "mark-label")
+        .attr("x", inner.w + 12).attr("y", cy).attr("dy", "0.34em")
+        .attr("fill", cssVar("--ink", "#15181c"))
+        .text(`${pctOf.toFixed(0)}% of the estimate`);
+    } else if (labelOf && !narrow) {
+      const t = labelOf(r);
+      if (t) {
+        g.append("text").attr("class", "mark-label")
+          .attr("x", inner.w + 12).attr("y", cy).attr("dy", "0.34em")
+          .attr("opacity", 0.75)
+          .text(t);
+      }
+    }
+
+    g.append("rect")
+      .attr("x", 0).attr("y", y(r.year) - y.step() * 0.1)
+      .attr("width", inner.w).attr("height", y.bandwidth() + y.step() * 0.2)
+      .attr("fill", "transparent")
+      .on("pointerleave", () => hideTip(tip))
+      .on("pointermove", (event) => {
+        const [, my] = d3.pointer(event);
+        const pos = toHostPx(host, svg.node(), margin.left + inner.w / 2, margin.top + my);
+        showTip(tip, host, pos.x, pos.y, r.year, [
+          { color: est, label: "Budget estimate", value: format(r.be ?? NaN) },
+          { color: cssVar("--ink-muted", "#8a9099"), label: "Revised", value: format(r.re ?? NaN) },
+          { color: out, label: "Actuals", value: format(r.a ?? NaN) },
+        ]);
+      });
   }
 }
 
-// ---------------------------------------------------------------------------
-// Stacked bars, for composition: what a total is made of, year by year.
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// Horizontal stacked bar, years as rows. Part-to-whole over time, horizontal
+// because account-head names are long.
+// --------------------------------------------------------------------------
 
-export function stackedBars(host, { years, layers, format, height = 340 }) {
+export function stackedBarH(host, opts) {
   if (!d3) return;
-  const { g, inner } = frame(host, height);
-  const rows = years.map((yr) => {
-    const row = { year: yr };
-    for (const l of layers) row[l.key] = l.values[yr] ?? 0;
+  const { years, layers, format, height = 400, annotation = null } = opts;
+  const narrow = hostWidth(host) < NARROW;
+  // room above the first row for the in-chart annotation
+  const margin = {
+    top: annotation && !narrow ? 52 : 22,
+    right: narrow ? 14 : 26,
+    bottom: 36,
+    left: narrow ? 56 : 72,
+  };
+  const { svg, g, inner } = frame(host, height, margin);
+  const tip = tooltipFor(host);
+  const ground = cssVar("--ground", "#faf6f0");
+
+  const rows = years.map((year) => {
+    const row = { year, total: 0, parts: [] };
+    for (const l of layers) {
+      const v = l.values[year];
+      if (v != null && v > 0) { row.parts.push({ layer: l, value: v }); row.total += v; }
+    }
     return row;
-  });
-  const keys = layers.map((l) => l.key);
-  const stacked = d3.stack().keys(keys)(rows);
-  const x = d3.scaleBand().domain(years).range([0, inner.w]).padding(0.28);
-  const max = d3.max(rows, (r) => keys.reduce((a, k) => a + r[k], 0)) ?? 1;
-  const y = d3.scaleLinear().domain([0, max * 1.08]).nice().range([inner.h, 0]);
-  const colour = new Map(layers.map((l) => [l.key, l.color]));
-  const label = new Map(layers.map((l) => [l.key, l.label]));
+  }).filter((r) => r.total > 0);
 
-  yAxis(g, y, inner.w, format);
-  xAxisBand(g, x, inner.h);
+  const y = d3.scaleBand().domain(rows.map((r) => r.year))
+    .range([0, inner.h]).padding(0.34);
+  const max = d3.max(rows, (r) => r.total) ?? 1;
+  const x = d3.scaleLinear().domain([0, max]).range([0, inner.w]);
+  const bandH = Math.min(y.bandwidth(), 24);   // marks stay thin
 
-  g.selectAll(null)
-    .data(stacked)
-    .join("g")
-    .attr("fill", (s) => colour.get(s.key))
-    .selectAll("rect")
-    .data((s) => s.map((seg) => Object.assign({ key: s.key }, seg)))
-    .join("rect")
-    .attr("x", (s) => x(s.data.year))
-    .attr("width", x.bandwidth())
-    .attr("y", (s) => y(s[1]))
-    .attr("height", (s) => Math.max(0, y(s[0]) - y(s[1])))
-    .append("title")
-    .text((s) => `${label.get(s.key)}\n${s.data.year}: ${format(s[1] - s[0])}`);
+  g.append("g").attr("class", "axis")
+    .call(d3.axisLeft(y).tickSize(0).tickPadding(10))
+    .select(".domain").remove();
+  xAxis(g, x, inner.h, format, 1);
+
+  for (const r of rows) {
+    let acc = 0;
+    const top = y(r.year) + (y.bandwidth() - bandH) / 2;
+    for (const part of r.parts) {
+      const x0 = x(acc);
+      const x1 = x(acc + part.value);
+      acc += part.value;
+      // 2px gap in the ground colour does the separating, never a stroke
+      const w = Math.max(0, x1 - x0 - 2);
+      const rect = g.append("rect")
+        .attr("x", x0).attr("y", top)
+        .attr("width", w).attr("height", bandH)
+        .attr("fill", part.layer.color)
+        .attr("rx", 1);
+
+      rect
+        .on("pointerleave", () => { hideTip(tip); rect.attr("opacity", 1); })
+        .on("pointermove", (event) => {
+          rect.attr("opacity", 0.78);
+          const [mx, my] = d3.pointer(event, g.node());
+          const pos = toHostPx(host, svg.node(), margin.left + mx, margin.top + my);
+          showTip(tip, host, pos.x, pos.y, `${part.layer.label} · ${r.year}`, [
+            { color: part.layer.color, label: "Provision", value: format(part.value) },
+            { label: "Share of ministry", value: `${((100 * part.value) / r.total).toFixed(1)}%` },
+          ]);
+        });
+
+      // only label inside the mark when the text genuinely fits
+      const text = part.layer.short || part.layer.code;
+      if (w > text.length * 7.2 + 14 && bandH >= 16) {
+        g.append("text")
+          .attr("x", x0 + 7).attr("y", top + bandH / 2).attr("dy", "0.34em")
+          .attr("class", "mark-label")
+          .attr("fill", part.layer.onFill || "#fff")
+          .text(text);
+      }
+    }
+  }
+
+  if (annotation && !narrow) {
+    // Anchor to the first row: it is the one with clear space above it, and
+    // the segment being called out leads every row anyway.
+    const r = rows.find((q) => q.year === annotation.year) || rows[0];
+    if (r && r.parts.length) {
+      const i = Math.min(annotation.index ?? 0, r.parts.length - 1);
+      const start = r.parts.slice(0, i).reduce((a, p) => a + p.value, 0);
+      const mid = x(start + r.parts[i].value / 2);
+      const topY = y(r.year) - 4;
+      g.append("path").attr("class", "annot-leader")
+        .attr("d", `M${mid},${topY}L${mid},${topY - 14}`);
+      const t = g.append("text").attr("class", "annot")
+        .attr("x", mid).attr("y", topY - 20).attr("text-anchor", "middle");
+      t.append("tspan").attr("class", "annot-strong").text(annotation.headline);
+      if (annotation.detail) {
+        t.append("tspan").attr("x", mid).attr("dy", "1.25em").text(annotation.detail);
+      }
+    }
+  }
 }
+
+// --------------------------------------------------------------------------
+// Treemap: the whole budget at true scale, with education picked out of it.
+// Emphasis, not categorical — one accent against the de-emphasis grey. A
+// share is far easier to feel as area than to read off a table.
+// --------------------------------------------------------------------------
+
+export function treemap(host, opts) {
+  if (!d3) return;
+  const { items, format, height = 460, accent, dim, onFillAccent } = opts;
+  host.textContent = "";
+  const width = Math.max(host.clientWidth || 720, 300);
+  const svg = d3.select(host).append("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .attr("role", "img");
+  const tip = tooltipFor(host);
+
+  const root = d3.hierarchy({ children: items })
+    .sum((d) => d.value || 0)
+    .sort((a, b) => b.value - a.value);
+  d3.treemap().size([width, height]).paddingInner(2).round(true)(root);
+
+  const total = root.value || 1;
+
+  for (const leaf of root.leaves()) {
+    const w = leaf.x1 - leaf.x0;
+    const h = leaf.y1 - leaf.y0;
+    if (w <= 0 || h <= 0) continue;
+    const d = leaf.data;
+    const fill = d.highlight ? accent : dim;
+
+    const cell = svg.append("g").attr("transform", `translate(${leaf.x0},${leaf.y0})`);
+    const rect = cell.append("rect")
+      .attr("width", w).attr("height", h)
+      .attr("fill", fill)
+      .attr("rx", 1);
+
+    const share = (100 * (d.value || 0)) / total;
+    rect
+      .on("pointerleave", () => { hideTip(tip); rect.attr("opacity", 1); })
+      .on("pointermove", (event) => {
+        rect.attr("opacity", 0.8);
+        const [mx, my] = d3.pointer(event, svg.node());
+        const pos = toHostPx(host, svg.node(), mx, my);
+        showTip(tip, host, pos.x, pos.y, d.name, [
+          { color: fill, label: "Provision", value: format(d.value) },
+          { label: "Share of Union spending", value: `${share.toFixed(2)}%` },
+        ]);
+      });
+
+    // labels only where they fit with padding; otherwise the tooltip and the
+    // table view carry the value
+    if (w > 62 && h > 26) {
+      const colour = d.highlight
+        ? (onFillAccent || "#fff")
+        : cssVar("--ink-2", "#4d545c");
+      const words = String(d.name).split(/\s+/);
+      const lines = [];
+      let cur = "";
+      const perLine = Math.floor(w / 6.4);
+      for (const word of words) {
+        if ((cur + " " + word).trim().length > perLine && cur) { lines.push(cur); cur = word; }
+        else cur = (cur + " " + word).trim();
+        if (lines.length >= 2) break;
+      }
+      if (cur && lines.length < 3) lines.push(cur);
+
+      const text = cell.append("text")
+        .attr("x", 6).attr("y", 15)
+        .attr("class", "mark-label")
+        .attr("fill", colour)
+        .style("font-weight", d.highlight ? 640 : 400);
+      lines.forEach((ln, i) => {
+        text.append("tspan").attr("x", 6).attr("dy", i ? "1.15em" : 0).text(ln);
+      });
+      if (h > 46) {
+        text.append("tspan").attr("x", 6).attr("dy", "1.3em")
+          .attr("opacity", 0.85)
+          .text(share >= 0.1 ? `${share.toFixed(1)}%` : "<0.1%");
+      }
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
 
 export function legend(host, items) {
-  host.innerHTML = items
-    .map(
-      (i) =>
-        `<span><i class="swatch${i.dash ? " dash" : ""}" style="background:${
-          i.dash ? "none" : i.color
-        };color:${i.color}"></i>${i.label}</span>`,
-    )
-    .join("");
+  host.textContent = "";
+  for (const i of items) {
+    const span = document.createElement("span");
+    const key = document.createElement("i");
+    key.className = i.shape === "rect" ? "rect-key" : "line-key";
+    key.style.background = i.color;
+    if (i.dash) {
+      key.style.background = "none";
+      key.style.borderTop = `2px dashed ${i.color}`;
+      key.style.height = "0";
+    }
+    if (i.hollow) {
+      key.style.background = "none";
+      key.style.border = `2px solid ${i.color}`;
+      key.style.height = "10px";
+      key.style.width = "10px";
+      key.style.borderRadius = "50%";
+    }
+    const label = document.createElement("span");
+    label.textContent = i.label;
+    span.append(key, label);
+    host.appendChild(span);
+  }
 }
+
+export { cssVar };

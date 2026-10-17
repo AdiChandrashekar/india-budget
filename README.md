@@ -129,6 +129,26 @@ means parsing PDF tables, which is the next piece of work and is scoped in
   downloads a map of but does not yet parse.
 - **Pre-1996.** Scanned PDFs needing OCR.
 
+## How it looks, and why
+
+The visual design is locked in [DESIGN.md](DESIGN.md): an editorial-statistical
+direction, FT chart style crossed with NYT Upshot. Titles state the finding
+rather than name the variable, the thing worth noticing is annotated on the
+plot itself, and charts sit on the page rather than in cards.
+
+One idiom runs through every figure and is never spent on anything else: **a
+solid line and a filled marker mean an audited outturn, a dashed line and a
+hollow marker mean an estimate.** A budget series is part fact and part
+forecast, and the reader can see where one becomes the other. A gap in the
+data is drawn as a gap, never interpolated.
+
+The palette is the dataviz method's validated categorical set, re-checked
+against this project's own surfaces rather than assumed: worst colourblind
+separation 9.2 ΔE light and 9.4 dark, against a target of 8. Three hues fall
+below 3:1 contrast on the light ground, so every figure carries direct labels
+and a table view, which is the documented relief. Read DESIGN.md before
+changing a colour, a typeface or a mark.
+
 ## Layout
 
 ```
@@ -139,6 +159,7 @@ data/reference/  the edition map, ministry mapping
 data/union.json  what the page reads
 js/ css/     the site: data.js, charts.js, app.js
 docs/        FINDINGS.md, what the sources actually look like
+DESIGN.md    the design lock: tokens, marks, chart rules
 ```
 
 ## Sources

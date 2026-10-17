@@ -1,278 +1,486 @@
-// Wiring. Reads data/union.json, renders the page, keeps the controls in sync.
+// Wiring. Reads data/union.json, renders the page, keeps controls in sync.
+// House style and the reasoning behind it are locked in DESIGN.md.
 
 import {
   load, pointsFor, valueAt, shareOfTotal, crore, lakhCrore, pct, csv, download,
+  fyStart,
 } from "./data.js";
-import { lineChart, groupedBars, stackedBars, legend } from "./charts.js";
+import { lineChart, dumbbell, stackedBarH, treemap, legend, cssVar } from "./charts.js";
 
 const state = {
-  measure: "cr",        // cr | share
-  basis: "best",        // best | A | RE | BE
-  wholeMeasure: "cr",   // cr | share
-  headFilter: "edu",    // edu | all
+  measure: "cr",
+  basis: "best",
+  wholeMeasure: "cr",
+  headFilter: "edu",
   search: "",
   deptSort: { key: "latest", dir: -1 },
   headSort: { key: "latest", dir: -1 },
 };
 
 let DATA = null;
-let COLOURS = {};
 
-// Years with data, and the full span including years we could not parse. The
-// charts use the span so a missing year leaves a hole; the tables use the
-// years that exist so there are no empty columns.
+const EDU_DEFS = [
+  { key: "moe", slot: "--s1", short: "Ministry" },
+  { key: "functional", slot: "--s2", short: "Functional" },
+  { key: "functional_narrow", slot: "--s3", short: "Functional, narrow" },
+];
+
+const $ = (id) => document.getElementById(id);
+
+// Years with data, plus the years the pipeline could not parse, so a gap in
+// coverage reads as a gap rather than as a shorter axis.
 function axisYears() {
-  const all = [...DATA.meta.years, ...(DATA.meta.gap_years || [])];
-  return all.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+  return [...DATA.meta.years, ...(DATA.meta.gap_years || [])]
+    .sort((a, b) => fyStart(a) - fyStart(b));
 }
 
-function readColours() {
-  const s = getComputedStyle(document.documentElement);
-  const get = (n, fallback) => (s.getPropertyValue(n) || fallback).trim();
-  COLOURS = {
-    edu: get("--edu", "#1f6f8b"),
-    actual: get("--actual", "#16191d"),
-    re: get("--re", "#b8762a"),
-    be: get("--be", "#8a8f96"),
-    warn: get("--warn", "#9c3b2e"),
-    faint: get("--ink-faint", "#818a93"),
-    soft: get("--edu-soft", "#cfe2e9"),
-  };
+function latestYear() {
+  return DATA.meta.years[DATA.meta.years.length - 1];
 }
 
-// ---------------------------------------------------------------------------
-// Small UI helpers
-// ---------------------------------------------------------------------------
+function fmtValue() {
+  return state.measure === "share"
+    ? (v) => (Number.isFinite(v) ? `${v.toFixed(1)}%` : "—")
+    : (v) => (Number.isFinite(v)
+      ? (Math.abs(v) >= 100000 ? `${(v / 100000).toFixed(2)}L cr` : `${crore(v)} cr`)
+      : "—");
+}
+
+// Axis ticks keep one unit for the whole axis — "50,000" sitting under "1.0L"
+// makes the reader convert in their head on every second tick.
+function axisFormatter(max) {
+  // Indian budgets are read in lakh crore, so switch at a lakh, not a million.
+  if (max >= 100000) return (v) => (v === 0 ? "0" : `${(v / 100000).toFixed(1)}L`);
+  if (max >= 10000) return (v) => (v === 0 ? "0" : `${Math.round(v / 1000)}k`);
+  return (v) => crore(v);
+}
+
+function seriesPoints(series) {
+  const years = DATA.meta.years;
+  if (state.measure !== "share") return pointsFor(series, state.basis, years);
+  const out = [];
+  for (const year of years) {
+    const value = shareOfTotal(series, DATA.totals, year, state.basis);
+    if (value == null) continue;
+    const byType = series[year] || {};
+    const used = state.basis === "best"
+      ? ["A", "RE", "BE"].find((t) => byType[t] != null)
+      : state.basis;
+    out.push({ year, value, basis: used });
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- utilities
 
 function segmented(host, options, current, onPick) {
-  host.innerHTML = "";
+  host.textContent = "";
   for (const opt of options) {
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = opt.label;
-    b.title = opt.title || "";
+    if (opt.title) b.title = opt.title;
     b.setAttribute("aria-pressed", String(opt.value === current));
     b.addEventListener("click", () => onPick(opt.value));
     host.appendChild(b);
   }
 }
 
-const EDU_SERIES = [
-  { key: "moe", colourKey: "edu" },
-  { key: "functional", colourKey: "re" },
-  { key: "functional_narrow", colourKey: "be" },
-];
+function buildTable(host, head, rows) {
+  const table = host.querySelector("table") || host;
+  const thead = table.querySelector("thead");
+  const tbody = table.querySelector("tbody");
+  thead.textContent = "";
+  tbody.textContent = "";
 
-function formatter() {
-  return state.measure === "share"
-    ? (v) => `${v.toFixed(1)}%`
-    : (v) => (Math.abs(v) >= 100000 ? `${(v / 100000).toFixed(1)}L` : crore(v));
-}
-
-function seriesPoints(series, years) {
-  if (state.measure === "share") {
-    return years
-      .map((year) => {
-        const value = shareOfTotal(series, DATA.totals, year, state.basis);
-        if (value == null) return null;
-        const byType = series[year] || {};
-        const used = state.basis === "best"
-          ? ["A", "RE", "BE"].find((t) => byType[t] != null)
-          : state.basis;
-        return { year, value, basis: used };
-      })
-      .filter(Boolean);
+  const hr = document.createElement("tr");
+  for (const h of head) {
+    const th = document.createElement("th");
+    th.textContent = h;
+    hr.appendChild(th);
   }
-  return pointsFor(series, state.basis, years);
+  thead.appendChild(hr);
+
+  for (const row of rows) {
+    const tr = document.createElement("tr");
+    if (row.cls) tr.className = row.cls;
+    row.cells.forEach((cell, i) => {
+      const td = document.createElement("td");
+      if (i > 0) td.className = "num";
+      td.textContent = cell;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
 }
 
-// ---------------------------------------------------------------------------
-// Headline: education three ways
-// ---------------------------------------------------------------------------
+function wireTableToggles() {
+  for (const btn of document.querySelectorAll("[data-table]")) {
+    btn.addEventListener("click", () => {
+      const target = $(btn.dataset.table);
+      const show = target.hidden;
+      target.hidden = !show;
+      btn.textContent = show
+        ? btn.textContent.replace(/^Show/, "Hide")
+        : btn.textContent.replace(/^Hide/, "Show");
+    });
+  }
+}
 
-function renderHeadline() {
-  const years = DATA.meta.years;
-  const latest = years[years.length - 1];
-  const stats = document.getElementById("headline-stats");
+// ------------------------------------------------------- 1. the disagreement
 
-  stats.innerHTML = EDU_SERIES.map(({ key }) => {
+function renderDefinitions() {
+  const latest = latestYear();
+  const vals = EDU_DEFS.map(({ key }) => valueAt(DATA.education[key].series, latest, "BE"));
+  const spread = Math.max(...vals) - Math.min(...vals);
+
+  $("hero-spread").textContent = lakhCrore(spread).replace(/ cr$/, "");
+  $("hero-spread-note").textContent =
+    `crore apart — the gap between the widest and narrowest definition of the `
+    + `Union education budget in ${latest}`;
+
+  const stats = $("definition-stats");
+  stats.textContent = "";
+  for (const { key, slot } of EDU_DEFS) {
     const block = DATA.education[key];
     const v = valueAt(block.series, latest, "BE");
     const share = shareOfTotal(block.series, DATA.totals, latest, "BE");
-    return `<div class="stat">
-      <dt>${block.label}</dt>
-      <dd>${lakhCrore(v)}
-        <span class="sub">${pct(share)} of Union spending &middot; ${latest} BE</span>
-      </dd>
-    </div>`;
-  }).join("");
 
-  const host = document.getElementById("edu-chart");
-  const series = EDU_SERIES.map(({ key, colourKey }) => ({
-    label: DATA.education[key].label,
-    color: COLOURS[colourKey],
-    points: seriesPoints(DATA.education[key].series, years),
-  }));
-
-  lineChart(host, { series, years: axisYears(), format: formatter() });
-
-  legend(
-    document.getElementById("edu-legend"),
-    series
-      .map((s) => ({ label: s.label, color: s.color }))
-      .concat([{ label: "dashed = estimate, not an outturn", color: COLOURS.faint, dash: true }]),
-  );
-
-  document.getElementById("edu-caption").textContent =
-    state.measure === "share"
-      ? "Each definition as a share of total Union expenditure, read on the same basis as the total."
-      : "Rupees crore, nominal. Not adjusted for inflation, so later years are flattered.";
-
-  const gap = valueAt(DATA.education.moe.series, latest, "BE")
-    - valueAt(DATA.education.functional.series, latest, "BE");
-  document.getElementById("definitions-note").innerHTML = `
-    <strong>Why they differ.</strong> ${EDU_SERIES.map(
-      ({ key }) => `<em>${DATA.education[key].label}</em> &mdash; ${DATA.education[key].note}`,
-    ).join("<br>")}
-    <br><br>In ${latest} the ministry figure runs
-    <strong>${lakhCrore(gap)}</strong> above the functional one, almost all of
-    it money routed to states as grants-in-aid rather than booked by the Union
-    under an education head.`;
-}
-
-// ---------------------------------------------------------------------------
-// Budgeted against spent
-// ---------------------------------------------------------------------------
-
-function renderUtilisation() {
-  const years = DATA.meta.years;
-  const series = DATA.education.moe.series;
-  const groups = [
-    { key: "BE", label: "Budget Estimate", color: COLOURS.be, values: {} },
-    { key: "RE", label: "Revised Estimate", color: COLOURS.re, values: {} },
-    { key: "A", label: "Actuals", color: COLOURS.actual, values: {} },
-  ];
-  for (const year of years) {
-    for (const g of groups) {
-      const v = valueAt(series, year, g.key);
-      if (v != null) g.values[year] = v;
-    }
+    const wrap = document.createElement("div");
+    wrap.className = "stat";
+    const dt = document.createElement("dt");
+    const k = document.createElement("i");
+    k.className = "key";
+    k.style.background = cssVar(slot, "#2a78d6");
+    const name = document.createElement("span");
+    name.textContent = block.label;
+    dt.append(k, name);
+    const dd = document.createElement("dd");
+    dd.textContent = lakhCrore(v);
+    const sub = document.createElement("span");
+    sub.className = "sub";
+    sub.textContent = `${pct(share)} of Union spending · ${latest} BE`;
+    dd.appendChild(sub);
+    wrap.append(dt, dd);
+    stats.appendChild(wrap);
   }
 
-  groupedBars(document.getElementById("util-chart"), {
+  const series = EDU_DEFS.map(({ key, slot, short }) => ({
+    label: DATA.education[key].label,
+    short,
+    color: cssVar(slot, "#2a78d6"),
+    points: seriesPoints(DATA.education[key].series),
+  }));
+  const peak = Math.max(...series.flatMap((s) => s.points.map((p) => p.value)));
+
+  // Annotate the spread where it is widest, which is the figure's whole point.
+  const wideYear = latest;
+  const hi = Math.max(...vals);
+  const lo = Math.min(...vals);
+  const annotation = state.measure === "share" ? null : {
+    year: wideYear,
+    value: hi,
+    from: hi,
+    to: lo,
+    headline: `${crore(spread)} cr apart`,
+    detail: "same year, same government",
+    dx: -14,
+    dy: -34,
+    anchor: "end",
+  };
+
+  lineChart($("edu-plot"), {
+    series,
     years: axisYears(),
-    groups,
-    format: (v) => (Math.abs(v) >= 100000 ? `${(v / 100000).toFixed(1)}L` : crore(v)),
+    format: state.measure === "share" ? (v) => `${v.toFixed(1)}%` : axisFormatter(peak),
+    tipFormat: fmtValue(),
+    band: true,
+    annotation,
+    height: 420,
   });
 
-  legend(
-    document.getElementById("util-legend"),
-    groups.map((g) => ({ label: g.label, color: g.color })),
-  );
+  legend($("edu-legend"), [
+    ...series.map((s) => ({ label: s.label, color: s.color })),
+    {
+      label: "dashed line, hollow dot = estimate, not an outturn",
+      color: cssVar("--ink-muted", "#8a9099"),
+      dash: true,
+    },
+  ]);
 
-  const settled = years
-    .map((year) => {
-      const be = valueAt(series, year, "BE");
-      const a = valueAt(series, year, "A");
-      return be && a ? { year, ratio: (100 * a) / be } : null;
-    })
-    .filter(Boolean);
-  const spread = settled.length
-    ? ` Where the actual is known, spending has run between
-       ${Math.min(...settled.map((s) => s.ratio)).toFixed(0)}% and
-       ${Math.max(...settled.map((s) => s.ratio)).toFixed(0)}% of the opening
-       budget estimate.`
-    : "";
-  document.getElementById("util-caption").textContent =
-    "Ministry of Education, Rs crore. A missing bar means that edition is not "
-    + "yet parsed, not that the figure is zero." + spread.replace(/\s+/g, " ");
+  $("edu-caption").textContent = state.measure === "share"
+    ? "Each definition as a share of total Union expenditure, numerator and "
+      + "denominator read on the same basis. The shaded band is the spread "
+      + "between definitions."
+    : "Rupees crore, nominal, so later years are flattered by inflation. The "
+      + "shaded band is the spread between the widest and narrowest definition.";
 
-  const rows = years
-    .map((year) => {
-      const be = valueAt(series, year, "BE");
-      const re = valueAt(series, year, "RE");
-      const a = valueAt(series, year, "A");
-      return { year, be, re, a, util: be && a ? (100 * a) / be : null };
-    })
-    .filter((r) => r.be != null || r.re != null || r.a != null);
+  const years = DATA.meta.years;
+  buildTable($("edu-table"),
+    ["Year", ...EDU_DEFS.map(({ key }) => DATA.education[key].label), "Total Union"],
+    years.map((year) => ({
+      cells: [
+        year,
+        ...EDU_DEFS.map(({ key }) => crore(valueAt(DATA.education[key].series, year, state.basis))),
+        crore(valueAt(DATA.totals, year, state.basis)),
+      ],
+    })));
 
-  const table = document.getElementById("util-table");
-  table.querySelector("thead").innerHTML =
-    "<tr><th>Year</th><th>Budget Estimate</th><th>Revised</th>"
-    + "<th>Actuals</th><th>Actuals as % of BE</th></tr>";
-  table.querySelector("tbody").innerHTML = rows
-    .map(
-      (r) => `<tr><td>${r.year}</td>
-        <td class="num">${crore(r.be)}</td>
-        <td class="num">${crore(r.re)}</td>
-        <td class="num">${crore(r.a)}</td>
-        <td class="num">${r.util == null ? "—" : pct(r.util, 1)}</td></tr>`,
-    )
-    .join("");
+  const note = $("definitions-note");
+  note.textContent = "";
+  const intro = document.createElement("p");
+  intro.style.margin = "0 0 10px";
+  const b = document.createElement("strong");
+  b.textContent = "Why they differ. ";
+  intro.appendChild(b);
+  intro.appendChild(document.createTextNode(
+    "All three are the government's own numbers; the choice between them is "
+    + "a choice about what counts as education."));
+  note.appendChild(intro);
+  for (const { key } of EDU_DEFS) {
+    const p = document.createElement("p");
+    p.style.margin = "0 0 6px";
+    const em = document.createElement("em");
+    em.textContent = DATA.education[key].label;
+    p.append(em, document.createTextNode(" — " + DATA.education[key].note));
+    note.appendChild(p);
+  }
 }
 
-// ---------------------------------------------------------------------------
-// Classification: where the ministry's money is booked
-// ---------------------------------------------------------------------------
+// --------------------------------------------------- 2. promise and outturn
+
+function renderUtilisation() {
+  const series = DATA.education.moe.series;
+  const rows = DATA.meta.years.map((year) => ({
+    year,
+    be: valueAt(series, year, "BE"),
+    re: valueAt(series, year, "RE"),
+    a: valueAt(series, year, "A"),
+  })).filter((r) => r.be != null || r.re != null || r.a != null);
+
+  const utilPeak = Math.max(...rows.flatMap((r) => [r.be, r.re, r.a].filter((v) => v != null)));
+  dumbbell($("util-plot"), {
+    rows,
+    format: axisFormatter(utilPeak),
+    height: Math.max(260, rows.length * 44 + 70),
+    // Only say what we actually know: a missing figure here means the
+    // edition that carries it has not been parsed, not that the government
+    // failed to publish it.
+    labelOf: (r) => (r.be != null && r.a != null ? "" : "incomplete triple"),
+  });
+
+  legend($("util-legend"), [
+    { label: "Budget estimate", color: cssVar("--seq-estimate", "#86b6ef"), hollow: true },
+    { label: "Revised estimate (tick)", color: cssVar("--ink-muted", "#8a9099") },
+    { label: "Actuals", color: cssVar("--seq-outturn", "#2a78d6"), shape: "rect" },
+  ]);
+
+  const settled = rows.filter((r) => r.be != null && r.a != null);
+  const ratios = settled.map((r) => (100 * r.a) / r.be);
+  $("util-caption").textContent =
+    "Ministry of Education, Rs crore. "
+    + (ratios.length
+      ? `Where the audited figure is known, spending has landed between `
+        + `${Math.min(...ratios).toFixed(0)}% and ${Math.max(...ratios).toFixed(0)}% `
+        + `of the opening budget estimate. `
+      : "")
+    + "A row with one dot is a year whose other figures sit in an edition the "
+    + "pipeline has not parsed yet.";
+
+  buildTable($("util-table"),
+    ["Year", "Budget estimate", "Revised", "Actuals", "Actuals as % of BE"],
+    rows.map((r) => ({
+      cells: [
+        r.year, crore(r.be), crore(r.re), crore(r.a),
+        r.be && r.a ? pct((100 * r.a) / r.be, 1) : "—",
+      ],
+    })));
+}
+
+// ------------------------------------------------------- 3. classification
 
 function renderClassification() {
-  const years = DATA.meta.years;
-  const latest = years[years.length - 1];
-  const heads = DATA.moe_heads
-    .filter((h) => Object.keys(h.series).length)
-    .slice(0, 7);
+  const latest = latestYear();
+  const years = axisYears();
+  const accent = cssVar("--s1", "#2a78d6");
+  const grants = cssVar("--s2", "#eb6834");
+  const dim = cssVar("--dim", "#d9d2c6");
 
-  const palette = [COLOURS.warn, COLOURS.edu, COLOURS.re, COLOURS.be,
-    COLOURS.soft, COLOURS.faint, COLOURS.actual];
+  // Emphasis, not categorical: education heads, the grants that leave the
+  // Union, and everything else. Three classes, because that is the argument.
+  const classOf = (h) => {
+    if (h.education) return { cls: "edu", color: accent, onFill: "#fff" };
+    if (h.code === "3601" || h.code === "3602") {
+      return { cls: "grant", color: grants, onFill: "#fff" };
+    }
+    return { cls: "other", color: dim, onFill: cssVar("--ink", "#15181c") };
+  };
 
-  const layers = heads.map((h, i) => {
+  const layers = DATA.moe_heads.map((h) => {
+    const k = classOf(h);
     const values = {};
-    for (const year of years) {
+    for (const year of DATA.meta.years) {
       const v = valueAt(h.series, year, state.basis);
       if (v != null && v > 0) values[year] = v;
     }
     return {
-      key: h.code,
-      label: `${h.code} ${h.name}${h.education ? " (education head)" : ""}`,
-      color: palette[i % palette.length],
+      code: h.code,
+      label: `${h.code} ${h.name}`,
+      short: h.code,
+      color: k.color,
+      onFill: k.onFill,
+      education: h.education,
       values,
     };
+  }).filter((l) => Object.keys(l.values).length);
+
+  // grants first, so the point of the chart is the first thing read
+  layers.sort((a, b) => {
+    const rank = (l) => (l.code === "3601" ? 0 : l.education ? 1 : 2);
+    return rank(a) - rank(b) || (b.values[latest] ?? 0) - (a.values[latest] ?? 0);
   });
 
-  stackedBars(document.getElementById("class-chart"), {
-    years: axisYears(),
+  const g3601 = layers.find((l) => l.code === "3601");
+  const classPeak = Math.max(...DATA.meta.years.map(
+    (y) => layers.reduce((a, l) => a + (l.values[y] ?? 0), 0)));
+  stackedBarH($("class-plot"), {
+    years,
     layers,
-    format: (v) => (Math.abs(v) >= 100000 ? `${(v / 100000).toFixed(1)}L` : crore(v)),
+    format: axisFormatter(classPeak),
+    height: Math.max(280, DATA.meta.years.length * 40 + 110),
+    annotation: g3601 ? {
+      year: DATA.meta.years[0],
+      index: 0,
+      headline: "Grants-in-aid to states",
+      detail: "spent, and booked as education, by the states",
+    } : null,
   });
 
-  legend(
-    document.getElementById("class-legend"),
-    layers.map((l) => ({ label: l.label, color: l.color })),
-  );
+  legend($("class-legend"), [
+    { label: "Grants-in-aid to states and UTs", color: grants, shape: "rect" },
+    { label: "Education heads (2202, 2203, 4202)", color: accent, shape: "rect" },
+    { label: "Everything else", color: dim, shape: "rect" },
+  ]);
 
-  document.getElementById("class-caption").textContent =
-    "Ministry of Education gross provision by major head, Rs crore. Gross, "
-    + "because recoveries are netted against the heads they came from.";
+  $("class-caption").textContent =
+    "Ministry of Education gross provision by major head, Rs crore. Gross "
+    + "rather than net, because receipts are netted against the head they came "
+    + "from. Segments are labelled by head code; hover or open the table for "
+    + "the full name.";
 
-  const grants = DATA.moe_heads.find((h) => h.code === "3601");
-  const general = DATA.moe_heads.find((h) => h.code === "2202");
-  const g = grants ? valueAt(grants.series, latest, "BE") : null;
-  const e = general ? valueAt(general.series, latest, "BE") : null;
-  document.getElementById("double-count-note").innerHTML = `
-    <strong>Read this before comparing governments.</strong> In ${latest},
-    ${g != null ? `<strong>${lakhCrore(g)}</strong>` : "the largest share"}
-    of the ministry's provision sits under head 3601, grants-in-aid to state
-    governments, against
-    ${e != null ? `<strong>${lakhCrore(e)}</strong>` : "a smaller sum"} under
-    2202, general education. Those grants are spent, and booked as education,
-    by the states. The Union's own functional education figure therefore
-    understates what the centre funds, and summing Union and state education
-    budgets overstates it.`;
+  buildTable($("class-table"),
+    ["Major head", ...DATA.meta.years],
+    layers.map((l) => ({
+      cls: l.education ? "is-edu" : "",
+      cells: [l.label, ...DATA.meta.years.map((y) => crore(l.values[y] ?? null))],
+    })));
+
+  const g = g3601 ? g3601.values[latest] ?? null : null;
+  const edu2202 = layers.find((l) => l.code === "2202");
+  const e = edu2202 ? edu2202.values[latest] ?? null : null;
+
+  const note = $("double-count-note");
+  note.textContent = "";
+  const strong = document.createElement("strong");
+  strong.textContent = "The double-counting trap. ";
+  note.appendChild(strong);
+  note.appendChild(document.createTextNode(
+    `In ${latest} the ministry books ${g != null ? lakhCrore(g) : "its largest sum"} `
+    + `under head 3601, grants-in-aid to state governments, against `
+    + `${e != null ? lakhCrore(e) : "a smaller sum"} under 2202, general `
+    + `education. Those grants reappear as education spending in state `
+    + `budgets. Add the two governments' education totals together and you `
+    + `count the same rupee twice; for a genuine combined figure use the `
+    + `ministry's Analysis of Budgeted Expenditure or the CAG's combined accounts.`));
 }
 
-// ---------------------------------------------------------------------------
-// The whole budget, by department
-// ---------------------------------------------------------------------------
+// ------------------------------------------------------------- 4. the scale
+
+function isEduDept(name) {
+  return /school education|higher education|elementary education|secondary education/i
+    .test(name);
+}
+
+function renderScale() {
+  const latest = latestYear();
+  const accent = cssVar("--s1", "#2a78d6");
+  const dim = cssVar("--dim", "#d9d2c6");
+
+  const items = DATA.demands
+    .map((d) => ({
+      name: d.name,
+      value: valueAt(d.series, latest, "BE") ?? 0,
+      highlight: isEduDept(d.name),
+    }))
+    .filter((d) => d.value > 0);
+
+  const total = items.reduce((a, d) => a + d.value, 0);
+  const edu = items.filter((d) => d.highlight).reduce((a, d) => a + d.value, 0);
+  const biggest = items.slice().sort((a, b) => b.value - a.value)[0];
+
+  const stats = $("scale-stats");
+  stats.textContent = "";
+  const tiles = [
+    {
+      label: "Education's share",
+      value: pct((100 * edu) / total),
+      sub: `${lakhCrore(edu)} of ${lakhCrore(total)} · ${latest} BE`,
+      colour: accent,
+    },
+    {
+      label: "Largest single demand",
+      value: lakhCrore(biggest.value),
+      sub: biggest.name,
+      colour: dim,
+    },
+    {
+      label: "Demands for grants",
+      value: String(items.length),
+      sub: "every ministry and department",
+      colour: dim,
+    },
+  ];
+  for (const t of tiles) {
+    const wrap = document.createElement("div");
+    wrap.className = "stat";
+    const dt = document.createElement("dt");
+    const k = document.createElement("i");
+    k.className = "key";
+    k.style.background = t.colour;
+    const nm = document.createElement("span");
+    nm.textContent = t.label;
+    dt.append(k, nm);
+    const dd = document.createElement("dd");
+    dd.textContent = t.value;
+    const sub = document.createElement("span");
+    sub.className = "sub";
+    sub.textContent = t.sub;
+    dd.appendChild(sub);
+    wrap.append(dt, dd);
+    stats.appendChild(wrap);
+  }
+
+  treemap($("treemap-plot"), {
+    items,
+    format: (v) => `${crore(v)} cr`,
+    height: 470,
+    accent,
+    dim,
+    onFillAccent: "#fff",
+  });
+
+  legend($("treemap-legend"), [
+    { label: "Education departments", color: accent, shape: "rect" },
+    { label: "Every other demand", color: dim, shape: "rect" },
+  ]);
+
+  $("treemap-caption").textContent =
+    `Every demand for grants, ${latest} budget estimate, area proportional to `
+    + `provision net of receipts. Tiles too small to label carry their name on `
+    + `hover; the full table has every figure.`;
+
+  renderDepartments();
+}
 
 function deptValue(d, year) {
   return state.wholeMeasure === "share"
@@ -282,7 +490,7 @@ function deptValue(d, year) {
 
 function renderDepartments() {
   const years = DATA.meta.years;
-  const latest = years[years.length - 1];
+  const latest = latestYear();
   const needle = state.search.trim().toLowerCase();
 
   let rows = DATA.demands.map((d) => ({
@@ -291,10 +499,8 @@ function renderDepartments() {
     values: years.map((y) => deptValue(d, y)),
   }));
   if (needle) {
-    rows = rows.filter(
-      (r) => r.d.name.toLowerCase().includes(needle)
-        || (r.d.ministry || "").toLowerCase().includes(needle),
-    );
+    rows = rows.filter((r) => r.d.name.toLowerCase().includes(needle)
+      || (r.d.ministry || "").toLowerCase().includes(needle));
   }
 
   const { key, dir } = state.deptSort;
@@ -306,60 +512,82 @@ function renderDepartments() {
   });
 
   const fmt = state.wholeMeasure === "share" ? (v) => pct(v, 2) : (v) => crore(v);
-  const table = document.getElementById("dept-table");
-  table.querySelector("thead").innerHTML = `<tr>
-    <th data-sort="name">Department</th>
-    ${years.map((y) => `<th data-sort="${y}">${y}</th>`).join("")}
-  </tr>`;
+  const table = $("dept-table");
+  const thead = table.querySelector("thead");
+  const tbody = table.querySelector("tbody");
+  thead.textContent = "";
+  tbody.textContent = "";
 
-  table.querySelector("tbody").innerHTML = rows
-    .map((r) => {
-      const isEdu = /school education|higher education/i.test(r.d.name);
-      return `<tr class="${isEdu ? "is-edu" : ""}">
-        <td>${r.d.name}${isEdu ? '<span class="tag">education</span>' : ""}</td>
-        ${r.values.map((v) => `<td class="num">${v == null ? "—" : fmt(v)}</td>`).join("")}
-      </tr>`;
-    })
-    .join("")
-    + (needle
-      ? ""
-      : `<tr class="total"><td>Total Union expenditure</td>${years
-        .map((y) => {
-          const v = state.wholeMeasure === "share"
-            ? 100
-            : valueAt(DATA.totals, y, state.basis);
-          return `<td class="num">${v == null ? "—" : fmt(v)}</td>`;
-        })
-        .join("")}</tr>`);
-
-  for (const th of table.querySelectorAll("th")) {
-    const k = th.dataset.sort;
-    if (k === state.deptSort.key) {
-      th.setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
-    }
-    th.addEventListener("click", () => {
+  const hr = document.createElement("tr");
+  for (const [k, label] of [["name", "Department"], ...years.map((y) => [y, y])]) {
+    const th = document.createElement("th");
+    th.textContent = label;
+    th.dataset.sort = k;
+    th.tabIndex = 0;
+    if (k === key) th.setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
+    const go = () => {
       state.deptSort = {
         key: k,
         dir: state.deptSort.key === k ? -state.deptSort.dir : (k === "name" ? 1 : -1),
       };
       renderDepartments();
-    });
+    };
+    th.addEventListener("click", go);
+    th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);
+
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    const edu = isEduDept(r.d.name);
+    if (edu) tr.className = "is-edu";
+    const td = document.createElement("td");
+    td.textContent = r.d.name;
+    if (edu) {
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = "education";
+      td.appendChild(tag);
+    }
+    tr.appendChild(td);
+    for (const v of r.values) {
+      const cell = document.createElement("td");
+      cell.className = "num";
+      cell.textContent = v == null ? "—" : fmt(v);
+      tr.appendChild(cell);
+    }
+    tbody.appendChild(tr);
   }
 
-  document.getElementById("dept-caption").textContent =
-    `${rows.length} of ${DATA.demands.length} departments shown. `
+  if (!needle) {
+    const tr = document.createElement("tr");
+    tr.className = "total";
+    const td = document.createElement("td");
+    td.textContent = "Total Union expenditure";
+    tr.appendChild(td);
+    for (const y of years) {
+      const cell = document.createElement("td");
+      cell.className = "num";
+      const v = state.wholeMeasure === "share" ? 100 : valueAt(DATA.totals, y, state.basis);
+      cell.textContent = v == null ? "—" : fmt(v);
+      tr.appendChild(cell);
+    }
+    tbody.appendChild(tr);
+  }
+
+  $("dept-caption").textContent =
+    `${rows.length} of ${DATA.demands.length} departments. `
     + (state.wholeMeasure === "share"
       ? "Share of total Union expenditure, per cent."
       : "Rs crore, net of receipts netted against the demand.");
 }
 
-// ---------------------------------------------------------------------------
-// Functional heads
-// ---------------------------------------------------------------------------
+// -------------------------------------------------------- 5. account heads
 
 function renderHeads() {
   const years = DATA.meta.years;
-  const latest = years[years.length - 1];
+  const latest = latestYear();
   let heads = DATA.heads;
   if (state.headFilter === "edu") heads = heads.filter((h) => h.education);
 
@@ -377,137 +605,147 @@ function renderHeads() {
     return dir * ((ai ?? -Infinity) - (bi ?? -Infinity));
   });
 
-  const table = document.getElementById("head-table");
-  table.querySelector("thead").innerHTML = `<tr>
-    <th data-sort="name">Major head</th>
-    ${years.map((y) => `<th data-sort="${y}">${y}</th>`).join("")}
-  </tr>`;
-  table.querySelector("tbody").innerHTML = rows
-    .map(
-      (r) => `<tr class="${r.h.education ? "is-edu" : ""}">
-      <td>${r.h.code} &middot; ${r.h.name}${
-        r.h.education ? '<span class="tag">education</span>' : ""
-      }</td>
-      ${r.values.map((v) => `<td class="num">${v == null ? "—" : crore(v)}</td>`).join("")}
-    </tr>`,
-    )
-    .join("");
+  const table = $("head-table");
+  const thead = table.querySelector("thead");
+  const tbody = table.querySelector("tbody");
+  thead.textContent = "";
+  tbody.textContent = "";
 
-  for (const th of table.querySelectorAll("th")) {
-    const k = th.dataset.sort;
-    if (k === state.headSort.key) {
-      th.setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
-    }
-    th.addEventListener("click", () => {
+  const hr = document.createElement("tr");
+  for (const [k, label] of [["name", "Major head"], ...years.map((y) => [y, y])]) {
+    const th = document.createElement("th");
+    th.textContent = label;
+    th.dataset.sort = k;
+    th.tabIndex = 0;
+    if (k === key) th.setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
+    const go = () => {
       state.headSort = {
         key: k,
         dir: state.headSort.key === k ? -state.headSort.dir : (k === "name" ? 1 : -1),
       };
       renderHeads();
-    });
+    };
+    th.addEventListener("click", go);
+    th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);
+
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    if (r.h.education) tr.className = "is-edu";
+    const td = document.createElement("td");
+    td.textContent = `${r.h.code} · ${r.h.name}`;
+    if (r.h.education) {
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = "education";
+      td.appendChild(tag);
+    }
+    tr.appendChild(td);
+    for (const v of r.values) {
+      const cell = document.createElement("td");
+      cell.className = "num";
+      cell.textContent = v == null ? "—" : crore(v);
+      tr.appendChild(cell);
+    }
+    tbody.appendChild(tr);
   }
 
-  document.getElementById("head-caption").textContent =
-    `${rows.length} major heads, gross provision in Rs crore. `
-    + "Summed across every demand that books to the head.";
+  $("head-caption").textContent =
+    `${rows.length} major heads, gross provision in Rs crore, summed across `
+    + `every demand that books to the head.`;
 }
 
-// ---------------------------------------------------------------------------
-// Chrome
-// ---------------------------------------------------------------------------
+// ------------------------------------------------------------------ chrome
 
 function renderChrome() {
   const m = DATA.meta;
-  document.getElementById("srcline").innerHTML = [
-    `${m.years[0]} – ${m.years[m.years.length - 1]}`,
+  const byline = $("byline");
+  byline.textContent = "";
+  for (const t of [
+    `${m.years[0]} to ${m.years[m.years.length - 1]}`,
     `${m.editions.length} budget editions`,
     `${m.rows_in_long_table.toLocaleString("en-IN")} published figures`,
+    `source: indiabudget.gov.in`,
     `built ${m.generated}`,
-  ].map((t) => `<span>${t}</span>`).join("");
+  ]) {
+    const s = document.createElement("span");
+    s.textContent = t;
+    byline.appendChild(s);
+  }
 
-  const gap = m.gap_years || [];
-  document.getElementById("coverage").innerHTML = `
-    <h3>Coverage</h3>
-    <ul>
-      <li>Editions parsed: ${m.editions.join(", ")}. Each one publishes four
-        years &mdash; actuals for two years back, a revised and a budget
-        estimate for last year, and a budget estimate for the year ahead
-        &mdash; so a handful of editions covers a decade.</li>
-      ${gap.length
-    ? `<li><strong>Gap: ${gap.join(", ")}.</strong> The editions covering
-        these years ship PDF only, with no Excel. Reading them needs a PDF
-        table parser, which is the next piece of work, not a missing
-        source.</li>`
-    : ""}
-      <li>Education departments seen across editions:
-        ${m.moe_departments.join("; ")}.</li>
-    </ul>`;
+  const cov = $("coverage");
+  cov.textContent = "";
+  const ul = document.createElement("ul");
+  const bits = [
+    `Editions parsed: ${m.editions.join(", ")}. Each publishes four years at `
+    + `once — actuals two years back, a revised and a budget estimate for last `
+    + `year, a budget estimate for the year ahead — so a few editions cover a decade.`,
+  ];
+  if ((m.gap_years || []).length) {
+    bits.push(`Gap: ${m.gap_years.join(", ")}. The editions covering these `
+      + `years ship PDF only. That is a parser still to be written, not a `
+      + `missing source.`);
+  }
+  bits.push(`Education departments seen across editions: ${m.moe_departments.join("; ")}.`);
+  for (const b of bits) {
+    const li = document.createElement("li");
+    li.textContent = b;
+    ul.appendChild(li);
+  }
+  cov.appendChild(ul);
 }
 
 function renderAll() {
-  readColours();
-  renderHeadline();
+  renderDefinitions();
   renderUtilisation();
   renderClassification();
-  renderDepartments();
+  renderScale();
   renderHeads();
 }
 
 function wireControls() {
-  segmented(
-    document.getElementById("measure-toggle"),
-    [
-      { value: "cr", label: "Rs crore" },
-      { value: "share", label: "% of Union spending" },
-    ],
-    state.measure,
-    (v) => { state.measure = v; wireControls(); renderHeadline(); },
-  );
+  segmented($("measure-toggle"), [
+    { value: "cr", label: "Rs crore" },
+    { value: "share", label: "% of Union spending" },
+  ], state.measure, (v) => { state.measure = v; wireControls(); renderDefinitions(); });
 
-  const bases = [
+  segmented($("basis-toggle"), [
     { value: "best", label: "Best available", title: "Actuals, else revised, else budget estimate" },
     { value: "A", label: "Actuals" },
     { value: "RE", label: "Revised" },
     { value: "BE", label: "Budget" },
-  ];
-  segmented(document.getElementById("basis-toggle"), bases, state.basis, (v) => {
+  ], state.basis, (v) => {
     state.basis = v;
     wireControls();
-    renderHeadline();
+    renderDefinitions();
     renderClassification();
-    renderDepartments();
+    renderScale();
     renderHeads();
   });
 
-  segmented(
-    document.getElementById("whole-measure"),
-    [
-      { value: "cr", label: "Rs crore" },
-      { value: "share", label: "% of total" },
-    ],
-    state.wholeMeasure,
-    (v) => { state.wholeMeasure = v; wireControls(); renderDepartments(); },
-  );
+  segmented($("whole-measure"), [
+    { value: "cr", label: "Rs crore" },
+    { value: "share", label: "% of total" },
+  ], state.wholeMeasure, (v) => { state.wholeMeasure = v; wireControls(); renderDepartments(); });
 
-  segmented(
-    document.getElementById("head-filter"),
-    [
-      { value: "edu", label: "Education only" },
-      { value: "all", label: "All heads" },
-    ],
-    state.headFilter,
-    (v) => { state.headFilter = v; wireControls(); renderHeads(); },
-  );
+  segmented($("head-filter"), [
+    { value: "edu", label: "Education heads" },
+    { value: "all", label: "All heads" },
+  ], state.headFilter, (v) => { state.headFilter = v; wireControls(); renderHeads(); });
 }
 
 function wireOnce() {
-  const search = document.getElementById("dept-search");
+  wireTableToggles();
+
+  const search = $("dept-search");
   search.addEventListener("input", () => {
     state.search = search.value;
     renderDepartments();
   });
 
-  document.getElementById("export-depts").addEventListener("click", () => {
+  $("export-depts").addEventListener("click", () => {
     const years = DATA.meta.years;
     const rows = [["department", "ministry", ...years]];
     for (const d of DATA.demands) {
@@ -516,11 +754,12 @@ function wireOnce() {
     download(`union-departments-${state.basis}.csv`, csv(rows));
   });
 
-  document.getElementById("export-heads").addEventListener("click", () => {
+  $("export-heads").addEventListener("click", () => {
     const years = DATA.meta.years;
     const rows = [["major_head", "name", "is_education", ...years]];
     for (const h of DATA.heads) {
-      rows.push([h.code, h.name, h.education, ...years.map((y) => valueAt(h.series, y, state.basis) ?? "")]);
+      rows.push([h.code, h.name, h.education,
+        ...years.map((y) => valueAt(h.series, y, state.basis) ?? "")]);
     }
     download(`union-major-heads-${state.basis}.csv`, csv(rows));
   });
@@ -528,30 +767,28 @@ function wireOnce() {
   let timer;
   window.addEventListener("resize", () => {
     clearTimeout(timer);
-    timer = setTimeout(renderAll, 180);
+    timer = setTimeout(renderAll, 200);
   });
 
-  const scheme = window.matchMedia("(prefers-color-scheme: dark)");
-  scheme.addEventListener("change", renderAll);
+  window.matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => setTimeout(renderAll, 60));
 }
 
 load()
   .then((data) => {
     DATA = data;
-    document.getElementById("loading").remove();
-    document.getElementById("content").hidden = false;
-    readColours();
+    $("loading").remove();
+    $("content").hidden = false;
     renderChrome();
     wireControls();
     wireOnce();
     renderAll();
   })
   .catch((err) => {
-    const el = document.getElementById("loading");
+    const el = $("loading");
     if (el) {
-      el.textContent = `Could not load the data: ${err.message}. `
-        + "If you opened this file directly, serve it over http instead: "
-        + "python -m http.server 8123";
+      el.textContent = `Could not load the data: ${err.message}. If you opened `
+        + `this file directly, serve it over http instead: python -m http.server 8124`;
     }
     console.error(err);
   });
