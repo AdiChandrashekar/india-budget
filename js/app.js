@@ -2,8 +2,8 @@
 // House style and the reasoning behind it are locked in DESIGN.md.
 
 import {
-  load, loadStates, loadMap, pointsFor, valueAt, shareOfTotal, crore,
-  lakhCrore, pct, csv, download, fyStart,
+  load, loadStates, loadMap, loadOptional, pointsFor, valueAt, shareOfTotal,
+  crore, lakhCrore, pct, csv, download, fyStart,
 } from "./data.js";
 import {
   lineChart, dumbbell, stackedBarH, rankedBars, animateIn, onFirstView,
@@ -23,38 +23,15 @@ const state = {
   rankMeasure: "share",
 };
 
-// Published measurements of India's public education spending as a share of
-// GDP. They disagree because they count different things, which is the same
-// disagreement this page opens with, carried into the country's most-quoted
-// education statistic. Sources are listed in the page footer; none of these
-// is computed here, because no GDP series is loaded.
-const GDP_BENCHMARKS = {
-  target: { value: 6, label: "6% target, set 1966, restated 2020", short: "the target" },
-  marks: [
-    {
-      value: 2.7,
-      label: "Economic Survey 2024-25, for 2023-24",
-      short: "Economic Survey",
-      detail: "education departments only",
-    },
-    {
-      value: 4.1,
-      label: "PRS, citing World Bank, for 2022",
-      short: "World Bank",
-      detail: "centre and states together",
-    },
-    {
-      value: 4.6,
-      label: "Ministry of Education, for 2020-21",
-      short: "Ministry, broad",
-      detail: "including other departments",
-    },
-  ],
-};
+// The 6% of GDP target. Its history is attributed in the page footer.
+const TARGET = { value: 6, label: "6% target", short: "the target" };
 
 let DATA = null;
 let STATES = null;
 let MAP = null;
+let ABE = null;            // centre and states together, counted once
+let SCHEMES = null;        // schemes followed across their renames
+let UNION_ACTUALS = null;  // audited Union spending before 2015-16
 
 // The three scroll-driven graphics. Each is rebuilt on every render (a
 // resize, a theme change) and then put back on whichever step the reader had
@@ -84,11 +61,48 @@ function wireStories() {
   }
 }
 
+// The three definitions of the Union's education budget, in plain words.
 const EDU_DEFS = [
-  { key: "moe", slot: "--union", short: "Ministry" },
-  { key: "functional", slot: "--def-functional", short: "Functional" },
-  { key: "functional_narrow", slot: "--def-narrow", short: "Functional, narrow" },
+  {
+    key: "moe",
+    slot: "--union",
+    label: "Ministry of Education",
+    short: "Ministry",
+    note: "What the ministry's two departments are given. It is the figure in "
+      + "the budget speech and in the next morning's headlines. It includes the "
+      + "money the ministry passes on to state governments, but nothing that "
+      + "other ministries spend on education.",
+  },
+  {
+    key: "functional",
+    slot: "--def-functional",
+    label: "Education, sports and culture",
+    short: "All ministries",
+    note: "Everything the Union records under the education account heads, "
+      + "whichever ministry spends it. Every state uses the same heads, which "
+      + "makes this the only one of the three that compares across "
+      + "governments. It leaves out the ministry's grants to the states, which "
+      + "are recorded as transfers. Until 2014-15 most of that money was "
+      + "recorded here as education, which is why this line falls by more than "
+      + "half that year without a rupee less being spent.",
+  },
+  {
+    key: "functional_narrow",
+    slot: "--def-narrow",
+    label: "Education alone",
+    short: "Without sports",
+    note: "The same, without sports and youth services and art and culture, "
+      + "which the account heads group with education.",
+  },
 ];
+
+const BASIS_WORD = { A: "actual", RE: "revised", BE: "budget" };
+
+function setAll(selector, text) {
+  for (const el of document.querySelectorAll(selector)) el.textContent = text;
+}
+
+function byFy(a, b) { return fyStart(a) - fyStart(b); }
 
 const $ = (id) => document.getElementById(id);
 
@@ -199,51 +213,57 @@ function renderDefinitions() {
   const vals = EDU_DEFS.map(({ key }) => valueAt(DATA.education[key].series, latest, "BE"));
   const spread = Math.max(...vals) - Math.min(...vals);
 
-  $("hero-spread").textContent = lakhCrore(spread).replace(/ cr$/, "");
+  // How many whole ministries and departments are smaller than the gap
+  // between definitions - a sense of scale for a number that is otherwise
+  // just large.
+  const demandSizes = DATA.demands
+    .map((d) => valueAt(d.series, latest, "BE"))
+    .filter((v) => v != null && v > 0);
+  const smaller = demandSizes.filter((v) => v < spread).length;
+
+  $("hero-spread").textContent = crore(spread);
   $("hero-spread-note").textContent =
-    `crore apart — the gap between the widest and narrowest definition of the `
-    + `Union education budget in ${latest}`;
+    `crore separates the largest and smallest of the three in ${latest}: more `
+    + `than the entire budget of ${smaller} of the Union's ${demandSizes.length} `
+    + `ministries and departments.`;
 
   const stats = $("definition-stats");
   stats.textContent = "";
-  for (const { key, slot } of EDU_DEFS) {
-    const block = DATA.education[key];
-    const v = valueAt(block.series, latest, "BE");
-    const share = shareOfTotal(block.series, DATA.totals, latest, "BE");
-
+  for (const def of EDU_DEFS) {
+    const series = DATA.education[def.key].series;
+    const v = valueAt(series, latest, "BE");
+    const share = shareOfTotal(series, DATA.totals, latest, "BE");
     const wrap = document.createElement("div");
     wrap.className = "stat";
     const dt = document.createElement("dt");
     const k = document.createElement("i");
     k.className = "key";
-    k.style.background = cssVar(slot, "#e65d31");
+    k.style.background = cssVar(def.slot, "#e65d31");
     const name = document.createElement("span");
-    name.textContent = block.label;
+    name.textContent = def.label;
     dt.append(k, name);
     const dd = document.createElement("dd");
     dd.textContent = lakhCrore(v);
     const sub = document.createElement("span");
     sub.className = "sub";
-    sub.textContent = `${pct(share)} of Union spending · ${latest} BE`;
+    sub.textContent = `${pct(share)} of all Union spending · ${latest} budget`;
     dd.appendChild(sub);
     wrap.append(dt, dd);
     stats.appendChild(wrap);
   }
 
-  const series = EDU_DEFS.map(({ key, slot, short }) => ({
-    label: DATA.education[key].label,
-    short,
-    color: cssVar(slot, "#e65d31"),
-    points: seriesPoints(DATA.education[key].series),
+  const series = EDU_DEFS.map((def) => ({
+    label: def.label,
+    short: def.short,
+    color: cssVar(def.slot, "#e65d31"),
+    points: seriesPoints(DATA.education[def.key].series),
   }));
   const peak = Math.max(...series.flatMap((s) => s.points.map((p) => p.value)));
 
-  // Annotate the spread where it is widest, which is the figure's whole point.
-  const wideYear = latest;
   const hi = Math.max(...vals);
   const lo = Math.min(...vals);
   const annotations = state.measure === "share" ? [] : [{
-    year: wideYear,
+    year: latest,
     value: hi,
     from: hi,
     to: lo,
@@ -254,13 +274,9 @@ function renderDefinitions() {
     anchor: "end",
   }];
 
-  // A reader meeting a cliff in a published chart should be told whether it is
-  // the data or the parser. This one is the data: the ministry's budget fell
-  // about 17% in 2015-16 while total Union spending barely moved. The timing
-  // is that of the 14th Finance Commission award, which raised the states'
-  // share of central taxes from 32% to 42% and restructured centrally
-  // sponsored schemes - stated here as the coincidence it is, not as a
-  // proven cause, because this tool reads budget documents and nothing more.
+  // The ministry's budget fell sharply in 2015-16 while total Union spending
+  // barely moved. That was the first year of the larger tax devolution to the
+  // states, which the note states as timing, not as a proven cause.
   const drop = "2015-16";
   const before = valueAt(DATA.education.moe.series, "2014-15", "BE");
   const after = valueAt(DATA.education.moe.series, drop, "BE");
@@ -269,10 +285,28 @@ function renderDefinitions() {
       year: drop,
       value: after,
       headline: `${(100 * (before - after) / before).toFixed(0)}% fall in 2015-16`,
-      detail: "the year the 14th Finance Commission award began",
+      detail: "the year the states' share of central taxes rose to 42%",
       dx: 10,
-      dy: 46,
+      dy: -95,
       anchor: "start",
+    });
+  }
+
+  // The two account-head lines fall by more than half in 2014-15. Nothing was
+  // cut: from that year the Union's money for schemes the states run was
+  // routed through state budgets and recorded as grants, not as education.
+  const reroute = "2014-15";
+  const fBefore = valueAt(DATA.education.functional.series, "2013-14", "BE");
+  const fAfter = valueAt(DATA.education.functional.series, reroute, "BE");
+  if (state.measure !== "share" && fBefore && fAfter && fAfter < fBefore * 0.6) {
+    annotations.push({
+      year: reroute,
+      value: fAfter,
+      headline: "2014-15: the money was re-booked",
+      detail: "grants to states moved off the education heads",
+      dx: -14,
+      dy: 40,
+      anchor: "end",
     });
   }
 
@@ -289,67 +323,156 @@ function renderDefinitions() {
   legend($("edu-legend"), [
     ...series.map((s) => ({ label: s.label, color: s.color })),
     {
-      label: "dashed line, hollow dot = estimate, not an outturn",
+      label: "dashed line, hollow dot: an estimate, not audited spending",
       color: cssVar("--ink-muted", "#8a9099"),
       dash: true,
     },
   ]);
 
   $("edu-caption").textContent = state.measure === "share"
-    ? "Each definition as a share of total Union expenditure, numerator and "
-      + "denominator read on the same basis. The shaded band is the spread "
-      + "between definitions."
-    : "Rupees crore, nominal, so later years are flattered by inflation. The "
-      + "shaded band is the spread between the widest and narrowest definition.";
+    ? "Each definition as a share of all Union spending in the same year. The "
+      + "shaded band is the gap between the widest and narrowest."
+    : "Rupees crore at current prices. The shaded band is the gap between the "
+      + "widest and narrowest definition each year.";
 
   const years = DATA.meta.years;
   buildTable($("edu-table"),
-    ["Year", ...EDU_DEFS.map(({ key }) => DATA.education[key].label), "Total Union"],
+    ["Year", ...EDU_DEFS.map((d) => d.label), "All Union spending"],
     years.map((year) => ({
       cells: [
         year,
-        ...EDU_DEFS.map(({ key }) => crore(valueAt(DATA.education[key].series, year, state.basis))),
+        ...EDU_DEFS.map((d) => crore(valueAt(DATA.education[d.key].series, year, state.basis))),
         crore(valueAt(DATA.totals, year, state.basis)),
       ],
     })));
 
   const note = $("definitions-note");
   note.textContent = "";
-  const intro = document.createElement("p");
-  intro.style.margin = "0 0 10px";
-  const b = document.createElement("strong");
-  b.textContent = "Why they differ. ";
-  intro.appendChild(b);
-  intro.appendChild(document.createTextNode(
-    "All three are the government's own numbers; the choice between them is "
-    + "a choice about what counts as education."));
-  note.appendChild(intro);
-  for (const { key } of EDU_DEFS) {
+  const para = (head, body) => {
     const p = document.createElement("p");
-    p.style.margin = "0 0 6px";
-    const em = document.createElement("em");
-    em.textContent = DATA.education[key].label;
-    p.append(em, document.createTextNode(" — " + DATA.education[key].note));
+    const b = document.createElement("strong");
+    b.textContent = head + " ";
+    p.append(b, document.createTextNode(body));
     note.appendChild(p);
-  }
+  };
+  for (const def of EDU_DEFS) para(def.label + ".", def.note);
+  para("Why the ministry's figure is the largest.",
+    "Its biggest single line is a grant to the states, recorded as a transfer "
+    + "rather than as education. Chapter six follows that money.");
 }
 
 // ------------------------------------------------- 2. the 6% of GDP promise
 
+function abeYears() {
+  return ABE ? Object.keys(ABE.national).sort(byFy) : [];
+}
+
 function renderPromise() {
-  const { target, marks } = GDP_BENCHMARKS;
-  const lo = Math.min(...marks.map((m) => m.value));
-  const hi = Math.max(...marks.map((m) => m.value));
+  if (!ABE) return;
+  const nat = ABE.national;
+  const years = abeYears();
+  const actual = years.filter((y) => nat[y].estimate_type === "A");
+  const y = actual[actual.length - 1];
+  const narrow = nat[y].education_departments.pct_gdp.total;
+  const broad = nat[y].education_and_other_departments.pct_gdp.total;
+  const two = (v) => `${v.toFixed(2)}%`;
+
+  // "Never passed X": round the highest value up, so the claim stays strictly
+  // true rather than true-after-rounding.
+  const highest = Math.max(...years.map(
+    (k) => nat[k].education_and_other_departments.pct_gdp.total));
+  $("sf-max").textContent = `${(Math.ceil(highest * 10) / 10).toFixed(1)}%`;
+
+  $("g-narrow").textContent = two(narrow);
+  $("g-broad").textContent = two(broad);
+  setAll(".g-year", y);
+  $("g-gap").textContent = `${(broad - narrow).toFixed(1)} points`;
+  $("g-short").textContent = `${(TARGET.value - broad).toFixed(1)} points`;
+
   mountStory("promise", gauge($("gauge-plot"), {
-    marks,
-    target,
+    marks: [
+      {
+        value: narrow,
+        label: `Education departments, ${y}`,
+        short: "Education departments",
+        detail: "education departments only",
+      },
+      {
+        value: broad,
+        label: `All departments, ${y}`,
+        short: "All departments",
+        detail: "with other departments",
+      },
+    ],
+    target: TARGET,
     max: 7,
-    format: (v) => v.toFixed(1).replace(/\.0$/, "") + "%",
+    format: (v) => (Number.isInteger(v) ? `${v}%` : two(v)),
     ariaLabel:
-      "Public education spending as a share of GDP against the 6% target: "
-      + marks.map((m) => m.value + "% (" + m.label + ")").join(", ")
-      + ". The published measures differ by " + (hi - lo).toFixed(1) + " points.",
+      `Public spending on education by the centre and states together in ${y}: `
+      + `${two(narrow)} of GDP through education departments, ${two(broad)} `
+      + `counting other departments too, against a target of 6%.`,
   }));
+
+  // Two decades of the same answer.
+  const ink = cssVar("--ink", "#111418");
+  const muted = cssVar("--ink-muted", "#7c838c");
+  const target = cssVar("--target", "#b77d06");
+  const pointsOf = (key) => years.map((k) => ({
+    year: k,
+    value: nat[k][key].pct_gdp.total,
+    basis: nat[k].estimate_type,
+  }));
+
+  // The ministry's figures before 2011-12 divide by an older GDP series than
+  // those after, so the line is broken there rather than joined across it.
+  const rebased = years.find((k) => fyStart(k) === 2011);
+  lineChart($("abe-plot"), {
+    series: [
+      { label: "All departments", short: "All departments", color: ink,
+        points: pointsOf("education_and_other_departments") },
+      { label: "Education departments only", short: "Education depts", color: muted,
+        points: pointsOf("education_departments") },
+    ],
+    years,
+    format: (v) => `${v}%`,
+    tipFormat: (v) => `${v.toFixed(2)}% of GDP`,
+    reference: { value: TARGET.value, label: "6% target", color: target },
+    breakBefore: rebased ? [rebased] : [],
+    height: 400,
+  });
+
+  legend($("abe-legend"), [
+    { label: "All departments, centre and states", color: ink },
+    { label: "Education departments only", color: muted },
+    { label: "The 6% target", color: target },
+    {
+      label: "dashed line, hollow dot: an estimate, not audited spending",
+      color: muted,
+      dash: true,
+    },
+  ]);
+
+  // Say that 2020-21 is flattered by the fall in GDP only if GDP did fall.
+  const covid = nat["2020-21"];
+  const pre = nat["2019-20"];
+  const gdpFell = covid && pre && covid.gdp && pre.gdp && covid.gdp < pre.gdp;
+  $("abe-caption").textContent =
+    "Public spending on education by the centre and the states together, as "
+    + "a share of GDP, counting each rupee once, by the government that spends "
+    + "it. The Ministry of Education's own figures."
+    + (rebased ? ` The line breaks at ${rebased}, where GDP was rebased.` : "")
+    + (gdpFell ? " 2020-21, a revised estimate, is lifted by that year's fall in GDP." : "");
+
+  buildTable($("abe-table"),
+    ["Year", "Education departments", "All departments", "Basis"],
+    years.map((k) => ({
+      cells: [
+        k,
+        two(nat[k].education_departments.pct_gdp.total),
+        two(nat[k].education_and_other_departments.pct_gdp.total),
+        BASIS_WORD[nat[k].estimate_type] || nat[k].estimate_type,
+      ],
+    })));
 }
 
 // ------------------------------------------------------------- 3. who pays
@@ -418,23 +541,41 @@ function renderWhoPays() {
   const uLast = unionPts[unionPts.length - 1];
   const ratio = sLast.value / uLast.value;
 
+  // The same comparison, counted the other honest way: every rupee once, by
+  // the government that spends it. Shown beside the account-heads ratio so
+  // the reader can see the two agree on the point, if not the size.
+  let abeShare = null;
+  let abeYear = null;
+  if (ABE) {
+    const ys = abeYears().filter((k) => ABE.national[k].estimate_type === "A");
+    abeYear = ys[ys.length - 1];
+    const wide = ABE.national[abeYear].education_and_other_departments;
+    abeShare = (100 * wide.states) / wide.total;
+  }
+  setAll(".t-year", uLast.year);
+
   statTiles($("whopays-stats"), [
     {
-      label: `States and UTs, ${sLast.year} ${sLast.basis}`,
+      label: "States and union territories",
       value: lakhCrore(sLast.value),
-      sub: "on the shared functional heads",
+      sub: `${sLast.year} ${BASIS_WORD[sLast.basis]}, education, sports and culture`,
       colour: cssVar("--states", "#3d8bff"),
     },
     {
-      label: `Union, ${uLast.year} ${uLast.basis}`,
+      label: "The Union",
       value: lakhCrore(uLast.value),
-      sub: "the same heads, the same definition",
+      sub: "the same account heads, the same year",
       colour: cssVar("--union", "#e65d31"),
     },
-    {
+    abeShare != null ? {
+      label: "Counted once, by who spends it",
+      value: pct(abeShare, 0),
+      sub: `of all public spending on education is the states', ${abeYear}`,
+      colour: cssVar("--states", "#3d8bff"),
+    } : {
       label: "Ratio",
       value: `${ratio.toFixed(1)} : 1`,
-      sub: `same year, same basis (${sLast.basis})`,
+      sub: "states to the Union",
       colour: cssVar("--ink", "#15181c"),
     },
   ]);
@@ -445,6 +586,13 @@ function renderWhoPays() {
   $("tier-union").textContent = lakhCrore(uLast.value);
   $("tier-states").textContent = lakhCrore(sLast.value);
   $("tier-ratio").textContent = `${ratio.toFixed(1)} to 1`;
+  // The same comparison in the last year before 2014-15, read on one basis.
+  const pre = statePts.filter((p) => fyStart(p.year) < 2014);
+  if (pre.length) {
+    const sp = pre[pre.length - 1];
+    const up = unionPts.find((p) => p.year === sp.year);
+    if (up) $("tier-before").textContent = `${(sp.value / up.value).toFixed(1)} to 1 in ${sp.year}`;
+  }
   mountStory("whopays", tierBars($("tier-plot"), {
     rows: [
       { label: `Union, ${uLast.year}`, value: uLast.value, color: uColour },
@@ -476,24 +624,37 @@ function renderWhoPays() {
     years,
     format: axisFormatter(peak),
     tipFormat: (v) => `${crore(v)} cr`,
+    annotation: (() => {
+      const after = unionPts.find((p) => p.year === "2014-15");
+      return after ? [{
+        year: "2014-15",
+        value: after.value,
+        headline: "2014-15",
+        detail: "Union scheme money starts passing through state budgets",
+        dx: 12,
+        dy: -40,
+        anchor: "start",
+      }] : [];
+    })(),
     height: 400,
   });
 
   legend($("whopays-legend"), [
     { label: "States and union territories", color: cssVar("--states", "#3d8bff") },
-    { label: "Union government", color: cssVar("--union", "#e65d31") },
+    { label: "The Union", color: cssVar("--union", "#e65d31") },
     {
-      label: "dashed line, hollow dot = estimate, not an outturn",
+      label: "dashed line, hollow dot: an estimate, not audited spending",
       color: cssVar("--ink-muted", "#8a9099"),
       dash: true,
     },
   ]);
 
   $("whopays-caption").textContent =
-    "Rs crore, nominal. Both lines use the functional account heads for "
-    + "education, sports, art and culture, which the Union and every state "
-    + "share, so this is the one comparison the classification actually "
-    + "supports. The two must not be added.";
+    "Rupees crore at current prices, on the education, sports and culture "
+    + "account heads that the Union and every state share. In 2014-15 the "
+    + "Union's line falls and the states' rises by about the same amount: the "
+    + "Union's money for jointly run schemes began passing through state "
+    + "budgets that year, so the books changed, not the spending.";
 
   buildTable($("whopays-table"),
     ["Year", "States and UTs", "Union", "Ratio"],
@@ -510,17 +671,25 @@ function renderWhoPays() {
       };
     }));
 
-  // The warning text comes from the state pipeline, which already opens with
-  // "must never be added" - so this does not say it a second time.
+  const grants = DATA.moe_heads.find((h) => h.code === "3601");
+  const g = grants ? valueAt(grants.series, latestYear(), "BE") : null;
   const note = $("whopays-note");
   note.textContent = "";
   const b = document.createElement("strong");
-  b.textContent = "Read this before combining them. ";
+  b.textContent = "Why the two budgets can't simply be added. ";
   note.appendChild(b);
   note.appendChild(document.createTextNode(
-    STATES.meta.never_add
-    || "Central transfers appear in both tiers' budgets, so adding the two "
-      + "counts the same rupee twice."));
+    (g != null
+      ? `The Ministry of Education passes ${lakhCrore(g)} of its ${latestYear()} `
+        + `budget to state governments as grants. `
+      : "The Ministry of Education passes much of its budget to state "
+        + "governments as grants. ")
+    + "The states spend that money and record it as their own education "
+    + "spending, so adding the ministry's budget to theirs counts it twice."
+    + (abeShare != null
+      ? ` Counted once, by the government that actually spends it, the states `
+        + `account for ${pct(abeShare, 0)} of public spending on education.`
+      : "")));
 }
 
 // -------------------------------------- 4. education's share of own budgets
@@ -529,20 +698,41 @@ function renderStateShare() {
   if (!STATES) return;
   const edu = stateAll("education_spend");
   const agg = stateAll("aggregate_expenditure");
+  const soc = stateAll("social_services");
   const years = STATES.meta.years.filter((y) => edu[y] && agg[y]);
 
-  const pts = years.map((y) => {
+  // Every share reads numerator and denominator on the same estimate basis.
+  const shareOf = (num) => years.map((y) => {
     const basis = ["A", "RE", "BE"].find(
-      (t) => edu[y][t] != null && agg[y][t] != null);
+      (t) => num[y] && num[y][t] != null && agg[y][t] != null);
     return basis
-      ? { year: y, value: (100 * edu[y][basis]) / agg[y][basis], basis }
+      ? { year: y, value: (100 * num[y][basis]) / agg[y][basis], basis }
       : null;
   }).filter(Boolean);
-  if (!pts.length) return;
+  const eduPts = shareOf(edu);
+  const socPts = soc ? shareOf(soc) : [];
+  if (!eduPts.length) return;
+
+  const within = (y) => {
+    const t = ["A", "RE", "BE"].find(
+      (k) => edu[y] && soc && soc[y] && edu[y][k] != null && soc[y][k] != null);
+    return t ? (100 * edu[y][t]) / soc[y][t] : null;
+  };
+
+  const fromYear = "2010-11";
+  const from = eduPts.find((p) => p.year === fromYear);
+  const to = eduPts[eduPts.length - 1];
+  const socFrom = socPts.find((p) => p.year === fromYear);
+  const socTo = socPts[socPts.length - 1];
+  setAll(".ss-from", fromYear);
+  if (socFrom) $("ss-social-from").textContent = pct(socFrom.value, 1);
+  if (socTo) $("ss-social").textContent = pct(socTo.value, 1);
+  const wFrom = within(fromYear);
+  const wTo = within(to.year);
+  if (wFrom != null) $("ss-within-from").textContent = pct(wFrom, 1);
+  if (wTo != null) $("ss-within-to").textContent = pct(wTo, 1);
 
   const annotations = [];
-  const from = pts.find((p) => p.year === "2010-11");
-  const to = pts[pts.length - 1];
   if (from && to) {
     annotations.push({
       year: to.year,
@@ -554,56 +744,63 @@ function renderStateShare() {
       anchor: "end",
     });
   }
-  // The 2004-05 break is in the denominator, not in education spending.
-  const odd = pts.find((p) => p.year === "2004-05");
+  const odd = eduPts.find((p) => p.year === "2004-05");
   if (odd) {
     annotations.push({
       year: "2004-05",
       value: odd.value,
-      headline: "a break in the denominator",
-      detail: "total spending jumped by half; education did not fall",
+      headline: "2004-05",
+      detail: "total spending jumped; education did not fall",
       dx: 12,
-      dy: -30,
+      dy: 40,
       anchor: "start",
     });
   }
 
+  const blue = cssVar("--states", "#3d8bff");
+  const grey = cssVar("--ink-muted", "#7c838c");
   lineChart($("stateshare-plot"), {
-    series: [{
-      label: "All states and UTs",
-      short: "All states",
-      color: cssVar("--states", "#3d8bff"),
-      points: pts,
-    }],
+    series: [
+      { label: "Social sector", short: "Social sector", color: grey, points: socPts },
+      { label: "Education", short: "Education", color: blue, points: eduPts },
+    ],
     years,
     format: (v) => `${v.toFixed(0)}%`,
-    tipFormat: (v) => `${v.toFixed(1)}%`,
+    tipFormat: (v) => `${v.toFixed(1)}% of state spending`,
     annotation: annotations,
-    height: 400,
+    height: 420,
   });
 
   legend($("stateshare-legend"), [
+    { label: "Education, sports and culture", color: blue },
+    { label: "The whole social sector: education, health, welfare, housing and more", color: grey },
     {
-      label: "All states and UTs, RBI's own aggregate",
-      color: cssVar("--states", "#3d8bff"),
-    },
-    {
-      label: "dashed line, hollow dot = estimate, not an outturn",
-      color: cssVar("--ink-muted", "#8a9099"),
+      label: "dashed line, hollow dot: an estimate, not audited spending",
+      color: grey,
       dash: true,
     },
   ]);
 
   $("stateshare-caption").textContent =
-    "Education, sports, art and culture as a share of aggregate expenditure. "
-    + "RBI's Statement 26 definition, reproduced exactly: revenue expenditure "
-    + "plus capital outlay, over total revenue expenditure plus capital "
-    + "disbursements excluding the public account. The aggregate is RBI's own "
-    + "and excludes the union territories before 2017-18.";
+    "Share of total state spending, all states and union territories together. "
+    + "In 2004-05 total spending jumped by half while education did not fall, "
+    + "so that year's dip is in the total, not in education.";
 
   buildTable($("stateshare-table"),
-    ["Year", "Share of aggregate expenditure", "Basis"],
-    pts.map((p) => ({ cells: [p.year, pct(p.value, 1), p.basis] })));
+    ["Year", "Education", "Social sector", "Education's share of social", "Basis"],
+    eduPts.map((p) => {
+      const sp = socPts.find((q) => q.year === p.year);
+      const w = within(p.year);
+      return {
+        cells: [
+          p.year,
+          pct(p.value, 1),
+          sp ? pct(sp.value, 1) : "—",
+          w != null ? pct(w, 1) : "—",
+          BASIS_WORD[p.basis] || p.basis,
+        ],
+      };
+    }));
 
   renderRanking();
 }
@@ -670,19 +867,45 @@ function renderRanking() {
       : null,
   });
 
-  const spread = items[0].value - items[items.length - 1].value;
+  const top = items[0];
+  const bottom = items[items.length - 1];
+  const spread = top.value - bottom.value;
+  $("rank-heading").textContent = byShare
+    ? `${top.name} gives education ${pct(top.value, 1)} of its budget; `
+      + `${bottom.name}, ${pct(bottom.value, 1)}`
+    : `${top.name} spends ${pct(top.value, 1)} of its economy on education; `
+      + `${bottom.name}, ${pct(bottom.value, 1)}`;
+
+  // Compare the spread between states with how far the all-states average
+  // has moved over the whole period.
+  let trend = "";
+  if (byShare && allSer) {
+    const ys = STATES.meta.years.filter((y) => {
+      const e = allSer.education_spend[y];
+      const a = allSer.aggregate_expenditure[y];
+      return e && a && ["A", "RE", "BE"].some((t) => e[t] != null && a[t] != null);
+    });
+    const at = (y) => {
+      const e = allSer.education_spend[y];
+      const a = allSer.aggregate_expenditure[y];
+      const t = ["A", "RE", "BE"].find((k) => e[k] != null && a[k] != null);
+      return (100 * e[t]) / a[t];
+    };
+    if (ys.length > 1) {
+      const change = Math.abs(at(ys[0]) - at(ys[ys.length - 1]));
+      if (change > 0) {
+        trend = ` That ${spread.toFixed(1)}-point gap is ${(spread / change).toFixed(1)} `
+          + `times the ${change.toFixed(1)}-point fall in the all-states average `
+          + `since ${ys[0]}: where a state sits on this list is a bigger `
+          + `difference than the national trend.`;
+      }
+    }
+  }
   $("rank-caption").textContent = byShare
-    ? `Education as a share of each government's own aggregate expenditure, `
-      + `latest year available. ${items[0].name} spends `
-      + `${items[0].value.toFixed(1)}% of its budget on education and `
-      + `${items[items.length - 1].name} spends `
-      + `${items[items.length - 1].value.toFixed(1)}%, a spread of `
-      + `${spread.toFixed(1)} points. That is far wider than the all-states `
-      + `movement over twenty-five years.`
-    : `Education spending as a share of each state's GSDP, latest year with `
-      + `both figures. GSDP is published only from 2011-12 and not for every `
-      + `entity, so some are absent. A poorer state can spend a large share of `
-      + `a small economy and still spend little per child.`;
+    ? `Education as a share of each state's own spending, latest year.${trend}`
+    : `Education spending as a share of each state's economy, latest year. A `
+      + `larger share of a smaller economy can still mean less per child, so `
+      + `this ranking and the one by budget share answer different questions.`;
 }
 
 // ------------------------------------------------- the map, through time
@@ -789,72 +1012,107 @@ function renderMap() {
   showYear(MAPSTATE.index);
 
   $("map-caption").textContent = byShare
-    ? `Darker blue is a larger share of the state's own budget. The colour `
-      + `scale is the same in every year, so a change of colour is a change in `
-      + `the share. Union territories without a legislature have no budget of `
-      + `their own and stay grey.`
-    : `Darker blue is a larger share of the state's economy. GSDP is published `
-      + `from ${years[0]}, so the map starts there.`;
+    ? `Darker blue is a larger share of the state's own budget, on one scale `
+      + `for every year, so a change of colour is a change in the share. `
+      + `Chhattisgarh, Jharkhand and Uttarakhand were created in 2000 and `
+      + `Telangana in 2014, so they join the map then. Union territories without `
+      + `a legislature have no budget of their own and stay grey.`
+    : `Darker blue is a larger share of the state's economy. These figures `
+      + `start in ${years[0]}.`;
 }
 
 // --------------------------------------------------- 5. promise and outturn
 
+// The ministry's audited spending for a year: from the budget documents where
+// they carry it (2015-16 on), otherwise from the separate statement of
+// ministries' actual expenditure that earlier editions printed.
+function moeActual(year) {
+  const direct = valueAt(DATA.education.moe.series, year, "A");
+  if (direct != null) return direct;
+  const rec = UNION_ACTUALS && UNION_ACTUALS.years[year];
+  if (!rec || !rec.departments) return null;
+  const parts = rec.departments.filter((d) => /school education|higher education|elementary education|secondary/i.test(d.key || d.name));
+  if (!parts.length) return null;
+  return parts.reduce((a, d) => a + (d.total || 0), 0);
+}
+
 function renderUtilisation() {
   const series = DATA.education.moe.series;
-  // Only the years where the comparison can actually be made. Before the
-  // pipeline reaches the Plan-era actuals there is nothing to compare a
-  // budget estimate against, and a column of lone dots is not a dumbbell.
   const all = DATA.meta.years.map((year) => ({
     year,
     be: valueAt(series, year, "BE"),
     re: valueAt(series, year, "RE"),
-    a: valueAt(series, year, "A"),
+    a: moeActual(year),
   }));
   const rows = all.filter((r) => r.be != null && r.a != null);
-  const omitted = all.length - rows.length;
+  if (!rows.length) return;
+  const ratio = (r) => (100 * r.a) / r.be;
+  const mean = (rs) => rs.reduce((acc, r) => acc + ratio(r), 0) / rs.length;
+
+  const split = 2010;
+  const early = rows.filter((r) => fyStart(r.year) < split);
+  const late = rows.filter((r) => fyStart(r.year) >= split);
+  if (early.length) {
+    $("u-early-span").textContent = `${early[0].year} to ${early[early.length - 1].year}`;
+    $("u-early").textContent = pct(mean(early), 0);
+  }
+  if (late.length) {
+    $("u-late-from").textContent = late[0].year;
+    $("u-late").textContent = pct(mean(late), 0);
+  }
 
   const utilPeak = Math.max(...rows.flatMap((r) => [r.be, r.re, r.a].filter((v) => v != null)));
   dumbbell($("util-plot"), {
     rows,
     format: axisFormatter(utilPeak),
-    height: Math.max(260, rows.length * 44 + 70),
-    // Only say what we actually know: a missing figure here means the
-    // edition that carries it has not been parsed, not that the government
-    // failed to publish it.
+    height: Math.max(260, rows.length * 32 + 80),
     labelOf: () => "",
   });
 
   legend($("util-legend"), [
-    { label: "Budget estimate", color: cssVar("--union", "#e65d31"), hollow: true },
+    { label: "Budget estimate, February", color: cssVar("--union", "#e65d31"), hollow: true },
     { label: "Revised estimate (tick)", color: cssVar("--ink-muted", "#8a9099") },
-    { label: "Actuals", color: cssVar("--union", "#e65d31"), shape: "rect" },
+    { label: "Audited spending", color: cssVar("--union", "#e65d31"), shape: "rect" },
   ]);
 
-  const settled = rows.filter((r) => r.be != null && r.a != null);
-  const ratios = settled.map((r) => (100 * r.a) / r.be);
   $("util-caption").textContent =
-    "Ministry of Education, Rs crore. "
-    + (ratios.length
-      ? `Where the audited figure is known, spending has landed between `
-        + `${Math.min(...ratios).toFixed(0)}% and ${Math.max(...ratios).toFixed(0)}% `
-        + `of the opening budget estimate. `
-      : "")
-    + (omitted
-      ? `${omitted} earlier years are left out: the Demands for Grants of the `
-        + `Plan era print no actuals column, so there is nothing to compare `
-        + `their estimates against. The table below carries them.`
-      : "");
+    "Ministry of Education, Rs crore. Before 2015-16 the audited figures are "
+    + "the provisional ones the budget documents first published.";
 
-  // Every year, including the ones the chart leaves out: the table view is
-  // the figure's complete twin, so nothing is reachable only by hovering.
   buildTable($("util-table"),
-    ["Year", "Budget estimate", "Revised", "Actuals", "Actuals as % of BE"],
+    ["Year", "Budget estimate", "Revised", "Audited", "Audited as % of budget"],
     all.map((r) => ({
       cells: [
         r.year, crore(r.be), crore(r.re), crore(r.a),
-        r.be && r.a ? pct((100 * r.a) / r.be, 1) : "—",
+        r.be && r.a ? pct(ratio(r), 1) : "—",
       ],
     })));
+
+  // The ministry's largest scheme, since the 2018-19 merger that created it.
+  const note = $("util-note");
+  note.textContent = "";
+  const ss = SCHEMES && SCHEMES.schemes.find((x) => x.id === "samagra_shiksha");
+  if (!ss) { note.hidden = true; return; }
+  const yrs = Object.keys(ss.total)
+    .filter((y) => fyStart(y) >= 2018 && ss.total[y].BE && ss.total[y].A)
+    .sort(byFy);
+  const ministry = rows.filter((r) => yrs.includes(r.year));
+  if (!yrs.length || !ministry.length) { note.hidden = true; return; }
+  const ssRatio = (y) => (100 * ss.total[y].A) / ss.total[y].BE;
+  const ssMean = yrs.reduce((acc, y) => acc + ssRatio(y), 0) / yrs.length;
+  const worst = yrs.reduce((w, y) => (ssRatio(y) < ssRatio(w) ? y : w), yrs[0]);
+  const lower = ssMean < mean(ministry);
+  const b = document.createElement("strong");
+  b.textContent = lower
+    ? "The ministry's largest scheme falls further short. "
+    : "The ministry's largest scheme. ";
+  note.hidden = false;
+  note.append(b, document.createTextNode(
+    `Samagra Shiksha, the school programme the Union runs jointly with the `
+    + `states, has spent ${pct(ssMean, 1)} of its budget estimate on average `
+    + `since it was created in ${yrs[0]}, against ${pct(mean(ministry), 1)} `
+    + `for the ministry as a whole over the same years. Its worst year was `
+    + `${worst}, at ${pct(ssRatio(worst), 1)}.`));
 }
 
 // ------------------------------------------------------- 3. classification
@@ -912,21 +1170,22 @@ function renderClassification() {
       year: DATA.meta.years[0],
       index: 0,
       headline: "Grants-in-aid to states",
-      detail: "spent, and booked as education, by the states",
+      detail: "spent, and recorded as education, by the states",
     } : null,
   });
 
   legend($("class-legend"), [
-    { label: "Grants-in-aid to states and UTs", color: grants, shape: "rect" },
-    { label: "Education heads (2202, 2203, 4202)", color: accent, shape: "rect" },
+    { label: "Grants to states and union territories", color: grants, shape: "rect" },
+    { label: "Education, recorded by the Union itself", color: accent, shape: "rect" },
     { label: "Everything else", color: dim, shape: "rect" },
   ]);
 
   $("class-caption").textContent =
-    "Ministry of Education gross provision by major head, Rs crore. Gross "
-    + "rather than net, because receipts are netted against the head they came "
-    + "from. Segments are labelled by head code; hover or open the table for "
-    + "the full name.";
+    "Ministry of Education spending by account head, Rs crore, before "
+    + "receipts are netted off. The switch in 2014-15 is a change in how the "
+    + "money is recorded, not where it went: from that year the Union's money "
+    + "for jointly run schemes has been routed through state budgets and "
+    + "recorded as grants to them. Hover a segment for its name.";
 
   buildTable($("class-table"),
     ["Major head", ...DATA.meta.years],
@@ -939,19 +1198,29 @@ function renderClassification() {
   const edu2202 = layers.find((l) => l.code === "2202");
   const e = edu2202 ? edu2202.values[latest] ?? null : null;
 
+  if (g != null) $("c-grants").textContent = lakhCrore(g);
+  if (e != null) $("c-general").textContent = lakhCrore(e);
+  setAll(".c-year", latest);
+
+  let combined = "";
+  if (ABE) {
+    const ys = abeYears().filter((k) => ABE.national[k].estimate_type === "A");
+    const y = ys[ys.length - 1];
+    combined = ` The only sound combined figure counts each rupee by the `
+      + `government that spends it: ${pct(ABE.national[y].education_and_other_departments.pct_gdp.total, 2)} `
+      + `of GDP in ${y}.`;
+  }
   const note = $("double-count-note");
   note.textContent = "";
   const strong = document.createElement("strong");
   strong.textContent = "The double-counting trap. ";
   note.appendChild(strong);
   note.appendChild(document.createTextNode(
-    `In ${latest} the ministry books ${g != null ? lakhCrore(g) : "its largest sum"} `
-    + `under head 3601, grants-in-aid to state governments, against `
-    + `${e != null ? lakhCrore(e) : "a smaller sum"} under 2202, general `
-    + `education. Those grants reappear as education spending in state `
-    + `budgets. Add the two governments' education totals together and you `
-    + `count the same rupee twice; for a genuine combined figure use the `
-    + `ministry's Analysis of Budgeted Expenditure or the CAG's combined accounts.`));
+    "The grants are spent once, by the states, but they appear in both "
+    + "governments' budgets: in the Union's as a transfer and in the states' "
+    + "as education. That is why the Union's own education figure understates "
+    + "what the centre pays for, and why adding the two budgets overstates the "
+    + "total." + combined));
 }
 
 // ------------------------------------------------------------- 4. the scale
@@ -987,6 +1256,8 @@ function renderScale() {
   $("scale-total").textContent = lakhCrore(total);
   $("scale-interest").textContent = pct((100 * interest) / total, 1);
   $("scale-education").textContent = pct((100 * edu) / total, 1);
+  $("scale-ratio").textContent = `${(interest / edu).toFixed(1)} rupees`;
+  setAll(".sc-year", latest);
 
   mountStory("scale", treemapStory($("treemap-plot"), {
     items,
@@ -1001,7 +1272,7 @@ function renderScale() {
     {
       label: "Education's share",
       value: pct((100 * edu) / total),
-      sub: `${lakhCrore(edu)} of ${lakhCrore(total)} · ${latest} BE`,
+      sub: `${lakhCrore(edu)} of ${lakhCrore(total)} · ${latest} budget`,
       colour: accent,
     },
     {
@@ -1011,9 +1282,9 @@ function renderScale() {
       colour: ink,
     },
     {
-      label: "Demands for grants",
+      label: "Ministries and departments",
       value: String(items.length),
-      sub: "every ministry and department",
+      sub: "each with its own demand for grants",
       colour: dim,
     },
   ]);
@@ -1025,8 +1296,8 @@ function renderScale() {
   ]);
 
   $("treemap-caption").textContent =
-    `Every demand for grants in the ${latest} budget estimate, area in `
-    + `proportion to provision. Hover any tile for its figure.`;
+    `Every ministry and department in the ${latest} budget, sized by what it `
+    + `is given. Hover a tile for its figure.`;
 
   renderDepartments();
 }
@@ -1126,10 +1397,10 @@ function renderDepartments() {
   }
 
   $("dept-caption").textContent =
-    `${rows.length} of ${DATA.demands.length} departments. `
+    `${rows.length} of ${DATA.demands.length} ministries and departments. `
     + (state.wholeMeasure === "share"
-      ? "Share of total Union expenditure, per cent."
-      : "Rs crore, net of receipts netted against the demand.");
+      ? "Per cent of all Union spending."
+      : "Rupees crore, after receipts are netted off.");
 }
 
 // -------------------------------------------------------- 5. account heads
@@ -1202,42 +1473,52 @@ function renderHeads() {
   }
 
   $("head-caption").textContent =
-    `${rows.length} major heads, gross provision in Rs crore, summed across `
-    + `every demand that books to the head.`;
+    `${rows.length} account heads, Rs crore before receipts are netted off, `
+    + `across every ministry that records spending under them.`;
 }
 
 // ------------------------------------------------------------------ chrome
 
 function renderChrome() {
   const m = DATA.meta;
+  const u0 = m.years[0];
+  const uN = m.years[m.years.length - 1];
   const byline = $("byline");
   byline.textContent = "";
-  for (const t of [
-    `${m.years[0]} to ${m.years[m.years.length - 1]}`,
-    `${m.editions.length} budget editions`,
-    `${m.rows_in_long_table.toLocaleString("en-IN")} published figures`,
-    `source: indiabudget.gov.in`,
-    `built ${m.generated}`,
-  ]) {
-    const s = document.createElement("span");
-    s.textContent = t;
-    byline.appendChild(s);
+  const items = [`The Union, ${u0} to ${uN}`];
+  if (STATES) {
+    const sy = STATES.meta.years;
+    items.push(`The states, ${sy[0]} to ${sy[sy.length - 1]}`);
+  }
+  if (ABE) {
+    const ay = abeYears();
+    items.push(`Centre and states together, ${ay[0]} to ${ay[ay.length - 1]}`);
+  }
+  for (const t of items) {
+    const sEl = document.createElement("span");
+    sEl.textContent = t;
+    byline.appendChild(sEl);
   }
 
+  const lastAudited = [...m.years].reverse().find(
+    (y) => valueAt(DATA.totals, y, "A") != null);
   const cov = $("coverage");
   cov.textContent = "";
   const ul = document.createElement("ul");
   const bits = [
-    `Editions parsed: ${m.editions.join(", ")}. Each publishes four years at `
-    + `once — actuals two years back, a revised and a budget estimate for last `
-    + `year, a budget estimate for the year ahead — so a few editions cover a decade.`,
+    `The Union: budget estimates from ${u0} to ${uN}, audited spending to `
+    + `${lastAudited}.`,
   ];
-  if ((m.gap_years || []).length) {
-    bits.push(`Gap: ${m.gap_years.join(", ")}. The editions covering these `
-      + `years ship PDF only. That is a parser still to be written, not a `
-      + `missing source.`);
+  if (STATES) {
+    const sy = STATES.meta.years;
+    bits.push(`The states: ${sy[0]} to ${sy[sy.length - 1]}, every state and `
+      + `union territory with a legislature.`);
   }
-  bits.push(`Education departments seen across editions: ${m.moe_departments.join("; ")}.`);
+  if (ABE) {
+    const ay = abeYears();
+    bits.push(`Centre and states together: ${ay[0]} to ${ay[ay.length - 1]}.`);
+  }
+  bits.push("Not covered: spending per pupil, which needs enrolment figures.");
   for (const b of bits) {
     const li = document.createElement("li");
     li.textContent = b;
@@ -1252,7 +1533,7 @@ function renderChrome() {
 // The scroll-driven graphics and the map animate themselves, so they are not
 // in this list.
 const PLOTS = [
-  "edu-plot", "whopays-plot", "stateshare-plot",
+  "abe-plot", "edu-plot", "whopays-plot", "stateshare-plot",
   "rank-plot", "util-plot", "class-plot",
 ];
 const armed = new Set();
@@ -1392,11 +1673,21 @@ function wireTheme() {
   });
 }
 
-Promise.all([load(), loadStates(), loadMap()])
-  .then(([data, states, map]) => {
+Promise.all([
+  load(),
+  loadStates(),
+  loadMap(),
+  loadOptional("data/abe.json", ["national"]),
+  loadOptional("data/schemes.json", ["schemes"]),
+  loadOptional("data/union_actuals.json", ["years"]),
+])
+  .then(([data, states, map, abe, schemes, unionActuals]) => {
     DATA = data;
     STATES = states;
     MAP = map;
+    ABE = abe;
+    SCHEMES = schemes;
+    UNION_ACTUALS = unionActuals;
     $("loading").remove();
     $("content").hidden = false;
     renderChrome();

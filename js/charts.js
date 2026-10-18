@@ -183,6 +183,11 @@ export function lineChart(host, opts) {
   const {
     series, years, format, height = 400, band = false, annotation = null,
     tipFormat = format,
+    // A horizontal rule for a target the series are measured against, and
+    // years where the series must not be joined to the year before, because
+    // the measure itself changed there (a GDP rebasing, say).
+    reference = null,
+    breakBefore = [],
   } = opts;
   const narrow = hostWidth(host) < NARROW;
   const margin = narrow
@@ -193,7 +198,7 @@ export function lineChart(host, opts) {
 
   const x = d3.scalePoint().domain(years).range([0, inner.w]).padding(0.5);
   const all = series.flatMap((s) => s.points.map((p) => p.value));
-  const max = d3.max(all) ?? 1;
+  const max = Math.max(d3.max(all) ?? 1, reference ? reference.value : 0);
   const min = Math.min(0, d3.min(all) ?? 0);
   const y = d3.scaleLinear().domain([min, max * 1.1]).nice().range([inner.h, 0]);
 
@@ -203,6 +208,20 @@ export function lineChart(host, opts) {
   const every = Math.max(1, Math.ceil(years.length / (narrow ? 5 : 9)));
   yAxis(g, y, inner.w, format, narrow ? 4 : 5);
   xAxis(g, x, inner.h, null, every);
+
+  if (reference) {
+    const ry = y(reference.value);
+    g.append("line")
+      .attr("x1", 0).attr("x2", inner.w).attr("y1", ry).attr("y2", ry)
+      .attr("stroke", reference.color).attr("stroke-width", 2.5);
+    if (reference.label) {
+      g.append("text").attr("class", "annot")
+        .attr("x", 0).attr("y", ry - 9)
+        .append("tspan").attr("class", "annot-strong")
+        .attr("fill", reference.color)
+        .text(reference.label);
+    }
+  }
 
   // the spread between the highest and lowest definition, where all are known
   if (band && series.length > 1) {
@@ -234,8 +253,10 @@ export function lineChart(host, opts) {
 
     for (let i = 0; i < pts.length - 1; i += 1) {
       const pair = [pts[i], pts[i + 1]];
-      // A gap in the data is a gap in the line, never an interpolation.
+      // A gap in the data is a gap in the line, never an interpolation; and
+      // a change in what is being measured is a gap too.
       if (parseInt(pair[1].year, 10) - parseInt(pair[0].year, 10) > 1) continue;
+      if (breakBefore.includes(pair[1].year)) continue;
       const estimate = pair.some((p) => p.basis !== "A");
       g.append("path")
         .attr("class", "series-line")

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>India Budget Explorer</title>
-<meta name="description" content="India's 6%-of-GDP education target, set in 1966 and restated in 2020, measured against what the Union and the states actually budget - read from the budget documents themselves, 1990-91 to 2026-27.">
+<meta name="description" content="In 1966 India set itself a target of spending 6% of GDP on education. Sixty years on it spends about 4%, cannot agree on the exact figure, and most of the money is spent by the states, not the Union.">
 <meta name="color-scheme" content="light">
 <script>
   // Apply a saved theme before first paint, so the page never flashes the
-  // wrong one. Storage can throw in private windows; the OS setting is then
-  // the default, which is the right fallback.
+  // wrong one. Storage can throw in a private window; light is then the
+  // default, which is the right fallback.
   try {
     var saved = localStorage.getItem("budget-theme");
     if (saved === "light" || saved === "dark") {
@@ -28,9 +28,13 @@
 <div class="progress" id="progress" aria-hidden="true"></div>
 
 <div class="topbar">
-  <span>India &middot; Education &middot; Public finance</span>
+  <span>India &middot; Public spending on education</span>
   <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch colour theme">Theme</button>
 </div>
+
+<!-- Every figure in the prose below is an empty slot filled from the data at
+     render time. None is typed here. Claims from outside the data are
+     attributed in the footer. -->
 
 <!-- ================================================================ hero -->
 <header class="hero wrap" id="top">
@@ -40,9 +44,12 @@
     <div class="hero-text">
       <h1>India's oldest education promise</h1>
       <p class="standfirst">
-        Six per cent of GDP on education. Proposed in 1966, restated in 1968,
-        1986 and 2020, never reached. What the country actually spends, who
-        spends it, and why nobody can say exactly how far short it falls.
+        In 1966 a national commission said India should spend six per cent of
+        its national income on education, and every education policy since has
+        repeated it. Across the two decades the government's own accounts
+        cover, public spending has never passed <span id="sf-max"></span> of
+        GDP &mdash; and most of it is spent by the governments the argument
+        rarely mentions.
       </p>
     </div>
   </div>
@@ -60,7 +67,7 @@
   <section class="chapter" id="promise">
     <div class="chapter-head">
       <p class="chapter-no">Chapter one</p>
-      <h2>A target nobody can measure</h2>
+      <h2>Sixty years, and no closer</h2>
     </div>
 
     <div class="scrolly" id="promise-scrolly">
@@ -70,43 +77,56 @@
       <div class="scrolly-steps">
         <div class="step"><div class="step-card">
           <span class="step-figure c-target">6%</span>
-          of GDP. The Education Commission of 1964-66 set it as the level of
-          public spending on education India should reach. Three national
-          policies have repeated it since.
+          of GDP: the target the Education Commission set in 1966. The
+          national policies of 1968 and 1986 adopted it, and the 2020 policy
+          committed the centre and the states to reach it &ldquo;at the
+          earliest&rdquo;.
         </div></div>
         <div class="step"><div class="step-card">
-          <span class="step-figure">2.7%</span>
-          is what India spends by the Economic Survey's count for 2023-24 -
-          the money that flows through education departments.
+          <span class="step-figure" id="g-narrow"></span>
+          is what the Union and the states together spent through their
+          education departments in <span class="g-year"></span>. It is the
+          figure behind the Economic Survey's &ldquo;2.7 per cent&rdquo;.
         </div></div>
         <div class="step"><div class="step-card">
-          <span class="step-figure">4.1%</span>
-          is the World Bank figure for 2022, as cited by PRS Legislative
-          Research - centre and states together.
+          <span class="step-figure" id="g-broad"></span>
+          is the same spending counted more widely, adding the education and
+          training run by other departments. It is the figure behind the
+          &ldquo;about four per cent&rdquo; that PRS and the World Bank cite.
         </div></div>
         <div class="step"><div class="step-card">
-          <span class="step-figure">4.6%</span>
-          is the Ministry of Education's own broader measure for 2020-21, which
-          adds education and training run by other ministries.
-        </div></div>
-        <div class="step"><div class="step-card">
-          <span class="step-figure">1.9 points</span>
-          separate the lowest reading from the highest. The gap between the
-          measurements is larger than most annual changes anyone argues about.
+          <span class="step-figure" id="g-gap"></span>
+          separate two honest answers to the same question &mdash; and even the
+          wider count leaves India <span id="g-short"></span> short of its own
+          target.
         </div></div>
       </div>
     </div>
+
+    <h3>Two decades of the same answer</h3>
+    <figure>
+      <div class="plot" id="abe-plot"></div>
+      <div class="figbar">
+        <div class="legend" id="abe-legend"></div>
+        <button class="linkbtn" data-table="abe-table">Show the numbers</button>
+      </div>
+      <div class="tablewrap" id="abe-table" hidden>
+        <table><thead></thead><tbody></tbody></table>
+      </div>
+      <figcaption id="abe-caption"></figcaption>
+    </figure>
   </section>
 
   <!-- ================================================ 2. three definitions -->
   <section class="chapter" id="definitions">
     <div class="chapter-head">
       <p class="chapter-no">Chapter two</p>
-      <h2>The same budget, counted three ways</h2>
+      <h2>The Union's budget alone has three sizes</h2>
       <p class="lede">
-        The disagreement starts with the Union budget itself. Three defensible
-        definitions of what counts as education spending give three different
-        totals for the same year.
+        Before the states come into it, the Union's own education budget has
+        no single size. Three defensible definitions give three totals for the
+        same year, and each one gets quoted as &ldquo;the education
+        budget&rdquo;.
       </p>
     </div>
 
@@ -147,7 +167,7 @@
   <section class="chapter" id="whopays">
     <div class="chapter-head">
       <p class="chapter-no">Chapter three</p>
-      <h2>The half nobody argues about</h2>
+      <h2>The bigger spender is the one nobody argues about</h2>
     </div>
 
     <div class="scrolly" id="whopays-scrolly">
@@ -157,9 +177,9 @@
       <div class="scrolly-steps">
         <div class="step"><div class="step-card">
           <span class="step-figure c-union" id="tier-union"></span>
-          is what the <span class="c-union">Union</span> budgets for education,
-          sports, art and culture on the functional account heads both tiers
-          share.
+          is what the <span class="c-union">Union</span> budgets for
+          education, sports and culture in <span class="t-year"></span>, on the
+          account heads every government in India uses.
         </div></div>
         <div class="step"><div class="step-card">
           <span class="step-figure c-states" id="tier-states"></span>
@@ -168,13 +188,16 @@
         </div></div>
         <div class="step"><div class="step-card">
           <span class="step-figure" id="tier-ratio"></span>
-          The national argument about education spending happens almost
-          entirely over the smaller of the two numbers.
+          Education is on the Concurrent List, so both governments run it, but
+          the states do most of the spending. Part of it is the Union's money:
+          since 2014-15 its grants for schemes the two run together have passed
+          through state budgets and are counted there, which is why the same
+          comparison stood at <span id="tier-before"></span>.
         </div></div>
       </div>
     </div>
 
-    <h3>Over time</h3>
+    <h3>However it is counted</h3>
     <dl class="statrow" id="whopays-stats"></dl>
     <figure>
       <div class="plot" id="whopays-plot"></div>
@@ -194,11 +217,14 @@
   <section class="chapter" id="stateshare">
     <div class="chapter-head">
       <p class="chapter-no">Chapter four</p>
-      <h2>A shrinking share of state budgets</h2>
+      <h2>Education is losing its place in state budgets</h2>
       <p class="lede">
-        Rupee totals always rise. How much of its own budget a government
-        gives to education is the choice - and across all states together
-        that share has fallen since 2010-11.
+        States have not cut social spending: it took
+        <span id="ss-social-from"></span> of their budgets in
+        <span class="ss-from"></span> and takes <span id="ss-social"></span>
+        now. Education has lost ground inside it, from
+        <span id="ss-within-from"></span> of state social spending to
+        <span id="ss-within-to"></span>.
       </p>
     </div>
 
@@ -233,7 +259,7 @@
       <figcaption id="map-caption"></figcaption>
     </figure>
 
-    <h3 id="rank-heading">Ranked, latest year</h3>
+    <h3 id="rank-heading"></h3>
     <figure>
       <div class="plot" id="rank-plot"></div>
       <figcaption id="rank-caption"></figcaption>
@@ -244,11 +270,14 @@
   <section class="chapter" id="utilisation">
     <div class="chapter-head">
       <p class="chapter-no">Chapter five</p>
-      <h2>A budget estimate is not spending</h2>
+      <h2>Budgeted is not spent</h2>
       <p class="lede">
-        Every year is published three times: a budget estimate in February, a
-        revised estimate a year later, an audited actual the year after that.
-        The gap between the first and the last runs in both directions.
+        Each year's education budget is announced in February, revised a year
+        later and audited a year after that. From
+        <span id="u-early-span"></span> the Ministry of Education spent, on
+        average, <span id="u-early"></span> of what it was first given. Since
+        <span id="u-late-from"></span> it has averaged
+        <span id="u-late"></span>.
       </p>
     </div>
     <figure>
@@ -262,6 +291,7 @@
       </div>
       <figcaption id="util-caption"></figcaption>
     </figure>
+    <div class="note" id="util-note"></div>
   </section>
 
   <!-- =================================================== 6. classification -->
@@ -270,9 +300,11 @@
       <p class="chapter-no">Chapter six</p>
       <h2>Most of the ministry's money becomes state money</h2>
       <p class="lede">
-        The Ministry of Education's largest account head is not education. It
-        is <span class="c-states">grants-in-aid to state governments</span>,
-        which the states then spend and book as education themselves.
+        The Ministry of Education's largest account head is not education.
+        It is <span class="c-states">grants-in-aid to state governments</span>:
+        <span id="c-grants"></span> in <span class="c-year"></span>, against
+        <span id="c-general"></span> the Union books as general education
+        itself.
       </p>
     </div>
     <figure>
@@ -303,16 +335,18 @@
       <div class="scrolly-steps">
         <div class="step"><div class="step-card">
           <span class="step-figure" id="scale-total"></span>
-          is the whole Union budget, every demand for grants drawn to scale.
+          is the whole Union budget for <span class="sc-year"></span>. Each
+          tile is one ministry or department, drawn to scale.
         </div></div>
         <div class="step"><div class="step-card">
           <span class="step-figure" id="scale-interest"></span>
-          of it goes on interest payments on past borrowing - the single
-          largest claim on the budget.
+          of it goes on interest on past borrowing &mdash; the single largest
+          claim on the budget.
         </div></div>
         <div class="step"><div class="step-card">
           <span class="step-figure c-union" id="scale-education"></span>
-          goes to the Ministry of Education's two departments.
+          goes to the Ministry of Education. For every rupee it receives, the
+          Union pays <span id="scale-ratio"></span> in interest.
         </div></div>
       </div>
     </div>
@@ -354,9 +388,10 @@
       <p class="chapter-no">Appendix</p>
       <h2>The account heads every government shares</h2>
       <p class="lede">
-        Major head 2202 means general education in Uttar Pradesh exactly as it
-        does in the Union budget. That shared classification is what makes the
-        comparison in chapter three possible.
+        Major head 2202 means general education in a state budget exactly as
+        it does in the Union's. That shared classification is what makes it
+        possible to compare the two governments at all, and it is the basis of
+        chapter three.
       </p>
     </div>
     <div class="controls">
@@ -380,44 +415,46 @@
 <footer class="wrap">
   <div class="cols">
     <div>
-      <h3>Coverage</h3>
+      <h3>What the figures cover</h3>
       <div id="coverage"></div>
     </div>
     <div>
-      <h3>Read this before comparing</h3>
+      <h3>Reading them</h3>
       <ul>
-        <li><strong>Never add Union and state education totals.</strong>
-          Central transfers appear in both. For a combined figure the sources
-          are the ministry's <em>Analysis of Budgeted Expenditure on
-          Education</em> or the CAG's combined accounts.</li>
-        <li><strong>Nominal rupees.</strong> No inflation adjustment and no
-          share of GDP computed here yet. Shares of total expenditure are
-          computed and are safe to compare across years.</li>
+        <li><strong>Never add the Union's and the states' education
+          budgets.</strong> Money the Union passes to the states appears in
+          both. The only sound combined figure counts each rupee once, by the
+          government that spends it &mdash; chapter one's.</li>
+        <li><strong>Rupees at current prices.</strong> Rupee totals are not
+          adjusted for inflation, so later years look larger than they are.
+          Shares of GDP and of total spending are not affected.</li>
+        <li><strong>Solid lines are audited spending, dashed lines are
+          estimates.</strong> The most recent years are always estimates.</li>
       </ul>
     </div>
     <div>
       <h3>Where the numbers come from</h3>
       <ul>
-        <li><strong>Union figures</strong> are read from
-          <a href="https://www.indiabudget.gov.in/">indiabudget.gov.in</a>,
-          the Expenditure Budget and Demands for Grants, 24 editions.</li>
-        <li><strong>State figures</strong> are read from the Reserve Bank of
-          India's <a href="https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets"><em>State
-          Finances: A Study of Budgets</em></a> e-STATES database and
-          Statement 26.</li>
-        <li>The Union total reproduces to within Rs 0.19 crore across 102
-          demands, and all 570 percentages RBI publishes in Statement 26
-          reproduce exactly.</li>
+        <li><strong>The Union:</strong> the Expenditure Budget and Demands for
+          Grants, on
+          <a href="https://www.indiabudget.gov.in/">indiabudget.gov.in</a>.</li>
+        <li><strong>The states:</strong> the Reserve Bank of India's
+          <a href="https://rbi.org.in/Scripts/AnnualPublications.aspx?head=State+Finances+%3A+A+Study+of+Budgets"><em>State
+          Finances: A Study of Budgets</em></a>.</li>
+        <li><strong>Centre and states together:</strong> the Ministry of
+          Education's <em>Analysis of Budgeted Expenditure on Education</em>,
+          the only official series that counts each rupee once.</li>
+        <li><strong>GDP:</strong> the RBI <em>Handbook of Statistics on the
+          Indian Economy</em>.</li>
       </ul>
     </div>
   </div>
 
   <div id="claims">
-    <h3>Claims from outside the data, and their sources</h3>
+    <h3>Claims from outside these figures, and their sources</h3>
     <p>
-      Every other figure on this page is computed from the budget documents
-      above. These are not, so each is attributed. Where published figures
-      disagree, all are given rather than one being picked.
+      Everything else on this page is calculated from the sources above.
+      These statements are not, so each is attributed.
     </p>
     <ul>
       <li><strong>The 6% of GDP target.</strong> Proposed by the Education
@@ -425,31 +462,31 @@
         National Policy on Education 1968, repeated in 1986, and committed to
         again by the
         <a href="https://www.education.gov.in/sites/upload_files/mhrd/files/NEP_Final_English_0.pdf">National
-        Education Policy 2020</a>, which states the aim of reaching 6% of GDP
-        "at the earliest".</li>
-      <li><strong>2.7% of GDP.</strong> Economic Survey 2024-25, for 2023-24,
-        on the narrower measure of what central and state governments spend
-        through their education departments.</li>
-      <li><strong>4.1% of GDP.</strong>
+        Education Policy 2020</a>, which aims to reach 6% of GDP &ldquo;at the
+        earliest&rdquo;.</li>
+      <li><strong>&ldquo;2.7 per cent&rdquo;.</strong> The Economic Survey
+        2024-25's figure for public spending on education, on the measure of
+        education departments alone. It matches the narrower count in chapter
+        one.</li>
+      <li><strong>&ldquo;About four per cent&rdquo;.</strong>
         <a href="https://prsindia.org/budgets/parliament/demand-for-grants-2026-27-analysis-education">PRS
-        Legislative Research, Demand for Grants 2026-27: Education</a>,
-        citing World Bank data for 2022: "Centre and states together spend
-        around 4.1% of GDP on education, lower than the recommended 6%."</li>
-      <li><strong>4.6% of GDP.</strong> The Ministry of Education's
-        <em>Analysis of Budgeted Expenditure on Education</em> measure for
-        2020-21, which adds education and training spending by departments
-        other than education - health, tribal affairs, labour and others.</li>
-      <li><strong>Devolution rose from 32% to 42%.</strong> The Fourteenth
-        Finance Commission's recommendation, effective from 2015-16, raising
-        the states' share of the divisible pool of central taxes.</li>
-      <li><strong>Samagra Shiksha is cost-shared 60:40.</strong> 60:40 between
-        centre and states, 90:10 for the north-eastern and Himalayan states,
-        and 100% central funding for union territories without a legislature,
-        per PRS as above. The sharing pattern for its predecessor Sarva
-        Shiksha Abhiyan was reset at the same time as the devolution change.</li>
-      <li><strong>Scheme shares of the ministry's budget.</strong> Samagra
-        Shiksha Rs 42,100 crore and PM POSHAN Rs 12,750 crore in 2026-27,
-        per PRS as above.</li>
+        Legislative Research, Demand for Grants 2026-27: Education</a>, citing
+        World Bank data for 2022: &ldquo;Centre and states together spend
+        around 4.1% of GDP on education, lower than the recommended 6%.&rdquo;
+        It matches the wider count.</li>
+      <li><strong>The states' share of central taxes rose from 32% to
+        42%</strong> from 2015-16, on the Fourteenth Finance Commission's
+        recommendation.</li>
+      <li><strong>Union money for jointly run schemes passes through state
+        budgets from 2014-15.</strong> From that year, central assistance for
+        schemes the states implement has been budgeted together and
+        transferred through the states' consolidated funds, under Ministry of
+        Finance guidelines of 6 January 2014, as set out by the
+        <a href="https://delhiplanning.delhi.gov.in/sites/default/files/Planning/generic_multiple_files/final_css_writeup.pdf">Delhi
+        government's planning department</a>.</li>
+      <li><strong>Samagra Shiksha is cost-shared 60:40</strong> between the
+        centre and the states, 90:10 for the north-eastern and Himalayan
+        states, per PRS as above.</li>
     </ul>
   </div>
 </footer>

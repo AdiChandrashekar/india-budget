@@ -28,6 +28,18 @@ export async function loadStates() {
   }
 }
 
+// The supplementary datasets: the centre-plus-state series and the scheme
+// lineage. Each is read only for what it adds, so a failure costs that one
+// figure and nothing else.
+export async function loadOptional(path, required) {
+  try {
+    return await loadJson(path, required);
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 // Boundaries are decoded to plain GeoJSON at build time, so the page needs no
 // TopoJSON library. Absence is survivable: the ranked bars say the same thing.
 export async function loadMap() {
