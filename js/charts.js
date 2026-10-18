@@ -826,10 +826,9 @@ const BLUE_RAMP_DARK = [
   "#184f95", "#2266c0", "#3d8bff", "#6aa6ff", "#97c1ff", "#c6dcff",
 ];
 
+// The page is a light design; dark exists only when the reader picks it.
 function isDark() {
-  const stamped = document.documentElement.getAttribute("data-theme");
-  if (stamped) return stamped === "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return document.documentElement.getAttribute("data-theme") === "dark";
 }
 
 export function choropleth(host, opts) {

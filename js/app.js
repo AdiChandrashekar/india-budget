@@ -1364,17 +1364,13 @@ function wireOnce() {
     timer = setTimeout(renderAll, 200);
   });
 
-  window.matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => setTimeout(renderAll, 60));
 }
 
-// The page follows the system theme until the reader picks one, and then
-// remembers it. Storage can throw in a private window; the toggle still works
-// for the session, it just is not remembered.
+// Light unless the reader picks dark, and then remembered. Storage can throw
+// in a private window; the toggle still works for the session, it just is not
+// remembered.
 function effectiveTheme() {
-  const stamped = document.documentElement.getAttribute("data-theme");
-  if (stamped) return stamped;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
 }
 
 function labelTheme() {

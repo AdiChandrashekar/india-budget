@@ -15,7 +15,7 @@ Three catalogue references, each owning a layer:
 | --- | --- |
 | **Data Journalism / Interactive Explainers** (The Pudding, NYT Graphics) — dominant | Structure, tone, motion. Scroll-driven chapters, a sticky graphic with steps passing it, annotation in the chart, reader participation. |
 | **Swiss International Style** | Typography and grid. A neo-grotesque, enormous numerals, flush-left ragged-right, asymmetric composition on a 12-column grid, mathematical spacing, no ornament. |
-| **Bloomberg Graphics** | Colour mood. Confident saturated colour on a dark ground. |
+| **Bloomberg Graphics** | Colour mood. Confident saturated colour. |
 
 The page should read as a data-journalism feature with an argument, not as a
 dashboard. Four rules carry the look:
@@ -31,10 +31,11 @@ dashboard. Four rules carry the look:
 
 ## Tokens
 
-All in `css/style.css`. Light on `:root`; dark under the
-`prefers-color-scheme` query (guarded by `:where(:not([data-theme="light"]))`)
-and again under `[data-theme="dark"]`. The page follows the system until the
-reader uses the theme toggle, then remembers the choice.
+All in `css/style.css`. **This is a light design.** Light tokens sit on
+`:root` and apply to everyone regardless of the operating system's setting;
+dark exists only under `[data-theme="dark"]`, which the reader opts into with
+the toggle, and the choice is remembered. There is deliberately no
+`prefers-color-scheme` rule.
 
 ### Surfaces and ink
 
@@ -106,6 +107,35 @@ uses the same sans as everything else holds without exception. The serif is
 gone. Big standalone figures use proportional numerals; only aligned columns
 use tabular. Loaded from Google Fonts with `display=swap` and system
 fallbacks.
+
+## Layout: text lives on the grid
+
+The single most important layout rule, added after the owner pointed out that
+text was sitting in a narrow left-hand column beside full-width figures, with
+the right half of the page empty.
+
+**No text element is capped with a `max-width` in `ch`.** Every heading, deck,
+note and caption shares the same left and right edges as the figures, on the
+same twelve columns. Line length is controlled by type size, grid placement and
+column flow — never by an arbitrary cap.
+
+| Element | Placement | Measured line length at 1280px |
+| --- | --- | --- |
+| Hero | numeral on the left; headline and standfirst stacked on the right, one shared left edge | standfirst 78 characters, single column |
+| Chapter head | headline in columns 1–6, deck in 7–12, deck's last line on the headline's baseline; full width when there is no deck | decks 64–67 |
+| Figure footer | key in columns 1–6, caption in 7–12 — the same line the decks start on | 84 |
+| Caption with no key | full width, two columns | ~80 per column |
+| Notes, footer claims | full width, two columns, paragraphs kept whole | ~72–76 per column |
+
+Headings use `text-wrap: balance`; prose uses `text-wrap: pretty`.
+
+Two things measurement showed that the eye did not, which is why line lengths
+are measured, not guessed:
+
+- A single full-width deck ran 110–128 characters at 1.5rem. Inter sets
+  narrower than its size suggests.
+- Splitting a two-sentence deck into two columns broke it mid-sentence across
+  the gap. Columns suit longer prose only; short decks get the lockup.
 
 ## Structure
 
@@ -208,8 +238,11 @@ tiles are grey; only the small subject tiles carry colour).
 - 2026-10-17 — State layer: benchmark plot, two-tier comparison, ranked bars,
   choropleth; charts made responsive to series length.
 - 2026-10-17 — **Re-resolved** at the owner's request: data-journalism
-  interactive × Swiss × Bloomberg Graphics, dark-first. New semantic colour
+  interactive × Swiss × Bloomberg Graphics, initially dark-first. New semantic colour
   system, validated in both modes with no contrast warnings. Serif dropped for
   a single grotesque family. Scrollytelling engine, hero, four motion pieces,
   animated map, theme toggle, progress bar. Fixed the CSS-fill-over-attribute
   trap above.
+- 2026-10-18 — **Light by default** at the owner's request, dark opt-in only.
+  Removed every `ch` width cap and put all text on the figures' grid, with the
+  lockups in the layout table above.

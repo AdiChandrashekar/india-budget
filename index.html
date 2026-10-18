@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>India Budget Explorer</title>
 <meta name="description" content="India's 6%-of-GDP education target, set in 1966 and restated in 2020, measured against what the Union and the states actually budget - read from the budget documents themselves, 1990-91 to 2026-27.">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="light">
 <script>
   // Apply a saved theme before first paint, so the page never flashes the
   // wrong one. Storage can throw in private windows; the OS setting is then
@@ -35,13 +35,17 @@
 <!-- ================================================================ hero -->
 <header class="hero wrap" id="top">
   <p class="eyebrow">The target, since 1966</p>
-  <div class="hero-numeral" id="hero-numeral" aria-label="6 per cent">6<span class="unit">%</span></div>
-  <h1>India's oldest education promise</h1>
-  <p class="standfirst">
-    Six per cent of GDP on education. Proposed in 1966, restated in 1968, 1986
-    and 2020, never reached. What the country actually spends, who spends it,
-    and why nobody can say exactly how far short it falls.
-  </p>
+  <div class="hero-lockup">
+    <div class="hero-numeral" id="hero-numeral" aria-label="6 per cent">6<span class="unit">%</span></div>
+    <div class="hero-text">
+      <h1>India's oldest education promise</h1>
+      <p class="standfirst">
+        Six per cent of GDP on education. Proposed in 1966, restated in 1968,
+        1986 and 2020, never reached. What the country actually spends, who
+        spends it, and why nobody can say exactly how far short it falls.
+      </p>
+    </div>
+  </div>
   <p class="byline" id="byline"></p>
   <span class="scroll-cue">Scroll</span>
 </header>
@@ -314,11 +318,13 @@
     </div>
 
     <dl class="statrow" id="scale-stats"></dl>
-    <div class="figbar">
-      <div class="legend" id="treemap-legend"></div>
-      <button class="linkbtn" data-table="dept-block">Show every department</button>
+    <div class="figfoot">
+      <div class="figbar">
+        <div class="legend" id="treemap-legend"></div>
+        <button class="linkbtn" data-table="dept-block">Show every department</button>
+      </div>
+      <p class="figcaption-text" id="treemap-caption"></p>
     </div>
-    <figcaption id="treemap-caption"></figcaption>
 
     <div id="dept-block" hidden>
       <div class="controls" style="margin-top:32px">
@@ -408,12 +414,12 @@
 
   <div id="claims">
     <h3>Claims from outside the data, and their sources</h3>
-    <p style="max-width:68ch">
+    <p>
       Every other figure on this page is computed from the budget documents
       above. These are not, so each is attributed. Where published figures
       disagree, all are given rather than one being picked.
     </p>
-    <ul style="max-width:72ch">
+    <ul>
       <li><strong>The 6% of GDP target.</strong> Proposed by the Education
         Commission of 1964-66 (the Kothari Commission), adopted in the
         National Policy on Education 1968, repeated in 1986, and committed to

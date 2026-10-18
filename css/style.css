@@ -1,4 +1,4 @@
-/* India Budget Explorer.
+/* India Budget Explorer. A light design; dark is opt-in via the toggle.
    Data-journalism interactive (The Pudding, NYT Graphics), set in the Swiss
    International Style, with Bloomberg Graphics colour confidence.
    Tokens and the reasoning behind them are locked in DESIGN.md.
@@ -43,29 +43,6 @@
   --max: 1280px;
   --gutter: 24px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --ground: #0c0f14;
-    --ground-2: #11151c;
-    --raised: #151a22;
-    --ink: #f1eee8;
-    --ink-2: #b3b9c2;
-    --ink-muted: #7b838e;
-    --rule: #1f252e;
-    --rule-strong: #2f3741;
-    --union: #e65d31;
-    --states: #3d8bff;
-    --target: #f2b02e;
-    --def-functional: #17a588;
-    --def-narrow: #8a78f0;
-    --dim: #262c35;
-    --dim-2: #1b2028;
-    --wash: rgba(241, 238, 232, 0.07);
-    --glow: 0 0 90px rgba(242, 176, 46, 0.28);
-  }
 }
 
 :root[data-theme="dark"] {
@@ -125,6 +102,11 @@ a:hover { text-decoration-color: var(--states); }
 :focus-visible { outline: 2px solid var(--states); outline-offset: 3px; }
 
 [hidden] { display: none !important; }
+
+/* Line breaks are designed, not left to chance: headings balance their lines
+   so a two-line heading is two even lines, and prose avoids a lone last word. */
+h1, h2, h3 { text-wrap: balance; }
+p, li, figcaption, .lede, .standfirst, .step-card, .note { text-wrap: pretty; }
 
 /* --------------------------------------------------------------- top bar */
 
@@ -214,22 +196,35 @@ a:hover { text-decoration-color: var(--states); }
 
 .hero-numeral .unit { font-size: 0.48em; letter-spacing: -0.04em; margin-left: 0.02em; }
 
+/* The numeral on the left; headline and standfirst stacked on the right,
+   sharing one left edge. Together they span the page, and the standfirst is a
+   single readable column rather than a two-column split that breaks a
+   two-sentence deck mid-sentence. */
+.hero-lockup {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 0 clamp(28px, 4vw, 72px);
+  margin: 0 0 48px;
+}
+
+.hero-text { padding-bottom: 0.6em; }
+
 .hero h1 {
   font-family: var(--display);
   font-weight: 750;
-  font-size: clamp(2.2rem, 5.6vw, 4.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  margin: 28px 0 22px;
-  max-width: 15ch;
+  font-size: clamp(2.4rem, 5.4vw, 5.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  margin: 0 0 28px;
 }
 
 .hero .standfirst {
-  font-size: clamp(1.08rem, 1.9vw, 1.32rem);
-  line-height: 1.5;
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
   color: var(--ink-2);
-  max-width: 50ch;
-  margin: 0 0 30px;
+  margin: 0;
 }
 
 .byline {
@@ -291,14 +286,20 @@ a:hover { text-decoration-color: var(--states); }
 .chapter { padding: 120px 0 80px; position: relative; }
 .chapter + .chapter { border-top: 1px solid var(--rule); }
 
+/* Headline in columns 1-6, deck in 7-12 - the same line the figure captions
+   start on - with the deck's last line on the headline's baseline. A chapter
+   with no deck gives its headline the full width. */
 .chapter-head {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 0 var(--gutter);
-  margin-bottom: 48px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  align-items: end;
+  margin-bottom: 64px;
 }
-
-.chapter-head > * { grid-column: 1 / span 8; }
+.chapter-head > * { grid-column: 1 / -1; }
+.chapter-head > h2 { margin: 0; }
+.chapter-head > h2:has(+ .lede) { grid-column: 1 / span 6; }
+.chapter-head > .lede { grid-column: 7 / -1; }
 
 .chapter-no {
   font-family: var(--mono);
@@ -322,11 +323,10 @@ a:hover { text-decoration-color: var(--states); }
 h2 {
   font-family: var(--display);
   font-weight: 750;
-  font-size: clamp(2.1rem, 4.6vw, 3.9rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  margin: 0 0 22px;
-  max-width: 17ch;
+  font-size: clamp(2.2rem, 4.3vw, 3.9rem);
+  line-height: 0.97;
+  letter-spacing: -0.04em;
+  margin: 0 0 28px;
 }
 
 h3 {
@@ -339,10 +339,10 @@ h3 {
 }
 
 .lede {
-  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
-  line-height: 1.55;
+  font-size: clamp(1.1rem, 1.5vw, 1.32rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
   color: var(--ink-2);
-  max-width: 60ch;
   margin: 0;
 }
 
@@ -511,7 +511,12 @@ h3 {
   color: var(--ink);
 }
 
-.hero-figure .unit { font-size: 1.05rem; color: var(--ink-2); max-width: 34ch; line-height: 1.4; }
+.hero-figure .unit {
+  flex: 1 1 280px;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  color: var(--ink-2);
+  line-height: 1.4;
+}
 
 /* ------------------------------------------------------------- controls */
 
@@ -661,7 +666,32 @@ input[type="range"]::-moz-range-thumb {
 
 /* -------------------------------------------------------------- figures */
 
-figure { margin: 0 0 20px; }
+figure, .figfoot {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  margin: 0 0 20px;
+}
+
+figure > *, .figfoot > * { grid-column: 1 / -1; min-width: 0; }
+figure > .plot { grid-row: 1; }
+figure > .figbar, .figfoot > .figbar {
+  grid-row: 2;
+  grid-column: 1 / span 6;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+figure > figcaption, .figfoot > figcaption, .figfoot > .figcaption-text {
+  grid-row: 2;
+  grid-column: 7 / -1;
+}
+figure:not(:has(> .figbar)) > figcaption {
+  grid-column: 1 / -1;
+  columns: 2 22rem;
+  column-gap: 56px;
+}
+figure > .tablewrap { grid-row: 3; margin-top: 24px; }
 .plot { width: 100%; position: relative; }
 svg { display: block; width: 100%; height: auto; overflow: visible; }
 
@@ -704,12 +734,11 @@ svg { display: block; width: 100%; height: auto; overflow: visible; }
 .hit { fill: transparent; cursor: crosshair; }
 .map-state { transition: fill 0.55s var(--ease); cursor: pointer; }
 
-figcaption {
-  font-size: 0.82rem;
+figcaption, .figcaption-text {
+  font-size: 0.92rem;
   line-height: 1.55;
   color: var(--ink-muted);
   margin-top: 18px;
-  max-width: 72ch;
 }
 
 .figbar {
@@ -721,7 +750,7 @@ figcaption {
   margin-top: 16px;
 }
 
-.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.84rem; flex: 1 1 320px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.84rem; min-width: 0; }
 .legend span { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); }
 .legend .line-key { width: 18px; height: 2.5px; border-radius: 2px; flex: none; }
 .legend .rect-key { width: 12px; height: 12px; border-radius: 2px; flex: none; }
@@ -843,17 +872,19 @@ tr.total td {
 /* ------------------------------------------------------------- callouts */
 
 .note {
-  border-left: 2px solid var(--rule-strong);
-  padding: 4px 0 4px 22px;
-  margin: 36px 0 0;
-  font-size: 0.95rem;
+  border-top: 2px solid var(--rule-strong);
+  padding: 20px 0 0;
+  margin: 48px 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--ink-2);
-  max-width: 68ch;
+  columns: 2 26rem;
+  column-gap: 56px;
 }
 
-.note.flag { border-left-color: var(--union); }
+.note.flag { border-top-color: var(--union); }
 .note strong { color: var(--ink); font-weight: 650; }
-.note p { margin: 0 0 8px; }
+.note p { margin: 0 0 10px; break-inside: avoid; }
 
 /* ---------------------------------------------------------------- footer */
 
@@ -881,6 +912,9 @@ footer ul { margin: 0; padding-left: 18px; }
 footer li { margin-bottom: 9px; }
 
 #claims { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--rule); }
+#claims > p { font-size: 1rem; margin: 0 0 24px; }
+#claims ul { columns: 2 26rem; column-gap: 56px; padding-left: 18px; }
+#claims li { break-inside: avoid; }
 
 .loading {
   min-height: 60svh;
@@ -898,7 +932,14 @@ footer li { margin-bottom: 9px; }
 @media (max-width: 860px) {
   :root { --gutter: 18px; }
   .chapter { padding: 88px 0 56px; }
-  .chapter-head > * { grid-column: 1 / -1; }
+  .hero-lockup { grid-template-columns: 1fr; }
+  .hero h1 { margin-top: 20px; }
+  .chapter-head > h2:has(+ .lede), .chapter-head > .lede { grid-column: 1 / -1; }
+  .chapter-head > .lede { margin-top: 20px; }
+  figure > .figbar, .figfoot > .figbar,
+  figure > figcaption, .figfoot > figcaption { grid-column: 1 / -1; }
+  figure > figcaption, .figfoot > figcaption, .figfoot > .figcaption-text { grid-row: 3; grid-column: 1 / -1; }
+  figure > .tablewrap { grid-row: 4; }
   .stat { border-right: 0; margin-right: 0; border-bottom: 1px solid var(--rule); }
   .stat:last-child { border-bottom: 0; }
   th:first-child, td:first-child { min-width: 170px; }
