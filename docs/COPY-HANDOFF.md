@@ -85,8 +85,11 @@ policy documents without being met, and which cannot be measured to better
 than two percentage points, is doing political work rather than fiscal work.
 Be careful not to assert motive; state what is observable.
 
-**Not yet available:** the page cannot compute % of GDP itself — no GDP series
-is loaded. These three figures are cited. See the data gaps at the end.
+**Now available:** the page can compute % of GDP itself (`data/gdp.json`),
+and the ABE's own combined figure is in `data/abe.json`: 4.04% for 2019-20 on
+the broad definition and 2.73% on education departments alone, which brackets
+the Economic Survey's 2.7%. The PRS/World Bank figure stays cited. See the data
+gaps at the end.
 
 ---
 
@@ -243,39 +246,81 @@ time; Sarva Shiksha Abhiyan moved to 60:40.
 
 **The honest framing:** this was not a cut in education spending, it was a
 transfer of who writes the cheque. Whether total education spending rose or
-fell across both tiers that year is a question this page cannot currently
-answer — see gap 3 below.
+fell across both tiers that year can now be answered from the ABE's
+Centre-plus-states series (`data/abe.json`, `national`): Centre and states
+together, all departments, rose from Rs 5,06,849 crore in 2014-15 to
+Rs 5,77,793 crore in 2015-16, while the Centre's own part went from
+Rs 1,33,392 crore to Rs 1,42,563 crore.
 
 ---
 
 ## Data gaps that constrain the copy
 
-Write around these; do not paper over them.
+Write around the ones still open; do not paper over them. Updated 18 October
+2026. How each was closed, and what is still missing, is in
+`docs/FINDINGS.md` under "Closing the data gaps".
 
-1. **No GDP series.** The page cannot compute education as a share of GDP, so
-   the three figures in section 3 are cited, not computed. Obtainable from the
-   RBI Handbook of Statistics on the Indian Economy or MOSPI.
-2. **No state sub-sector split.** RBI publishes only the combined "education,
-   sports, art and culture" group, so there is no elementary/secondary/higher
-   breakdown for states. The source that would give it, the Ministry of
-   Education's *Analysis of Budgeted Expenditure on Education*, is currently
-   404 on education.gov.in across every edition URL found, has no Wayback
-   snapshot at those URLs, and the Dataful mirror appears to be gated.
-3. **No Union actuals before 2015-16.** Confirmed as a limit of the source,
-   not of the parser: Plan-era Demands for Grants and Statements of Budget
-   Estimates print Plan/Non-Plan/Total for budget and revised estimates and
-   carry no actuals column at all. Actuals for those years exist only in the
-   CGA's Union Government Finance Accounts and the CAG's Appropriation
-   Accounts, which are not yet in the pipeline.
-4. **No centre-plus-state total, anywhere.** A test asserts the data contains
-   no combined figure. The only legitimate sources are the ABE (see gap 2) and
-   the CAG's Combined Finance and Revenue Accounts.
-5. **State GSDP only from 2011-12**, so the share-of-GSDP ranking cannot go
-   further back. Earlier GSDP exists on older base years and is not directly
-   comparable.
+### Closed
+
+1. **GDP series — closed.** `data/gdp.json` holds GDP at current prices from
+   the RBI Handbook on three bases, kept separate and never chained: 2004-05
+   (to 2011-12), 2011-12 (to 2024-25) and 2022-23 (from 2022-23). The page can
+   now compute any series as a share of GDP. It must show a break at 2011-12
+   and 2022-23, the two rebasings, each of which lowers the level of GDP by
+   about 3 per cent and so raises any share of it. There is no GDP yet for 2026-27, the year of the
+   current budget estimate.
+2. **State sub-sector split — closed for 2007-08 to 2021-22.** The ministry's
+   *Analysis of Budgeted Expenditure on Education* turned up in the Wayback
+   Machine's CDX index (twelve editions), and `data/abe.json` has each state's
+   spending on elementary, secondary, adult, university, technical, general
+   and language education. Two caveats for the copy: it is *revenue*
+   spending of the *education departments* only, which is the ABE's own
+   definition and not the e-STATES group the rest of the state view uses;
+   and four 2017-20 pages are unreadable at source, so secondary, adult,
+   university and language have no 2017-18 actual.
+3. **Union actuals before 2015-16 — closed back to 1997-98.** The earlier
+   claim that they existed only in the accounts was wrong: Expenditure Budget
+   Vol. I, Statement 2 prints them in every edition. `data/union_actuals.json`
+   has total expenditure and every department's actuals, 1997-98 to 2014-15,
+   and each year's total matches Budget at a Glance. The detail is the
+   department, not the major head, and the documents call most of these
+   actuals provisional.
+4. **Centre-plus-state total — closed, from the ABE only.** `data/abe.json`
+   (`national`) is the ABE's own Table 4, 2000-01 to 2021-22, which counts
+   each rupee once. Section 3's figures can now be stated from the data:
+   **4.04%** of GDP in 2019-20 (actual) on the broad definition (education
+   and other departments), **2.73%** on education departments alone; 4.36%
+   and 2.95% in 2020-21 (revised). The test that the Union and state files
+   carry no combined figure still stands: never add them together.
+5. **State GSDP before 2011-12 — closed back to 1990-91.** `data/gsdp.json`
+   has five base segments (1980-81, 1993-94, 1999-00, 2004-05, 2011-12). The
+   bases before 2011-12 measure GSDP at factor cost, so the share-of-GSDP
+   ranking must show breaks rather than one line. A correction also comes
+   with it: `data/states.json` currently divides undivided Andhra Pradesh's
+   2011-12 to 2013-14 budgets by residual-AP GSDP. `gsdp.json`'s
+   `budget_boundary` is the right denominator, and any AP share-of-GSDP
+   figure for those years should be rechecked against it.
+7. **Scheme-level series — closed.** `data/schemes.json` follows twelve
+   schemes across renames and mergers, 1998-99 to 2026-27, from 54 Statements
+   of Budget Estimates: Samagra Shiksha (with SSA, RMSA and Teacher Education
+   before the 2018 merger), PM POSHAN (Mid-Day Meal), DPEP, Operation
+   Blackboard, Mahila Samakhya, KGBV, adult literacy, RUSA/PM-USHA, KVS,
+   NVS, NCERT and UGC. Section 7's PRS citations can now be checked: in the
+   budget documents' own figures, Samagra Shiksha's actuals averaged 88.8% of
+   its budget estimate over 2017-18 to 2024-25 (PRS says 86%), with lows of
+   71.8% in 2020-21 and 80.7% in 2021-22. Scheme actuals exist only from
+   2009-10.
+
+### Still open
+
 6. **No enrolment data**, so no per-child figures. UDISE+ would supply it.
-7. **No scheme-level series.** The pipeline reads account heads. Scheme
-   figures quoted in section 7 are cited from PRS. The Statements of Budget
-   Estimates (`sbe<N>`) carry scheme detail for every edition back to 1998-99
-   and are downloaded but not parsed — this is the most tractable of the
-   gaps.
+   Not attempted in this round.
+8. **No 2015-16 actuals in the ABE.** The edition that would carry them
+   survives only as a scan without a text layer. Union and state totals for
+   2015-16 exist elsewhere; the sub-sector split for that year does not.
+9. **The ABE's early % of GDP is not recomputable.** For 2000-01 to 2010-11
+   the ABE divides by an older GDP vintage than any in `data/gdp.json`. Quote
+   those percentages as the ABE's, not as computed by the page.
+10. **Union detail before 2015-16 is by department, not by major head.** The
+    functional (major-head) definition of section 2 still starts in 2002-03
+    for budget estimates and in 2015-16 for actuals.

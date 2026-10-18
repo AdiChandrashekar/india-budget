@@ -1,0 +1,272 @@
+{
+ "note": "Which printed SBE lines are which scheme, across renames and mergers. A line is matched on its label reduced to lowercase letters only (so 'Sarva Shiksha Abhiyan(SSA)' and 'Sarva Shiksha AbhiyanSSA' are the same string), against the anchored regular expressions below. A line inside a matched line (a sub-item of a matched parent) is never matched again, so a parent and its children are not both counted. Lines that move money between the budget and a fund ('Transfer to Prarambhik Shiksha Kosh', 'Amount met from ...') are never part of a scheme on their own; inside a matched parent they are, because the parent's net is what the document says the scheme costs. Curated by hand from every label printed in the education departments' statements, 1998-99 to 2026-27; parse_schemes.py fails if a pattern matches nothing.",
+ "exclude": [
+  "^transferto",
+  "^amountmetfrom",
+  "^less"
+ ],
+ "schemes": [
+  {
+   "id": "samagra_shiksha",
+   "name": "Samagra Shiksha",
+   "department": "school",
+   "kind": "family",
+   "note": "Samagra Shiksha integrated three centrally sponsored schemes from 2018-19: Sarva Shiksha Abhiyan, Rashtriya Madhyamik Shiksha Abhiyan and Teacher Education. The 2018-19 edition still budgets them separately; from the 2019-20 edition they are one line. The family total before 2018-19 is the sum of the three predecessors as each was printed, which is the comparison the merger implies, not a figure any document prints. The 2015-16 edition budgets teacher education together with adult education in one line, 'Support for Educational Development including Teachers Training and Adult Education', which is in neither family; Teacher Education therefore shows nothing for the 2014-15 RE and 2015-16 BE and RE.",
+   "members": [
+    {
+     "id": "ssa",
+     "name": "Sarva Shiksha Abhiyan",
+     "match": [
+      "^(nationaleducationmission)?sarvas?h?ikshaabhiyan",
+      "^sarvshikshaabhiyan"
+     ]
+    },
+    {
+     "id": "rmsa",
+     "name": "Rashtriya Madhyamik Shiksha Abhiyan",
+     "match": [
+      "^(nationaleducationmission)?rashtriyamadhyamikshiksha"
+     ]
+    },
+    {
+     "id": "teacher_education",
+     "name": "Teacher Education (Strengthening of Teachers Training Institutions)",
+     "match": [
+      "^strengthe?ningofteacherstraining",
+      "^teacherstrainingprogramme$",
+      "^nationaleducationmissionteacherstraining"
+     ]
+    },
+    {
+     "id": "samagra_shiksha",
+     "name": "Samagra Shiksha",
+     "match": [
+      "^samagrashiksha"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pm_poshan",
+   "name": "PM POSHAN (Mid-Day Meal)",
+   "department": "school",
+   "kind": "renamed",
+   "note": "One scheme under three names: the National Programme of Nutritional Support to Primary Education (1995), the National Programme of Mid Day Meals in Schools (from the 2008-09 edition), and Pradhan Mantri Poshan Shakti Nirman, PM POSHAN (from the 2022-23 edition).",
+   "members": [
+    {
+     "id": "nspe",
+     "name": "Nutritional Support to Primary Education",
+     "match": [
+      "^nutritionalsupporttoprimaryeducation"
+     ]
+    },
+    {
+     "id": "mdm",
+     "name": "National Programme of Mid Day Meals in Schools",
+     "match": [
+      "^nationalprogrammeofmiddaymeal"
+     ]
+    },
+    {
+     "id": "pm_poshan",
+     "name": "PM POSHAN",
+     "match": [
+      "^pmposhan",
+      "^pradhanmantriposhan"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dpep",
+   "name": "District Primary Education Programme",
+   "department": "school",
+   "kind": "single",
+   "note": "Externally aided; wound down into Sarva Shiksha Abhiyan in the early 2000s and carried as a token line until 2010-11.",
+   "members": [
+    {
+     "id": "dpep",
+     "name": "District Primary Education Programme",
+     "match": [
+      "^districtprimaryedu",
+      "^dpep"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "operation_blackboard",
+   "name": "Operation Blackboard",
+   "department": "school",
+   "kind": "single",
+   "note": "Launched 1987-88; subsumed in Sarva Shiksha Abhiyan.",
+   "members": [
+    {
+     "id": "operation_blackboard",
+     "name": "Operation Blackboard",
+     "match": [
+      "^operationblackboard"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mahila_samakhya",
+   "name": "Mahila Samakhya",
+   "department": "school",
+   "kind": "single",
+   "note": "Women's education programme, 1989; last budgeted in the 2015-16 edition.",
+   "members": [
+    {
+     "id": "mahila_samakhya",
+     "name": "Mahila Samakhya",
+     "match": [
+      "^mahilasamakhya"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kgbv",
+   "name": "Kasturba Gandhi Balika Vidyalaya",
+   "department": "school",
+   "kind": "renamed",
+   "note": "Budgeted as 'Kasturba Gandhi Swatantra Vidyalaya' at first; merged into Sarva Shiksha Abhiyan after 2007-08.",
+   "members": [
+    {
+     "id": "kgbv",
+     "name": "Kasturba Gandhi Balika Vidyalaya",
+     "match": [
+      "^kasturbagandhi"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "adult_literacy",
+   "name": "Adult literacy mission",
+   "department": "school",
+   "kind": "renamed",
+   "note": "The head 'Adult Education & Skill Development Scheme' is printed from the 2007-08 edition; Saakshar Bharat, launched in 2009, was carried under it until the 2013-14 edition and under its own name after that. Figures before 2009-10 are therefore the head's predecessor programmes, not Saakshar Bharat. The mission was renamed Padhna Likhna Abhiyan (2020) and the New India Literacy Programme (2022). The 2015-16 edition budgets adult education together with teacher training in one line, 'Support for Educational Development including Teachers Training and Adult Education', which belongs to neither family and is left out of both, so both show nothing for 2014-15 and 2015-16 estimates. The National Literacy Mission's earlier schemes were budgeted as several separate lines and are not chained on here.",
+   "members": [
+    {
+     "id": "aesds",
+     "name": "Adult Education and Skill Development Scheme",
+     "match": [
+      "^adulteducationskilldevelopmentscheme",
+      "^adulteducationandskilldevelopmentscheme"
+     ]
+    },
+    {
+     "id": "saakshar_bharat",
+     "name": "Saakshar Bharat",
+     "match": [
+      "^(nationaleducationmission)?saaksharbharat"
+     ]
+    },
+    {
+     "id": "padhna_likhna",
+     "name": "Padhna Likhna Abhiyan",
+     "match": [
+      "^padhnalikhnaabhiyan"
+     ]
+    },
+    {
+     "id": "nilp",
+     "name": "New India Literacy Programme",
+     "match": [
+      "^newindialiteracyprogramme"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pm_usha",
+   "name": "PM-USHA (Rashtriya Uchchatar Shiksha Abhiyan)",
+   "department": "higher",
+   "kind": "renamed",
+   "note": "Rashtriya Uchchatar Shiksha Abhiyan, RUSA (2013), renamed Pradhan Mantri Uchchatar Shiksha Abhiyan, PM-USHA (2023). Not to be confused with PM Uchchatar Shiksha Protsahan (PM-USP), a scholarship.",
+   "members": [
+    {
+     "id": "rusa",
+     "name": "Rashtriya Uchchatar Shiksha Abhiyan",
+     "match": [
+      "^(nationaleducationmission)?rashtriyauchc?h?a(tar)?shikshaabhiyan",
+      "^strategicassistanceforstatehighereducation",
+      "^supporttorashtriyauchh?atarshikshaabhiyan"
+     ]
+    },
+    {
+     "id": "pm_usha",
+     "name": "PM-USHA",
+     "match": [
+      "^pradhanmantriuchchatarshikshaabhiyan"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kvs",
+   "name": "Kendriya Vidyalaya Sangathan",
+   "department": "school",
+   "kind": "single",
+   "members": [
+    {
+     "id": "kvs",
+     "name": "Kendriya Vidyalaya Sangathan",
+     "match": [
+      "^kendriyavidyalaya",
+      "^supportforkendriyavidyalaya"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "nvs",
+   "name": "Navodaya Vidyalaya Samiti",
+   "department": "school",
+   "kind": "single",
+   "members": [
+    {
+     "id": "nvs",
+     "name": "Navodaya Vidyalaya Samiti",
+     "match": [
+      "^navodayavidyalaya",
+      "^supportfornavodayavidyalaya"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ncert",
+   "name": "National Council of Educational Research and Training",
+   "department": "school",
+   "kind": "single",
+   "members": [
+    {
+     "id": "ncert",
+     "name": "NCERT",
+     "match": [
+      "^nationalcouncilofeducationalresearch"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ugc",
+   "name": "University Grants Commission",
+   "department": "higher",
+   "kind": "single",
+   "members": [
+    {
+     "id": "ugc",
+     "name": "University Grants Commission",
+     "match": [
+      "^universitygrantscommission",
+      "^supporttouniversitygrantscommission"
+     ]
+    }
+   ]
+  }
+ ]
+}

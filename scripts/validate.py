@@ -24,6 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import common as c  # noqa: E402
+import validate_gaps  # noqa: E402
 import validate_states  # noqa: E402
 
 TOLERANCE = 1.0          # Rs crore; the documents round to two decimals
@@ -205,6 +206,10 @@ def main() -> None:
 
     # The state layer's own fixtures and identities live in validate_states.py.
     failures += validate_states.run()
+
+    # GDP, schemes, pre-2015-16 actuals, the GSDP back-series and the ABE:
+    # the data that closed the gaps listed in docs/COPY-HANDOFF.md.
+    failures += validate_gaps.run()
 
     if failures:
         print("\n%d FAILURES" % len(failures))

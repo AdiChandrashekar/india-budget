@@ -89,7 +89,10 @@ def fy_shift(fy, years: int) -> str:
 TO_CRORE = {
     "crore": 1.0,
     "lakh": 0.01,
-    "thousand": 1e-5,
+    # Rs 1,000 = 10^3 / 10^7 crore. This read 1e-5 until the ABE, the first
+    # source in thousands, came out ten times too small against its own
+    # published totals.
+    "thousand": 1e-4,
     "rupee": 1e-7,
     "million": 0.1,
     "billion": 100.0,

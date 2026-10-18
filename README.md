@@ -57,6 +57,22 @@ python scripts/build_site.py       # -> data/union.json, what the page reads
 python scripts/validate.py         # published fixtures + internal identities
 ```
 
+The data that closed the open gaps has its own scripts, each writing its own
+JSON under `data/` (shapes at the end of [docs/FINDINGS.md](docs/FINDINGS.md)):
+
+```bash
+python scripts/national_gdp.py         # -> data/gdp.json, GDP on three bases
+python scripts/sbe.py fetch-education  # the Statements of Budget Estimates
+python scripts/parse_schemes.py        # -> data/schemes.json, with lineage
+python scripts/parse_union_actuals.py  # -> data/union_actuals.json, 1997-98 to 2014-15
+python scripts/state_gsdp_series.py    # -> data/gsdp.json, state GSDP from 1990-91
+python scripts/fetch_abe.py            # the ABE, from the Wayback Machine
+python scripts/parse_abe.py            # -> data/abe.json
+```
+
+They need `xlrd` as well as `openpyxl` and `pdfplumber`. `validate.py` checks
+all of them.
+
 `discover_union.py` is the slow one, a few minutes, because it verifies every
 candidate URL by fetching the first kilobyte and checking the file's magic
 number. It is worth it: see [docs/FINDINGS.md](docs/FINDINGS.md) for why

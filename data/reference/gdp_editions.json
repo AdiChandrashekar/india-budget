@@ -1,0 +1,57 @@
+{
+ "generated": "2026-10-17",
+ "index": "https://rbi.org.in/Scripts/AnnualPublications.aspx?head=Handbook+of+Statistics+on+Indian+Economy",
+ "note": "Handbook of Statistics on the Indian Economy, Table 1, one workbook per publication year. Older years are reached by the index's ASP.NET postback (hdnYear), not by URL. Every url was verified by a ranged GET and a magic-number check.",
+ "editions": {
+  "2017": {
+   "label": "Table 1 : Macro-Economic Aggregates (At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/TABLE11BC2E287C4844BB792DA26F499968B21.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2018": {
+   "label": "Table 1 : Macro-Economic Aggregates (Base Year: 2011-12 At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/TABLE103EBE23AD5EE4D6A9A62A9D939677B34.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2019": {
+   "label": "Table 1 : Macro-Economic Aggregates (At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/1T_HB15092019EA2B9307F08B4B4AB305B6D25552E76E.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2020": {
+   "label": "Table 1 : Macro-Economic Aggregates (At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/1TFE8B0F63C85F467696597F3001819B05.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2021": {
+   "label": "Table 1 : Macro-Economic Aggregates (At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/01T6D4C7D3976AD4CBA97A9005BAF8BD58F.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2022": {
+   "label": "Table 1 : Macro-Economic Aggregates (At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/1T_150920220E26C104836644C6AF0E37AB3DC678D6.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2023": {
+   "label": "Table 1 : Macro-Economic Aggregates (Base Year: 2011-12 At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/01T_150920234008E44FA61C491F811CD2D70F6C1862.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2024": {
+   "label": "Table 1 : Macro-Economic Aggregates (Base Year: 2011-12 At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/01T_13092024881D1A986DE94B0DB5570D567BE80FAC.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2025": {
+   "label": "Table 1 : Macro-Economic Aggregates (Base Year: 2011-12 At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/01T_29082025F2A38AAFD60B4A0886EBD595755550F7.XLSX",
+   "checked": "2026-10-17"
+  },
+  "2026": {
+   "label": "Table 1 : Macro-Economic Aggregates (At Current Prices)",
+   "url": "https://rbidocs.rbi.org.in/rdocs/Publications/DOCs/1T_HBIE310720260FBAA53A59A94B94A78CB8313C150B62.XLSX",
+   "checked": "2026-10-17"
+  }
+ }
+}

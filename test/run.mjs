@@ -329,6 +329,113 @@ ok("the Union functional series is carried for comparison",
   && Object.keys(states.union_functional.series).length > 0);
 
 // ---------------------------------------------------------------------------
+// The gap data: GDP, schemes, pre-2015-16 actuals, GSDP back-series, ABE.
+// Each file is checked for the arithmetic a page would rely on, so that a
+// consumer cannot divide by a chained GDP or add a family to its members.
+// ---------------------------------------------------------------------------
+
+const load = (name) => JSON.parse(readFileSync(join(ROOT, "data", name), "utf8"));
+
+const gdp = load("gdp.json");
+ok("gdp.json records both rebasings as breaks",
+  JSON.stringify(gdp.meta.breaks) === JSON.stringify(["2011-12", "2022-23"]));
+ok("gdp.json keeps three bases as separate segments",
+  gdp.segments.map((s) => s.base).join() === "2004-05,2011-12,2022-23");
+ok("every preferred GDP value is a printed value on its own base",
+  Object.entries(gdp.preferred).every(([fy, p]) => gdp.series[p.base][fy] === p.value));
+ok("the overlap years carry both bases, so a break can be measured",
+  gdp.series["2004-05"]["2011-12"] > 0 && gdp.series["2011-12"]["2011-12"] > 0
+  && gdp.series["2011-12"]["2022-23"] > 0 && gdp.series["2022-23"]["2022-23"] > 0);
+ok("the preferred series covers 1990-91 to 2025-26 without a hole",
+  Array.from({ length: 36 }, (_, i) => `${1990 + i}-${String((91 + i) % 100).padStart(2, "0")}`)
+    .every((fy) => gdp.preferred[fy] != null));
+ok("no rescaled or chained GDP is published",
+  !JSON.stringify(gdp).match(/chained|spliced|linked_series/));
+near("Union total expenditure 2008-09 is 15.8% of 2004-05-base GDP",
+  100 * 883956 / gdp.series["2004-05"]["2008-09"], 15.8, 0.1);
+
+const schemes = load("schemes.json");
+const byId = Object.fromEntries(schemes.schemes.map((s) => [s.id, s]));
+ok("a scheme's total is the sum of its members, every year and basis",
+  schemes.schemes.every((s) => Object.entries(s.total).every(([fy, d]) =>
+    Object.entries(d).every(([et, v]) => {
+      const sum = Object.values(s.by_member)
+        .reduce((a, m) => a + (m[fy]?.[et] ?? 0), 0);
+      return Math.abs(sum - v) < 0.02;
+    }))));
+ok("Samagra Shiksha's lineage names its three predecessors",
+  ["ssa", "rmsa", "teacher_education", "samagra_shiksha"]
+    .every((m) => byId.samagra_shiksha.members.some((x) => x.id === m)));
+near("Samagra Shiksha BE 2026-27", byId.samagra_shiksha.total["2026-27"].BE, 42100.02, 0.01);
+near("Sarva Shiksha Abhiyan BE 2010-11",
+  byId.samagra_shiksha.by_member.ssa["2010-11"].BE, 15000, 0.01);
+ok("every scheme year says which edition it came from",
+  schemes.schemes.every((s) => s.years.every((fy) => s.source[fy] != null)));
+ok("the SBE carries actuals from 2009-10 and not before",
+  byId.pm_poshan.total["2009-10"].A > 0 && byId.pm_poshan.total["2008-09"].A == null);
+
+const ua = load("union_actuals.json");
+const uaYears = Object.keys(ua.years);
+ok("Union actuals run 1997-98 to 2014-15, where the demands take over",
+  uaYears[0] === "1997-98" && uaYears[uaYears.length - 1] === "2014-15"
+  && uaYears.length === 18);
+ok("total expenditure = central sector + State Plans + UTs, every year",
+  uaYears.every((y) => {
+    const v = ua.years[y];
+    return Math.abs(v.central_sector + v.state_plans + v.union_territories
+      - v.total_expenditure) < 1;
+  }));
+ok("a department's total is its central-sector and State Plans lines",
+  uaYears.every((y) => ua.years[y].departments.every((d) =>
+    Math.abs((d.central_sector ?? 0) + (d.state_plans ?? 0) - d.total) < 0.01)));
+ok("departments add up to the central sector, except the one recorded misprint",
+  uaYears.every((y) => {
+    const v = ua.years[y];
+    const s = v.departments.reduce((a, d) => a + (d.central_sector ?? 0), 0);
+    return Math.abs(s - v.central_sector) < 1 || v.known_gaps.length > 0;
+  }));
+ok("the 1998-99 edition is excluded with its reason, not silently",
+  /truncated/.test(ua.excluded_editions["1998-99"] || ""));
+const unionLast = data.meta.years.find((y) => valueAt(data.totals, y, "A") != null);
+ok("the pre-2015-16 actuals meet union.json's own first actual year",
+  unionLast === "2015-16" || unionLast == null,
+  `union.json's first actual is ${unionLast}`);
+
+const gsdp = load("gsdp.json");
+ok("gsdp.json has five base segments, none chained",
+  gsdp.segments.length === 5 && !JSON.stringify(gsdp).match(/chained|spliced/));
+ok("the factor-cost to market-price change is recorded with the 2011-12 base",
+  /factor cost/.test(gsdp.segments[3].measure) && /market/.test(gsdp.segments[4].measure));
+ok("a parent's budget-boundary GSDP is never smaller than its printed GSDP",
+  Object.entries(gsdp.budget_boundary).every(([code, bases]) =>
+    Object.entries(bases).every(([b, ys]) => Object.entries(ys).every(([fy, v]) =>
+      v + 0.01 >= gsdp.series[code][b][fy]))));
+ok("undivided Andhra Pradesh 2011-12 includes Telangana",
+  Math.abs(gsdp.budget_boundary.AP["2011-12"]["2011-12"]
+    - gsdp.series.AP["2011-12"]["2011-12"] - gsdp.series.TG["2011-12"]["2011-12"]) < 0.01);
+ok("GSDP reaches back to 1990-91 for the large states",
+  ["UP", "MH", "WB", "TN"].every((s) => gsdp.series[s]["1980-81"]["1990-91"] > 0));
+
+const abe = load("abe.json");
+const nat = abe.national;
+ok("the ABE national series runs 2000-01 to 2021-22",
+  nat["2000-01"] != null && nat["2021-22"] != null && Object.keys(nat).length === 22);
+ok("ABE: Centre + States = total, both definitions, every year",
+  Object.values(nat).every((y) => ["education_departments",
+    "education_and_other_departments"].every((k) =>
+    Math.abs(y[k].states + y[k].centre - y[k].total) <= 2)));
+ok("ABE: each % of GDP is the total over the GDP it prints",
+  Object.values(nat).every((y) => Math.abs(100 * y.education_and_other_departments.total
+    / y.gdp - y.education_and_other_departments.pct_gdp.total) < 0.011));
+near("ABE: education by all departments, 2019-20, % of GDP",
+  nat["2019-20"].education_and_other_departments.pct_gdp.total, 4.04, 0.001);
+ok("ABE state rows carry the five main sub-sectors",
+  ["elementary", "secondary", "adult", "university", "technical"]
+    .every((s) => abe.states.AP?.[s] != null));
+ok("ABE's combined total says it is the only one, and why",
+  /never add/i.test(abe.meta.national_rule || ""));
+
+// ---------------------------------------------------------------------------
 
 console.log(`${passed} passed, ${failures.length} failed`);
 if (failures.length) {

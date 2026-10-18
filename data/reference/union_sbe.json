@@ -1,0 +1,2486 @@
+{
+ "note": "sbe<N> per edition, resolved by trying .xlsx, .xls and .pdf in that order and checking the magic number of the first kilobyte. url '' means no format exists. `education` is the education departments' demand numbers, each confirmed by the statement's own title.",
+ "files": {
+  "1998-99": {
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe40.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH & FAMILY WELFARE | Department of Health"
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe41.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH & FAMILY WELFARE | Department of Indian Systems of Medicine And Homoeopthy"
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe42.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Family Welfare"
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe43.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe44.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe45.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe46.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe47.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe48.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Education"
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe49.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Youth Affairs and Sports"
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe50.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Culture"
+   },
+   "51": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe51.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   }
+  },
+  "1999-00": {
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe40.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH & FAMILY WELFARE | Department of Indian Systems of Medicine And Homoeopthy"
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe41.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Family Welfare"
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe42.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe43.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe44.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe45.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe46.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe47.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Education"
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe48.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Youth Affairs and Sports"
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe49.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Culture"
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe50.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   }
+  },
+  "2000-01": {
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe40.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF CONSUMER AFFAIRS AND PUBLIC DISTRIBUTION | Department of Consumer Affairs"
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe41.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF CONSUMER AFFAIRS AND PUBLIC DISTRIBUTION | Department of Sugar and Edible Oils"
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe42.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH & FAMILY WELFARE | Department of Health"
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe43.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH & FAMILY WELFARE | Department of Indian Systems of Medicine And Homoeopthy"
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe44.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Family Welfare"
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe45.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe46.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe47.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe48.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe49.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe50.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "51": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe51.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "52": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe52.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   },
+   "53": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe53.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Public Enterprices"
+   },
+   "54": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe54.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Heavy Industry"
+   }
+  },
+  "2001-02": {
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe40.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Family Welfare"
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe41.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe42.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe43.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe44.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe45.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe46.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe47.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe48.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe49.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Public Enterprises"
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe50.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Heavy Industry"
+   }
+  },
+  "2002-03": {
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe40.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF CONSUMER AFFAIRS, FOOD AND PUBLIC DISTRIBUTION | Department of Food and Public Distribution"
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe41.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FOOD PROCESSING INDUSTRIES | Department of Food Processing Industries"
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe42.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Health"
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe43.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Indian Systems of Medicine and Homoeopathy"
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe44.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Family Welfare"
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe45.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe46.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe47.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe48.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe49.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe50.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "51": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe51.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "52": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe52.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   },
+   "53": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe53.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Public Enterprises"
+   },
+   "54": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe54.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Heavy Industry"
+   }
+  },
+  "2003-04": {
+   "55": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/sbe55.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   }
+  },
+  "2004-05": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/sbe59.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   }
+  },
+  "2005-06": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/sbe59.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   }
+  },
+  "2006-07": {
+   "54": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/sbe54.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "55": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/sbe55.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Elementary Education and Literacy"
+   },
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Secondary Education and Higher Education"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Women and Child Development"
+   }
+  },
+  "2007-08": {
+   "55": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/sbe55.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2008-09": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   }
+  },
+  "2009-10": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/sbe59.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2010-11": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/sbe56.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/sbe57.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/sbe59.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2011-12": {
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/sbe57.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/sbe58.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/sbe59.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/sbe60.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2012-13": {
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/sbe57.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/sbe58.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/sbe59.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/sbe60.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2013-14": {
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/sbe58.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Housing and Urban Poverty Alleviation | Ministry of Housing and Urban Poverty Alleviation"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/sbe59.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Human Resource Development | Department of School Education and Literacy"
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/sbe60.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Human Resource Development | Department of Higher Education"
+   },
+   "61": {
+    "url": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/sbe61.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Information and Broadcasting | Ministry of Information and Broadcasting"
+   }
+  },
+  "2014-15": {
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/sbe58.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/sbe59.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/sbe60.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "61": {
+    "url": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/sbe61.pdf",
+    "format": ".pdf",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2015-16": {
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/sbe58.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Housing and Urban Poverty Alleviation | Ministry of Housing and Urban Poverty Alleviation"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/sbe59.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Human Resource Development | Department of School Education and Literacy"
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/sbe60.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Human Resource Development | Department of Higher Education"
+   },
+   "61": {
+    "url": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/sbe61.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Information and Broadcasting | Ministry of Information and Broadcasting"
+   }
+  },
+  "2016-17": {
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/sbe50.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Housing and Urban Poverty Alleviation | Ministry of Housing and Urban Poverty Alleviation"
+   },
+   "51": {
+    "url": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/sbe51.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Human Resource Development | Department of School Education and Literacy"
+   },
+   "52": {
+    "url": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/sbe52.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Human Resource Development | Department of Higher Education"
+   },
+   "53": {
+    "url": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/sbe53.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Information and Broadcasting | Ministry of Information and Broadcasting"
+   }
+  },
+  "2017-18": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/sbe56.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION | MINISTRY OF HOUSING AND URBAN POVERTY ALLEVIATION"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/sbe57.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/sbe58.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/sbe59.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2018-19": {
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/sbe56.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN AFFAIRS | MINISTRY OF HOUSING AND URBAN AFFAIRS"
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/sbe57.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of School Education and Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/sbe58.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HUMAN RESOURCE DEVELOPMENT | Department of Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/sbe59.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF INFORMATION AND BROADCASTING | MINISTRY OF INFORMATION AND BROADCASTING"
+   }
+  },
+  "2019-20": {
+   "1": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe1.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "2": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe2.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "3": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe3.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "4": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe4.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "5": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe5.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "6": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe6.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "7": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe7.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "8": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe8.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "9": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe9.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "10": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe10.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "11": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe11.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "12": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe12.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "13": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe13.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "14": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe14.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "15": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe15.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "16": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe16.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "17": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe17.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "18": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe18.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "19": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe19.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "20": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe20.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "21": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe21.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "22": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe22.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "23": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe23.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe24.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe25.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe26.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe27.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "28": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe28.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "29": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe29.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "30": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe30.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "31": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe31.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "32": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe32.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "33": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe33.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "34": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe34.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "35": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe35.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "36": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe36.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "37": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe37.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "38": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe38.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "39": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe39.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe40.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe41.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe42.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe43.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe44.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe45.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe46.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe47.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe48.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe49.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe50.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "51": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe51.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "52": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe52.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "53": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe53.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "54": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe54.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "55": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe55.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe56.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe57.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "(no title; net 56536.63 = dg57) | Department Of School Education And Literacy"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe58.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "(no title; net 38317.01 = dg58) | Department Of Higher Education"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe59.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe60.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "61": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe61.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "62": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe62.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "63": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe63.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "64": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe64.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "65": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe65.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "66": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe66.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "67": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe67.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "68": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe68.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "69": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe69.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "70": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe70.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "71": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe71.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "72": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe72.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "73": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe73.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "74": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe74.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "75": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe75.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "76": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe76.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "77": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe77.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "78": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe78.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "79": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe79.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "80": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe80.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "81": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe81.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "82": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe82.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "83": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe83.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "84": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe84.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "85": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe85.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "86": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe86.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "87": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe87.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "88": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe88.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "89": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe89.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "90": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe90.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "91": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe91.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "92": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe92.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "93": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe93.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "94": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe94.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "95": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe95.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "96": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe96.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "97": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe97.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "98": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe98.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "99": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe99.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "100": {
+    "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe100.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "101": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "102": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "103": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "104": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "105": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "106": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "107": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "108": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "109": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "110": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "111": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "112": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "113": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "114": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "115": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "116": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "117": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "118": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "119": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "120": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   }
+  },
+  "2020-21": {
+   "1": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe1.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "2": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe2.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "3": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe3.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "4": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe4.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "5": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe5.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "6": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe6.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "7": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe7.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "8": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe8.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "9": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe9.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "10": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe10.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF COMMERCE AND INDUSTRY | Department of Commerce"
+   },
+   "11": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe11.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF COMMERCE AND INDUSTRY | MINISTRY OF COMMERCE AND INDUSTRY"
+   },
+   "12": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe12.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "13": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe13.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "14": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe14.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF CONSUMER AFFAIRS, FOOD AND PUBLIC DISTRIBUTION | Department of Consumer Affairs"
+   },
+   "15": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe15.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF CONSUMER AFFAIRS, FOOD AND PUBLIC DISTRIBUTION | Department of Food and Public Distribution"
+   },
+   "16": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe16.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "17": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe17.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "18": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe18.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF DEFENCE | MINISTRY OF DEFENCE"
+   },
+   "19": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe19.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "20": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe20.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "21": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe21.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "22": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe22.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "23": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe23.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe24.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe25.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe26.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe27.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FINANCE | Department of Economic Affairs"
+   },
+   "28": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe28.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FINANCE | Department of Expenditure"
+   },
+   "29": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe29.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FINANCE | Department of Financial Services"
+   },
+   "30": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe30.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "31": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe31.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "32": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe32.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FINANCE | MINISTRY OF FINANCE"
+   },
+   "33": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe33.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "34": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe34.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "35": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe35.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "36": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe36.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FINANCE | MINISTRY OF FINANCE"
+   },
+   "37": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe37.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "38": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe38.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FINANCE | MINISTRY OF FINANCE"
+   },
+   "39": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe39.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "40": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe40.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "41": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe41.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF FOOD PROCESSING INDUSTRIES | MINISTRY OF FOOD PROCESSING INDUSTRIES"
+   },
+   "42": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe42.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEALTH AND FAMILY WELFARE | Department of Health and Family Welfare"
+   },
+   "43": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe43.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "44": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe44.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HEAVY INDUSTRIES AND PUBLIC ENTERPRISES | Department of Heavy Industry"
+   },
+   "45": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe45.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "46": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe46.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "47": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe47.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "48": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe48.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "49": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe49.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "50": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe50.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "51": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe51.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOME AFFAIRS | MINISTRY OF HOME AFFAIRS"
+   },
+   "52": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe52.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "53": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe53.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "54": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe54.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "55": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe55.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "56": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe56.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "57": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe57.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF HOUSING AND URBAN AFFAIRS | MINISTRY OF HOUSING AND URBAN AFFAIRS"
+   },
+   "58": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe58.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "(no title; net 59845.00 = dg58) | Department Of School Education And Literacy"
+   },
+   "59": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe59.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "(no title; net 39466.52 = dg59) | Department Of Higher Education"
+   },
+   "60": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe60.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "61": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe61.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF JAL SHAKTI | Department of Water Resources, River Development and Ganga Rejuvenation"
+   },
+   "62": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe62.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "63": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe63.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF LABOUR AND EMPLOYMENT | MINISTRY OF LABOUR AND EMPLOYMENT"
+   },
+   "64": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe64.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "65": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe65.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "66": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe66.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "67": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe67.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF MICRO, SMALL AND MEDIUM ENTERPRISES | MINISTRY OF MICRO, SMALL AND MEDIUM ENTERPRISES"
+   },
+   "68": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe68.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF MINES | MINISTRY OF MINES"
+   },
+   "69": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe69.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF MINORITY AFFAIRS | MINISTRY OF MINORITY AFFAIRS"
+   },
+   "70": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe70.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "71": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe71.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "72": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe72.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "73": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe73.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF PERSONNEL, PUBLIC GRIEVANCES AND PENSIONS | MINISTRY OF PERSONNEL, PUBLIC GRIEVANCES AND PENSIONS"
+   },
+   "74": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe74.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "75": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe75.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "76": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe76.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF PLANNING | MINISTRY OF PLANNING"
+   },
+   "77": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe77.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "78": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe78.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "79": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe79.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "80": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe80.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "81": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe81.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "82": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe82.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "83": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe83.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "84": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe84.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "85": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe85.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "86": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe86.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "87": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe87.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "88": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe88.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "89": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe89.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "90": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe90.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "91": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe91.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF SKILL DEVELOPMENT AND ENTREPRENEURSHIP | MINISTRY OF SKILL DEVELOPMENT AND ENTREPRENEURSHIP"
+   },
+   "92": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe92.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF SOCIAL JUSTICE AND EMPOWERMENT | Department of Social Justice and Empowerment"
+   },
+   "93": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe93.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF SOCIAL JUSTICE AND EMPOWERMENT | Department of Empowerment of Persons with Disabilities"
+   },
+   "94": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe94.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "95": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe95.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "96": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe96.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF STEEL | MINISTRY OF STEEL"
+   },
+   "97": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe97.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF TEXTILES | MINISTRY OF TEXTILES"
+   },
+   "98": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe98.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF TOURISM | MINISTRY OF TOURISM"
+   },
+   "99": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe99.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "MINISTRY OF TRIBAL AFFAIRS | MINISTRY OF TRIBAL AFFAIRS"
+   },
+   "100": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe100.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "101": {
+    "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe101.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": " | "
+   },
+   "102": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "103": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "104": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "105": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "106": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "107": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "108": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "109": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "110": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "111": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "112": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "113": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "114": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "115": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "116": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "117": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "118": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "119": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   },
+   "120": {
+    "url": "",
+    "format": "",
+    "checked": "2026-10-17"
+   }
+  },
+  "2021-22": {
+   "23": {
+    "url": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/sbe23.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Earth Sciences | Ministry of Earth Sciences"
+   },
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/sbe24.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of School Education and Literacy"
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/sbe25.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of Higher Education"
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/sbe26.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Electronics and Information Technology | Ministry of Electronics and Information Technology"
+   }
+  },
+  "2022-23": {
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/sbe24.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Earth Sciences | Ministry of Earth Sciences"
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/sbe25.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of School Education and Literacy"
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/sbe26.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of Higher Education"
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/sbe27.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Electronics and Information Technology | Ministry of Electronics and Information Technology"
+   }
+  },
+  "2023-24": {
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/sbe24.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Earth Sciences | Ministry of Earth Sciences"
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/sbe25.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of School Education and Literacy"
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/sbe26.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of Higher Education"
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/sbe27.xls",
+    "format": ".xls",
+    "checked": "2026-10-17",
+    "title": "Ministry of Electronics and Information Technology | Ministry of Electronics and Information Technology"
+   }
+  },
+  "2024-25": {
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/sbe24.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Earth Sciences | Ministry of Earth Sciences"
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/sbe25.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of School Education and Literacy"
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/sbe26.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of Higher Education"
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/sbe27.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Electronics and Information Technology | Ministry of Electronics and Information Technology"
+   }
+  },
+  "2025-26": {
+   "24": {
+    "url": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/sbe24.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Earth Sciences | Ministry of Earth Sciences"
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/sbe25.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of School Education and Literacy"
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/sbe26.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of Higher Education"
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/sbe27.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Electronics and Information Technology | Ministry of Electronics and Information Technology"
+   }
+  },
+  "2026-27": {
+   "24": {
+    "url": "https://www.indiabudget.gov.in/doc/eb/sbe24.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Earth Sciences | Ministry of Earth Sciences"
+   },
+   "25": {
+    "url": "https://www.indiabudget.gov.in/doc/eb/sbe25.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of School Education and Literacy"
+   },
+   "26": {
+    "url": "https://www.indiabudget.gov.in/doc/eb/sbe26.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Education | Department of Higher Education"
+   },
+   "27": {
+    "url": "https://www.indiabudget.gov.in/doc/eb/sbe27.xlsx",
+    "format": ".xlsx",
+    "checked": "2026-10-17",
+    "title": "Ministry of Electronics and Information Technology | Ministry of Electronics and Information Technology"
+   }
+  }
+ },
+ "education": {
+  "1998-99": {
+   "48": "Department of Education"
+  },
+  "1999-00": {
+   "47": "Department of Education"
+  },
+  "2000-01": {
+   "50": "Department of Elementary Education and Literacy",
+   "51": "Department of Secondary Education and Higher Education"
+  },
+  "2001-02": {
+   "46": "Department of Elementary Education and Literacy",
+   "47": "Department of Secondary Education and Higher Education"
+  },
+  "2002-03": {
+   "50": "Department of Elementary Education and Literacy",
+   "51": "Department of Secondary Education and Higher Education"
+  },
+  "2003-04": {
+   "56": "Department of Elementary Education and Literacy",
+   "57": "Department of Secondary Education and Higher Education"
+  },
+  "2004-05": {
+   "57": "Department of Elementary Education and Literacy",
+   "58": "Department of Secondary Education and Higher Education"
+  },
+  "2005-06": {
+   "57": "Department of Elementary Education and Literacy",
+   "58": "Department of Secondary Education and Higher Education"
+  },
+  "2006-07": {
+   "55": "Department of Elementary Education and Literacy",
+   "56": "Department of Secondary Education and Higher Education"
+  },
+  "2007-08": {
+   "56": "Department of School Education and Literacy",
+   "57": "Department of Higher Education"
+  },
+  "2008-09": {
+   "57": "Department of School Education and Literacy",
+   "58": "Department of Higher Education"
+  },
+  "2009-10": {
+   "57": "Department of School Education and Literacy",
+   "58": "Department of Higher Education"
+  },
+  "2010-11": {
+   "57": "Department of School Education and Literacy",
+   "58": "Department of Higher Education"
+  },
+  "2011-12": {
+   "58": "Department of School Education and Literacy",
+   "59": "Department of Higher Education"
+  },
+  "2012-13": {
+   "58": "Department of School Education and Literacy",
+   "59": "Department of Higher Education"
+  },
+  "2013-14": {
+   "59": "Department of School Education and Literacy",
+   "60": "Department of Higher Education"
+  },
+  "2014-15": {
+   "59": "Department of School Education and Literacy",
+   "60": "Department of Higher Education"
+  },
+  "2015-16": {
+   "59": "Department of School Education and Literacy",
+   "60": "Department of Higher Education"
+  },
+  "2016-17": {
+   "51": "Department of School Education and Literacy",
+   "52": "Department of Higher Education"
+  },
+  "2017-18": {
+   "57": "Department of School Education and Literacy",
+   "58": "Department of Higher Education"
+  },
+  "2018-19": {
+   "57": "Department of School Education and Literacy",
+   "58": "Department of Higher Education"
+  },
+  "2019-20": {
+   "57": "Department Of School Education And Literacy",
+   "58": "Department Of Higher Education"
+  },
+  "2020-21": {
+   "58": "Department Of School Education And Literacy",
+   "59": "Department Of Higher Education"
+  },
+  "2021-22": {
+   "24": "Department of School Education and Literacy",
+   "25": "Department of Higher Education"
+  },
+  "2022-23": {
+   "25": "Department of School Education and Literacy",
+   "26": "Department of Higher Education"
+  },
+  "2023-24": {
+   "25": "Department of School Education and Literacy",
+   "26": "Department of Higher Education"
+  },
+  "2024-25": {
+   "25": "Department of School Education and Literacy",
+   "26": "Department of Higher Education"
+  },
+  "2025-26": {
+   "25": "Department of School Education and Literacy",
+   "26": "Department of Higher Education"
+  },
+  "2026-27": {
+   "25": "Department of School Education and Literacy",
+   "26": "Department of Higher Education"
+  }
+ }
+}

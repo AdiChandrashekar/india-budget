@@ -1,0 +1,722 @@
+{
+ "1998-99 sbe48": {
+  "dept": "Department of Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub1998-99/eb/sbe48.pdf",
+  "read": false,
+  "columns": [
+   "1997-98 BE",
+   "1997-98 RE",
+   "1998-99 BE"
+  ],
+  "lines": 116,
+  "why": [
+   "1997-98 BE: leaves 3538.00 != Grand Total 5231.63",
+   "1997-98 RE: leaves 3114.14 != Grand Total 4715.85",
+   "1998-99 BE: leaves 4916.83 != Grand Total 7046.82"
+  ]
+ },
+ "1999-00 sbe47": {
+  "dept": "Department of Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub1999-2000/eb/sbe47.pdf",
+  "read": true,
+  "columns": [
+   "1998-99 BE",
+   "1998-99 RE",
+   "1999-00 BE"
+  ],
+  "lines": 206,
+  "notes": [
+   "1999-00 BE: printed Grand Total 7934.74 disagrees with the top block and the schemes, both 7936.74"
+  ]
+ },
+ "2000-01 sbe50": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe50.pdf",
+  "read": true,
+  "columns": [
+   "1999-00 BE",
+   "1999-00 RE",
+   "2000-01 BE"
+  ],
+  "lines": 67
+ },
+ "2000-01 sbe51": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2000-01/eb/sbe51.pdf",
+  "read": true,
+  "columns": [
+   "1999-00 BE",
+   "1999-00 RE",
+   "2000-01 BE"
+  ],
+  "lines": 149
+ },
+ "2001-02 sbe46": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe46.pdf",
+  "read": true,
+  "columns": [
+   "2000-01 BE",
+   "2000-01 RE",
+   "2001-02 BE"
+  ],
+  "lines": 69
+ },
+ "2001-02 sbe47": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2001-02/eb/sbe47.pdf",
+  "read": true,
+  "columns": [
+   "2000-01 BE",
+   "2000-01 RE",
+   "2001-02 BE"
+  ],
+  "lines": 171
+ },
+ "2002-03 sbe50": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe50.pdf",
+  "read": true,
+  "columns": [
+   "2001-02 BE",
+   "2001-02 RE",
+   "2002-03 BE"
+  ],
+  "lines": 73
+ },
+ "2002-03 sbe51": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2002-03/eb/sbe51.pdf",
+  "read": true,
+  "columns": [
+   "2001-02 BE",
+   "2001-02 RE",
+   "2002-03 BE"
+  ],
+  "lines": 176
+ },
+ "2003-04 sbe56": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/sbe56.pdf",
+  "read": false,
+  "columns": [
+   "2002-03 BE",
+   "2002-03 RE",
+   "2003-04 BE"
+  ],
+  "lines": 66,
+  "why": [
+   "2002-03 BE: leaves 9417.05 != Grand Total 0.00",
+   "2002-03 BE: top block 4904.85 != Grand Total 0.00",
+   "2002-03 RE: leaves 8227.65 != Grand Total 0.00",
+   "2002-03 RE: top block 4304.58 != Grand Total 0.00",
+   "2003-04 BE: leaves 9811.23 != Grand Total 0.00",
+   "2003-04 BE: top block 4904.63 != Grand Total 0.00"
+  ]
+ },
+ "2003-04 sbe57": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2003-04/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2002-03 BE",
+   "2002-03 RE",
+   "2003-04 BE"
+  ],
+  "lines": 172
+ },
+ "2004-05 sbe57": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2003-04 BE",
+   "2003-04 RE",
+   "2004-05 BE"
+  ],
+  "lines": 60
+ },
+ "2004-05 sbe58": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2004-05/eb/sbe58.pdf",
+  "read": true,
+  "columns": [
+   "2003-04 BE",
+   "2003-04 RE",
+   "2004-05 BE"
+  ],
+  "lines": 165
+ },
+ "2005-06 sbe57": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2004-05 BE",
+   "2004-05 RE",
+   "2005-06 BE"
+  ],
+  "lines": 61
+ },
+ "2005-06 sbe58": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2005-06/eb/sbe58.pdf",
+  "read": true,
+  "columns": [
+   "2004-05 BE",
+   "2004-05 RE",
+   "2005-06 BE"
+  ],
+  "lines": 172
+ },
+ "2006-07 sbe55": {
+  "dept": "Department of Elementary Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/sbe55.pdf",
+  "read": true,
+  "columns": [
+   "2005-06 BE",
+   "2005-06 RE",
+   "2006-07 BE"
+  ],
+  "lines": 105
+ },
+ "2006-07 sbe56": {
+  "dept": "Department of Secondary Education and Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2006-07/eb/sbe56.pdf",
+  "read": true,
+  "columns": [
+   "2005-06 BE",
+   "2005-06 RE",
+   "2006-07 BE"
+  ],
+  "lines": 203
+ },
+ "2007-08 sbe56": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/sbe56.pdf",
+  "read": true,
+  "columns": [
+   "2006-07 BE",
+   "2006-07 RE",
+   "2007-08 BE"
+  ],
+  "lines": 180
+ },
+ "2007-08 sbe57": {
+  "dept": "Department of Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2007-08/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2006-07 BE",
+   "2006-07 RE",
+   "2007-08 BE"
+  ],
+  "lines": 212
+ },
+ "2008-09 sbe57": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2007-08 BE",
+   "2007-08 RE",
+   "2008-09 BE"
+  ],
+  "lines": 181
+ },
+ "2008-09 sbe58": {
+  "dept": "Department of Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2008-09/eb/sbe58.pdf",
+  "read": true,
+  "columns": [
+   "2007-08 BE",
+   "2007-08 RE",
+   "2008-09 BE"
+  ],
+  "lines": 183
+ },
+ "2009-10 sbe57": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2008-09 BE",
+   "2008-09 RE",
+   "2009-10 BE"
+  ],
+  "lines": 220
+ },
+ "2009-10 sbe58": {
+  "dept": "Department of Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2009-10/eb/sbe58.pdf",
+  "read": true,
+  "columns": [
+   "2008-09 BE",
+   "2008-09 RE",
+   "2009-10 BE"
+  ],
+  "lines": 175
+ },
+ "2010-11 sbe57": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/sbe57.pdf",
+  "read": true,
+  "columns": [
+   "2009-10 BE",
+   "2009-10 RE",
+   "2010-11 BE"
+  ],
+  "lines": 181
+ },
+ "2010-11 sbe58": {
+  "dept": "Department of Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget_archive/ub2010-11/eb/sbe58.pdf",
+  "read": true,
+  "columns": [
+   "2009-10 BE",
+   "2009-10 RE",
+   "2010-11 BE"
+  ],
+  "lines": 185
+ },
+ "2011-12 sbe58": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/sbe58.xls",
+  "read": true,
+  "columns": [
+   "2009-10 A",
+   "2010-11 BE",
+   "2010-11 RE",
+   "2011-12 BE"
+  ],
+  "lines": 139
+ },
+ "2011-12 sbe59": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2011-2012/ub2011-12/eb/sbe59.xls",
+  "read": true,
+  "columns": [
+   "2009-10 A",
+   "2010-11 BE",
+   "2010-11 RE",
+   "2011-12 BE"
+  ],
+  "lines": 123
+ },
+ "2012-13 sbe58": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/sbe58.xls",
+  "read": true,
+  "columns": [
+   "2010-11 A",
+   "2011-12 BE",
+   "2011-12 RE",
+   "2012-13 BE"
+  ],
+  "lines": 140
+ },
+ "2012-13 sbe59": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2012-2013/ub2012-13/eb/sbe59.xls",
+  "read": true,
+  "columns": [
+   "2010-11 A",
+   "2011-12 BE",
+   "2011-12 RE",
+   "2012-13 BE"
+  ],
+  "lines": 126
+ },
+ "2013-14 sbe59": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/sbe59.xls",
+  "read": true,
+  "columns": [
+   "2011-12 A",
+   "2012-13 BE",
+   "2012-13 RE",
+   "2013-14 BE"
+  ],
+  "lines": 144
+ },
+ "2013-14 sbe60": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2013-2014/ub2013-14/eb/sbe60.xls",
+  "read": true,
+  "columns": [
+   "2011-12 A",
+   "2012-13 BE",
+   "2012-13 RE",
+   "2013-14 BE"
+  ],
+  "lines": 147
+ },
+ "2014-15 sbe59": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/sbe59.pdf",
+  "read": true,
+  "columns": [
+   "2012-13 A",
+   "2013-14 BE",
+   "2013-14 RE",
+   "2014-15 BE"
+  ],
+  "lines": 271
+ },
+ "2014-15 sbe60": {
+  "dept": "Department of Higher Education",
+  "format": ".pdf",
+  "url": "https://www.indiabudget.gov.in/budget2014-2015/ub2014-15/eb/sbe60.pdf",
+  "read": true,
+  "columns": [
+   "2012-13 A",
+   "2013-14 BE",
+   "2013-14 RE",
+   "2014-15 BE"
+  ],
+  "lines": 246
+ },
+ "2015-16 sbe59": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/sbe59.xls",
+  "read": true,
+  "columns": [
+   "2013-14 A",
+   "2014-15 BE",
+   "2014-15 RE",
+   "2015-16 BE"
+  ],
+  "lines": 179
+ },
+ "2015-16 sbe60": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2015-2016/ub2015-16/eb/sbe60.xls",
+  "read": true,
+  "columns": [
+   "2013-14 A",
+   "2014-15 BE",
+   "2014-15 RE",
+   "2015-16 BE"
+  ],
+  "lines": 119
+ },
+ "2016-17 sbe51": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/sbe51.xls",
+  "read": true,
+  "columns": [
+   "2014-15 A",
+   "2015-16 BE",
+   "2015-16 RE",
+   "2016-17 BE"
+  ],
+  "lines": 177
+ },
+ "2016-17 sbe52": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2016-2017/ub2016-17/eb/sbe52.xls",
+  "read": true,
+  "columns": [
+   "2014-15 A",
+   "2015-16 BE",
+   "2015-16 RE",
+   "2016-17 BE"
+  ],
+  "lines": 250
+ },
+ "2017-18 sbe57": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/sbe57.xlsx",
+  "read": true,
+  "columns": [
+   "2015-16 A",
+   "2016-17 BE",
+   "2016-17 RE",
+   "2017-18 BE"
+  ],
+  "lines": 70
+ },
+ "2017-18 sbe58": {
+  "dept": "Department of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2017-2018/ub2017-18/eb/sbe58.xlsx",
+  "read": true,
+  "columns": [
+   "2015-16 A",
+   "2016-17 BE",
+   "2016-17 RE",
+   "2017-18 BE"
+  ],
+  "lines": 123
+ },
+ "2018-19 sbe57": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/sbe57.xlsx",
+  "read": true,
+  "columns": [
+   "2016-17 A",
+   "2017-18 BE",
+   "2017-18 RE",
+   "2018-19 BE"
+  ],
+  "lines": 86
+ },
+ "2018-19 sbe58": {
+  "dept": "Department of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2018-2019/ub2018-19/eb/sbe58.xlsx",
+  "read": true,
+  "columns": [
+   "2016-17 A",
+   "2017-18 BE",
+   "2017-18 RE",
+   "2018-19 BE"
+  ],
+  "lines": 158
+ },
+ "2019-20 sbe57": {
+  "dept": "Department Of School Education And Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe57.xlsx",
+  "read": true,
+  "columns": [
+   "2017-18 A",
+   "2018-19 BE",
+   "2018-19 RE",
+   "2019-20 BE"
+  ],
+  "lines": 98
+ },
+ "2019-20 sbe58": {
+  "dept": "Department Of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2019-20/doc/eb/sbe58.xlsx",
+  "read": true,
+  "columns": [
+   "2017-18 A",
+   "2018-19 BE",
+   "2018-19 RE",
+   "2019-20 BE"
+  ],
+  "lines": 214
+ },
+ "2020-21 sbe58": {
+  "dept": "Department Of School Education And Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe58.xlsx",
+  "read": true,
+  "columns": [
+   "2018-19 A",
+   "2019-20 BE",
+   "2019-20 RE",
+   "2020-21 BE"
+  ],
+  "lines": 100
+ },
+ "2020-21 sbe59": {
+  "dept": "Department Of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2020-21/doc/eb/sbe59.xlsx",
+  "read": true,
+  "columns": [
+   "2018-19 A",
+   "2019-20 BE",
+   "2019-20 RE",
+   "2020-21 BE"
+  ],
+  "lines": 213
+ },
+ "2021-22 sbe24": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/sbe24.xls",
+  "read": true,
+  "columns": [
+   "2019-20 A",
+   "2020-21 BE",
+   "2020-21 RE",
+   "2021-22 BE"
+  ],
+  "lines": 81
+ },
+ "2021-22 sbe25": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2021-22/doc/eb/sbe25.xls",
+  "read": true,
+  "columns": [
+   "2019-20 A",
+   "2020-21 BE",
+   "2020-21 RE",
+   "2021-22 BE"
+  ],
+  "lines": 190
+ },
+ "2022-23 sbe25": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/sbe25.xls",
+  "read": true,
+  "columns": [
+   "2020-21 A",
+   "2021-22 BE",
+   "2021-22 RE",
+   "2022-23 BE"
+  ],
+  "lines": 79
+ },
+ "2022-23 sbe26": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2022-23/doc/eb/sbe26.xls",
+  "read": true,
+  "columns": [
+   "2020-21 A",
+   "2021-22 BE",
+   "2021-22 RE",
+   "2022-23 BE"
+  ],
+  "lines": 175
+ },
+ "2023-24 sbe25": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/sbe25.xls",
+  "read": true,
+  "columns": [
+   "2021-22 A",
+   "2022-23 BE",
+   "2022-23 RE",
+   "2023-24 BE"
+  ],
+  "lines": 61
+ },
+ "2023-24 sbe26": {
+  "dept": "Department of Higher Education",
+  "format": ".xls",
+  "url": "https://www.indiabudget.gov.in/budget2023-24/doc/eb/sbe26.xls",
+  "read": true,
+  "columns": [
+   "2021-22 A",
+   "2022-23 BE",
+   "2022-23 RE",
+   "2023-24 BE"
+  ],
+  "lines": 146
+ },
+ "2024-25 sbe25": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/sbe25.xlsx",
+  "read": true,
+  "columns": [
+   "2022-23 A",
+   "2023-24 BE",
+   "2023-24 RE",
+   "2024-25 BE"
+  ],
+  "lines": 68
+ },
+ "2024-25 sbe26": {
+  "dept": "Department of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2024-25/doc/eb/sbe26.xlsx",
+  "read": true,
+  "columns": [
+   "2022-23 A",
+   "2023-24 BE",
+   "2023-24 RE",
+   "2024-25 BE"
+  ],
+  "lines": 155
+ },
+ "2025-26 sbe25": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/sbe25.xlsx",
+  "read": true,
+  "columns": [
+   "2023-24 A",
+   "2024-25 BE",
+   "2024-25 RE",
+   "2025-26 BE"
+  ],
+  "lines": 67
+ },
+ "2025-26 sbe26": {
+  "dept": "Department of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/budget2025-26/doc/eb/sbe26.xlsx",
+  "read": true,
+  "columns": [
+   "2023-24 A",
+   "2024-25 BE",
+   "2024-25 RE",
+   "2025-26 BE"
+  ],
+  "lines": 147
+ },
+ "2026-27 sbe25": {
+  "dept": "Department of School Education and Literacy",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/doc/eb/sbe25.xlsx",
+  "read": true,
+  "columns": [
+   "2024-25 A",
+   "2025-26 BE",
+   "2025-26 RE",
+   "2026-27 BE"
+  ],
+  "lines": 63
+ },
+ "2026-27 sbe26": {
+  "dept": "Department of Higher Education",
+  "format": ".xlsx",
+  "url": "https://www.indiabudget.gov.in/doc/eb/sbe26.xlsx",
+  "read": true,
+  "columns": [
+   "2024-25 A",
+   "2025-26 BE",
+   "2025-26 RE",
+   "2026-27 BE"
+  ],
+  "lines": 149
+ }
+}
