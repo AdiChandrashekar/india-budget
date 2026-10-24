@@ -281,6 +281,16 @@ p, li, figcaption, .lede, .standfirst, .step-card, .note { text-wrap: pretty; }
   to { opacity: 1; transform: none; }
 }
 
+/* Treemap tiles settle in on load, largest first. A CSS animation rather
+   than a d3 transition, so the step-driven fill transitions cannot pre-empt
+   it; the tile's resting state is visible either way. */
+.tile-rise { animation: tile-rise 0.5s var(--ease) backwards; }
+
+@keyframes tile-rise {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* -------------------------------------------------------------- chapters */
 
 .chapter { padding: 120px 0 80px; position: relative; }

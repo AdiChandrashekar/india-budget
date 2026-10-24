@@ -261,10 +261,15 @@ export function treemapStory(host, opts) {
     const h = leaf.y1 - leaf.y0;
     const d = leaf.data;
     const g = svg.append("g").attr("transform", "translate(" + leaf.x0 + "," + leaf.y0 + ")");
+    // The tile rests at full opacity and fades in through a CSS animation,
+    // not a d3 transition: step() animates `fill` on these same rects, and a
+    // d3 transition there pre-empts any other unnamed one still pending,
+    // which left every tile stuck at opacity 0 and the treemap blank.
     const rect = g.append("rect")
       .attr("width", Math.max(0, w)).attr("height", Math.max(0, h))
       .attr("rx", 2).attr("fill", dim)
-      .attr("opacity", 0);
+      .attr("class", "tile-rise")
+      .style("animation-delay", Math.min(idx * 9, 700) + "ms");
     const share = (100 * (d.value || 0)) / total;
 
     rect.on("pointerleave", () => hideTip(tip))
@@ -296,12 +301,6 @@ export function treemapStory(host, opts) {
       }
     }
     return { rect, label, d, idx };
-  });
-
-  // tiles settle in once, largest first
-  cells.forEach((c) => {
-    c.rect.transition().delay(dur(Math.min(c.idx * 9, 700))).duration(dur(500))
-      .attr("opacity", 1);
   });
 
   function fillFor(c, n) {
